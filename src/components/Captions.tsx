@@ -5,7 +5,7 @@ import {C, CAPTION_ZONE, FONT_UI} from '../lib/theme';
 import {clamp, pop} from '../lib/anim';
 
 // Words that get the gold highlight + bigger scale when spoken.
-const KEY = new Set(['7', 'ATTACK', 'SATU', 'TAK', 'DAPAT', '5', 'MINIT', 'SYAHMI', 'PLEASE', '1', '2', 'BIJI', 'ROTATE', 'MUQRI', 'CHAI', 'JASON', 'READY', 'LAST', '3', 'MINUTES', 'LEADING', 'GAP', 'KELUARKAN', 'BALIK', 'COME', 'ON']);
+const KEY = new Set(['7', 'ATTACK', 'KEEPER', 'SATU', 'TAK', 'DAPAT', '5', 'MINIT', 'SYAHMI', 'PLEASE', '1', '2', 'BIJI', 'ROTATE', 'MUQRI', 'CHAI', 'JASON', 'READY', 'LAST', '3', 'MINUTES', 'LEADING', 'GAP', 'KELUARKAN', 'BALIK', 'COME', 'ON']);
 
 export const Captions: React.FC = () => {
 	const frame = useCurrentFrame();

@@ -21,7 +21,7 @@ type SegmentDef = {
 };
 
 const DEFS: SegmentDef[] = [
-	{id: 'hook', srcStart: 8.72, srcEnd: 14.4, zoomFrom: 1.0, zoomTo: 1.08, note: 'Hook: "7 kali attack, satu pun tak dapat. Tapi diorang attack, nasib baik kita pun ada"'},
+	{id: 'hook', srcStart: 8.72, srcEnd: 14.4, zoomFrom: 1.0, zoomTo: 1.08, note: 'Hook: "7 kali attack, satu pun tak dapat. Tapi diorang attack, nasib baik keeper ada"'},
 	{id: 'fiveMin', srcStart: 0.0, srcEnd: 1.14, zoomFrom: 1.1, zoomTo: 1.1, note: '"5 minit saja lagi" (best of three takes)'},
 	{id: 'syahmi', srcStart: 20.04, srcEnd: 26.24, zoomFrom: 1.03, zoomTo: 1.1, note: '"So Syahmi mesti, tolong lah, please. Nampak 1 biji lagi, 2 biji lagi. Kita dah rotate, 5 minit lagi"'},
 	{id: 'lineup', srcStart: 31.0, srcEnd: 33.56, zoomFrom: 1.12, zoomTo: 1.12, note: '"Muqri. Chai. Jason. Ready."'},
@@ -75,12 +75,27 @@ export type Chunk = {words: Word[]; from: number; to: number};
 // Names confirmed by the coach (ASR heard "Syamil" and "Bukri").
 const FIX: Record<string, string> = {diorang: 'DIORANG', lah: 'LAH', Ok: 'OK', Syamil: 'SYAHMI', Bukri: 'MUQRI'};
 
+// Multi-word corrections confirmed by the coach: ASR split "keeper" into
+// "kita pun" (13.86-14.14 s). Words whose start falls in [s, e) are merged.
+const MERGE: {s: number; e: number; text: string}[] = [{s: 13.86, e: 14.14, text: 'KEEPER'}];
+
+type RawWord = {w: string; s: number; e: number};
+const applyMerges = (ws: RawWord[]): RawWord[] => {
+	const out: RawWord[] = [];
+	for (const w of ws) {
+		const m = MERGE.find((x) => w.s >= x.s - 0.01 && w.s < x.e);
+		if (!m) out.push(w);
+		else if (!out.some((o) => o.w === m.text && o.s === m.s)) out.push({w: m.text, s: m.s, e: m.e});
+	}
+	return out;
+};
+
 /** Caption chunks on the output timeline, built from the kept transcript words. */
 export const CHUNKS: Chunk[] = (() => {
 	const chunks: Chunk[] = [];
 	for (const s of SEGMENTS) {
 		for (const ts of transcript.segments) {
-			const words: Word[] = ts.words
+			const words: Word[] = applyMerges(ts.words)
 				.filter((w) => w.s >= s.srcStart - 0.05 && w.e <= s.srcEnd + 0.1)
 				.map((w) => ({
 					text: (FIX[w.w] ?? w.w).replace(/[.,!?]/g, '').toUpperCase(),

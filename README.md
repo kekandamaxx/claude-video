@@ -1,6 +1,6 @@
 # UMPSA Handball: Timeout Talk (Remotion edit)
 
-A 9:16 edit (1080×1920, 30 fps, 25.0 s) of `IMG_7678.MOV`, which is 42.9 s of raw footage of a team talk during a timeout. It is made for TikTok and Instagram Reels. **The final render has not been made yet.** Only a 540×960 preview exists, and it is waiting for approval.
+A 9:16 edit (1080×1920, 30 fps, 25.0 s) of `IMG_7678.MOV`, which is 42.9 s of raw footage of a team talk during a timeout. It is made for TikTok and Instagram Reels. The coach approved the preview and the corrections below; `npm run render:final` produces the delivered file.
 
 ## Pipeline
 
@@ -30,7 +30,7 @@ npm run render:final   # 1080p final; run only after the preview is approved
 | 5.14–5.88 | Alright | No | filler |
 | 6.92–8.72 | Kita tadi aku kira | No | lead-in, so the hook starts on the number |
 | 8.72–11.30 | 7 kali attack, satu pun tak dapat | **Yes: HOOK** | strongest line: a hard stat and the tension in it |
-| 11.30–14.40 | Tapi diorang attack, nasib baik kita pun ada | **Yes** | continues the hook |
+| 11.30–14.40 | Tapi diorang attack, nasib baik keeper ada | **Yes** | continues the hook |
 | 15.34–19.40 | Kita 7 attack … satu pun tak dapat | No | repeats the hook; contains a 1.7 s pause |
 | 19.40–20.04 | Ok | No | filler |
 | 20.04–26.24 | So Syahmi mesti, tolong lah, please. Nampak 1 biji lagi, 2 biji lagi. Kita dah rotate, 5 minit lagi | **Yes** | |
@@ -57,10 +57,10 @@ Output order: hook → 5 minit → Syahmi / target / rotate → lineup → last 
 - Measured (`npm run qa:audio`): median voice-over-music margin 14.3 dB. Every one of the 67 kept words is at least 8 dB above music+SFX (median 13.9 dB). The master is at −14.0 LUFS, −1.0 dBTP.
 - SFX come from Mixkit (free licence): cinematic impact, whooshes, swooshes, pops, a clock tick, a heartbeat, a riser, stadium crowd and a game buzzer. `prepare_media.sh` lists the IDs.
 
-## Things to confirm before the final render
+## Corrections confirmed by the coach
 
-- Names are confirmed: **Syahmi, Muqri, Chai, Jason**. The raw ASR in `src/data/transcript.json` still reads "Syamil" and "Bukri", and `FIX` in `src/lib/edl.ts` corrects them in the captions.
+The raw ASR stays untouched in `src/data/transcript.json`. The fixes are applied in `src/lib/edl.ts` (`FIX` for single words, `MERGE` for words the ASR split):
 
-- "2 aku tu keluarkan": the ASR confidence for "aku tu" is low (0.43 / 0.29).
-- "Nasib baik kita pun ada …": the sentence ends with no object. It is kept because the hook needs its "but they attacked" half.
-- The end-card line "UMPSA Handball · Last 3 minutes" and the "0 GOL" reading of "satu pun tak dapat".
+- "Syamil" → **Syahmi**, "Bukri" → **Muqri** (Chai and Jason were already correct).
+- "nasib baik kita pun ada" → "nasib baik **keeper** ada".
+- Confirmed as written: "2 aku tu keluarkan", the "0 GOL" stat, and the end card "UMPSA Handball · Last 3 minutes".
