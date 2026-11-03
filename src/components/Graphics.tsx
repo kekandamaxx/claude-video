@@ -13,16 +13,16 @@ export const T = {
 	hookEnd: seg('hook').outFrom + seg('hook').len,
 	five: seg('fiveMin').outFrom,
 	fiveEnd: seg('fiveMin').outFrom + seg('fiveMin').len,
-	syamil: at('syamil', 20.74),
-	please: at('syamil', 22.4),
-	nampak: at('syamil', 22.98),
-	ball1: at('syamil', 23.86),
-	ball2: at('syamil', 24.44),
-	rotate: at('syamil', 25.44),
-	rotateFive: at('syamil', 25.64),
-	syamilEnd: seg('syamil').outFrom + seg('syamil').len,
+	syahmi: at('syahmi', 20.74),
+	please: at('syahmi', 22.4),
+	nampak: at('syahmi', 22.98),
+	ball1: at('syahmi', 23.86),
+	ball2: at('syahmi', 24.44),
+	rotate: at('syahmi', 25.44),
+	rotateFive: at('syahmi', 25.64),
+	syahmiEnd: seg('syahmi').outFrom + seg('syahmi').len,
 	lineup: seg('lineup').outFrom,
-	bukri: at('lineup', 31.02),
+	muqri: at('lineup', 31.02),
 	chai: at('lineup', 31.84),
 	jason: at('lineup', 32.56),
 	ready: at('lineup', 32.96),
@@ -112,9 +112,9 @@ const Clock: React.FC<{frame: number; from: number; to: number; minutes: number;
 	);
 };
 
-// ---------------------------------------------------------------- SYAMIL call-out
+// ---------------------------------------------------------------- SYAHMI call-out
 const CoachCall: React.FC<{frame: number}> = ({frame}) => {
-	const from = T.syamil - 2;
+	const from = T.syahmi - 2;
 	const to = T.nampak;
 	if (frame < from || frame >= to) return null;
 	const p = pop(frame, from, 12, 0.6);
@@ -125,7 +125,7 @@ const CoachCall: React.FC<{frame: number}> = ({frame}) => {
 		<TopZone>
 			<div style={{opacity: v, transform: `translateX(${(1 - p) * -500}px) skewX(${(1 - p) * -14}deg) scale(${pulse})`, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12}}>
 				<Pill bg={C.gold} color={C.navy}>Coach call</Pill>
-				<Display size={190}>Syamil</Display>
+				<Display size={190}>Syahmi</Display>
 				<div style={{height: 14, width: 420 * easeIn(frame, from + 4, 10), background: C.gold, borderRadius: 7, boxShadow: `0 6px 0 ${C.navy}`}} />
 			</div>
 		</TopZone>
@@ -162,7 +162,7 @@ const Target: React.FC<{frame: number}> = ({frame}) => {
 // ---------------------------------------------------------------- ROTATE + 5 MIN
 const Rotate: React.FC<{frame: number}> = ({frame}) => {
 	const from = T.rotate - 1;
-	const to = T.syamilEnd;
+	const to = T.syahmiEnd;
 	if (frame < from || frame >= to) return null;
 	const p = pop(frame, from, 10, 0.5);
 	const spin = interpolate(frame, [from, from + 14], [-200, 0], clamp);
@@ -185,7 +185,7 @@ const Lineup: React.FC<{frame: number}> = ({frame}) => {
 	const from = T.lineup;
 	const to = T.lineupEnd;
 	if (frame < from || frame >= to) return null;
-	const names: [string, number][] = [['Bukri', T.bukri], ['Chai', T.chai], ['Jason', T.jason]];
+	const names: [string, number][] = [['Muqri', T.muqri], ['Chai', T.chai], ['Jason', T.jason]];
 	const stamp = frame >= T.ready ? pop(frame, T.ready, 9, 0.8) : 0;
 	return (
 		<TopZone style={{justifyContent: 'flex-start'}}>

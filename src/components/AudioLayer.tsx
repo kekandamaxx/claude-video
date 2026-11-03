@@ -64,9 +64,9 @@ export const CUES: Cue[] = [
 	// -> 5 minit
 	{sfx: 'whoosh_fast', at: T.five - 6, vol: 0.5},
 		{sfx: 'tick', at: T.fiveEnd - 2, vol: 0.4},
-	// -> Syamil / target / rotate
+	// -> Syahmi / target / rotate
 	{sfx: 'swoosh_wind', at: T.fiveEnd - 3, vol: 0.45},
-	{sfx: 'pop_hard', at: T.syamil - 3, vol: 0.4},
+	{sfx: 'pop_hard', at: T.syahmi - 3, vol: 0.4},
 	{sfx: 'bass_drum', at: T.please, vol: 0.35},
 	{sfx: 'swoosh_accent', at: T.nampak, vol: 0.3},
 	{sfx: 'pop_light', at: T.ball1 + 2, vol: 0.75},
@@ -76,7 +76,7 @@ export const CUES: Cue[] = [
 	{sfx: 'tick', at: T.rotateFive + 3, vol: 0.45},
 	// -> lineup
 	{sfx: 'whoosh_cine', at: T.lineup - 4, vol: 0.45},
-	{sfx: 'swoosh_accent', at: T.bukri - 2, vol: 0.25},
+	{sfx: 'swoosh_accent', at: T.muqri - 2, vol: 0.25},
 	{sfx: 'swoosh_accent', at: T.chai - 2, vol: 0.25},
 	{sfx: 'swoosh_accent', at: T.jason - 2, vol: 0.25},
 	{sfx: 'impact_fast', at: T.ready + 3, vol: 0.5},

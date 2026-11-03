@@ -33,13 +33,13 @@ npm run render:final   # 1080p final; run only after the preview is approved
 | 11.30–14.40 | Tapi diorang attack, nasib baik kita pun ada | **Yes** | continues the hook |
 | 15.34–19.40 | Kita 7 attack … satu pun tak dapat | No | repeats the hook; contains a 1.7 s pause |
 | 19.40–20.04 | Ok | No | filler |
-| 20.04–26.24 | So Syamil mesti, tolong lah, please. Nampak 1 biji lagi, 2 biji lagi. Kita dah rotate, 5 minit lagi | **Yes** | |
+| 20.04–26.24 | So Syahmi mesti, tolong lah, please. Nampak 1 biji lagi, 2 biji lagi. Kita dah rotate, 5 minit lagi | **Yes** | |
 | 26.20–31.00 | Ok, alright, the last 3 minutes kalau kita leading 5, ok | No | first take of a line that is repeated more clearly later |
-| 31.00–33.56 | Bukri. Chai. Jason. Ready. | **Yes** | |
+| 31.00–33.56 | Muqri. Chai. Jason. Ready. | **Yes** | |
 | 33.50–34.56 | Ok | No | filler and pause |
 | 34.56–42.83 | The last 3 minutes, kalau kita masih leading, kalau tak ada gap, 2 aku tu keluarkan, korang balik. Ok. Come on ×3 | **Yes** | |
 
-Output order: hook → 5 minit → Syamil / target / rotate → lineup → last 3 minutes → COME ON → end card. The ranges live in `src/lib/edl.ts`. Every graphic and SFX cue is tied to word timestamps through `at(segment, sourceTime)`, so changing one cut moves everything that follows it.
+Output order: hook → 5 minit → Syahmi / target / rotate → lineup → last 3 minutes → COME ON → end card. The ranges live in `src/lib/edl.ts`. Every graphic and SFX cue is tied to word timestamps through `at(segment, sourceTime)`, so changing one cut moves everything that follows it.
 
 ## Safe zones and faces
 
@@ -59,7 +59,8 @@ Output order: hook → 5 minit → Syamil / target / rotate → lineup → last 
 
 ## Things to confirm before the final render
 
-- ASR spellings of the names: **Syamil, Bukri, Chai, Jason**.
+- Names are confirmed: **Syahmi, Muqri, Chai, Jason**. The raw ASR in `src/data/transcript.json` still reads "Syamil" and "Bukri", and `FIX` in `src/lib/edl.ts` corrects them in the captions.
+
 - "2 aku tu keluarkan": the ASR confidence for "aku tu" is low (0.43 / 0.29).
 - "Nasib baik kita pun ada …": the sentence ends with no object. It is kept because the hook needs its "but they attacked" half.
 - The end-card line "UMPSA Handball · Last 3 minutes" and the "0 GOL" reading of "satu pun tak dapat".
