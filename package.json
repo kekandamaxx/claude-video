@@ -1,0 +1,28 @@
+{
+  "name": "umpsa-timeout-edit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion edit of IMG_7678.MOV: UMPSA handball timeout talk, vertical 9:16 for TikTok and Instagram Reels",
+  "scripts": {
+    "studio": "remotion studio",
+    "preview": "remotion render TimeoutEdit out/preview_raw.mp4 --props='{\"preview\":true,\"guides\":false,\"music\":true,\"sfx\":true,\"voice\":true}' --scale=0.5 --crf=23 --audio-bitrate=256k && scripts/master_audio.sh out/preview_raw.mp4 out/preview.mp4",
+    "guides": "remotion still TimeoutEdit out/guides.jpg --frame=330 --props='{\"preview\":true,\"guides\":true,\"music\":false,\"sfx\":false,\"voice\":false}'",
+    "stems": "for s in voice music sfx; do remotion render TimeoutEdit out/stem_$s.wav --codec=wav --props=\"{\\\"preview\\\":true,\\\"guides\\\":false,\\\"music\\\":$([ $s = music ] && echo true || echo false),\\\"sfx\\\":$([ $s = sfx ] && echo true || echo false),\\\"voice\\\":$([ $s = voice ] && echo true || echo false)}\"; done",
+    "qa:audio": "npm run stems && python3 scripts/word_snr.py && python3 scripts/audio_qa.py",
+    "render:final": "remotion render TimeoutEdit out/final_raw.mp4 --props='{\"preview\":false,\"guides\":false,\"music\":true,\"sfx\":true,\"voice\":true}' --crf=16 --audio-bitrate=320k && scripts/master_audio.sh out/final_raw.mp4 out/final.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/anton": "5.3.0",
+    "@fontsource/montserrat": "5.3.0",
+    "@remotion/cli": "4.0.540",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.540",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}
