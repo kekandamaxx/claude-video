@@ -5,7 +5,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | Composition | Source | Raw → cut | Status |
 |---|---|---|---|
 | `TimeoutEdit` | `IMG_7678.MOV`, handball timeout talk | 42.9 s → 25.0 s | final delivered, all corrections confirmed |
-| `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 26.3 s | preview awaiting approval |
+| `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | v2 preview awaiting approval |
 
 ## Layout
 
@@ -42,34 +42,35 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## SemifinalEdit: edit decisions
+## SemifinalEdit: edit decisions (v2, 45.7 s)
 
-| Source time | Speech | Kept? |
+The coach asked for 45–50 s, and for the rhetorical repeats to stay ("kena menang", "jiwa nak menang mesti ada", "kita mesti ada di final", "lawan tetap lawan"). Confirmed as written: "sizing", "50 minit yang terakhir", "Pre-semifinal talk".
+
+| # | Source time | Speech |
 |---|---|---|
-| 1.02–7.40 | Nak tak nak kita tetap kena menang, walau macam mana cara sekalipun, kita tetap kena menang | No: the 59.5 s take is cleaner |
-| 8.22–10.38, 65.60–67.56 | Jiwa nak menang mesti ada | No: the 13.66 s take is used |
-| 11.52–13.26 | Kena tinggal ada 3 biji gol | No: unclear in context |
-| 13.66–14.98 | Jiwa nak menang mesti ada | **Yes** (slot 5) |
-| 14.98–22.22 | Jangan …, aku memang berharap yang terbaik duduk di final, … | No: low ASR confidence |
-| 23.38–25.06 | Korang pilih nak menang apa dah | No |
-| 25.04–27.40 | Final tu, no more pressure | **Yes** (slot 2) |
-| 29.10–31.46 | Tetapi untuk game kali ni, semifinal kali ni | **Yes** (slot 3) |
-| 32.16–37.70 | Kita mesti masuk final / ada di final ×3 | No: the payoff is used once, at the end |
-| 37.70–39.40 | Lawan tetap lawan | No: repeated at 42.92 |
-| 40.84–44.32 | Biarlah sampai ke 50 minit yang terakhir, lawan tetap lawan | **Yes** (slot 8) |
-| 44.84–47.02 | Kalau nak heret extra time, tariklah extra time | **Yes** (slot 9); 0.5 s pause cut before it |
-| 47.52–50.20 | Kita mesti … ada kat final | **Yes: climax** (slots 10–11); 0.45 s of the 0.65 s pause removed |
-| 52.24–54.84 | Dua tahun berturut-turut berada di final. Tak semua orang boleh buat. | **Yes: HOOK** |
-| 55.98–59.48 | Ada perempuan universiti, tak semua orang boleh ada final, dua tahun berturut-turut | No: repeat, unclear ASR |
-| 59.50–63.94 | Nak tak nak, kita tetap kena menang. Buatlah macam mana cara sekalipun. | **Yes** (slot 4) |
-| 68.98–69.66 | Jangan give up | **Yes** (slot 6) |
-| 69.62–75.56 | Jangan tengok macam perempuan, dua senter keluar, tak ada, lawan dia | No: unclear ASR |
-| 77.86–81.18 | Jangan takut sizing apa semua. Tak ada masalah. Teknikal kita bagus. | **Yes** (slot 7) |
-| 81.18–88.64 | Dia orang laju kita perlahan ×2, … | No: repeated and the ending is unclear |
+| 1 | 52.24–54.84 | **HOOK** Dua tahun berturut-turut berada di final. Tak semua orang boleh buat. |
+| 2 | 17.24–20.72 | Aku memang berharap yang terbaik, duduk di final. |
+| 3 | 23.36–27.40 | Korang pilih nak menang apa dah. Final tu, no more pressure. |
+| 4 | 29.10–31.46 | Tetapi untuk game kali ni, semifinal kali ni, |
+| 5 | 32.58–33.80, 34.60–35.50 | Kita mesti masuk final. Kita mesti ada di final. (0.8 s pause cut) |
+| 6 | 59.50–63.94 | Nak tak nak, kita tetap kena menang. Buatlah macam mana cara sekalipun. |
+| 7 | 5.97–7.42 | Kita tetap kena menang. (close-up; the graphic moves to the low band) |
+| 8 | 8.52–10.40 | Jiwa nak menang, mesti ada. |
+| 9 | 11.50–14.98 | Kena tinggal ada 3 biji gol, jiwa nak menang mesti ada. |
+| 10 | 68.98–69.66 | Jangan give up. |
+| 11 | 77.86–82.50 | Jangan takut sizing apa semua. Tak ada masalah. Teknikal kita bagus. Dia orang laju, kita perlahan. |
+| 12 | 37.66–39.42 | Lawan tetap lawan. |
+| 13 | 40.84–44.32 | Biarlah sampai ke 50 minit yang terakhir, lawan tetap lawan. |
+| 14 | 44.84–47.02 | Kalau nak heret extra time, tariklah extra time. (0.5 s pause cut) |
+| 15 | 65.74–67.62 | Lawan! Jiwa nak menang mesti ada. |
+| 16 | 36.30–37.70 | Kita mesti ada final. |
+| 17 | 47.52–48.64, 49.10–50.20 | **CLIMAX** Kita mesti … ada kat final. (0.45 s of the pause cut) |
 
-QA results: `qa:faces` gives 0 of 789 frames with an overlay on a face and 0 outside the safe area. `word_snr` gives 72 words with a median of 14.6 dB and a minimum of 9.5 dB.
+Not used: 1.0–5.6 ("so/nak tak nak", the onset is unclear), 15.0–16.4, 20.8–23.4, 55.98–59.48, 69.62–75.56 and 83.0–88.6 (low ASR confidence even after a focused second pass), plus filler and dead air.
 
-To confirm: "sizing" (ASR, p 0.94), "50 minit yang terakhir" (the caption shows the ASR "50"; the graphic only says "minit terakhir"), the "UMPSA" label is not used in this edit, and the "Pre-semifinal talk" and "Semifinal · Jom ke final" texts.
+QA results: `qa:faces` gives 0 of 1370 frames with an overlay on a face and 0 outside the safe area. `word_snr` gives 122 words with a median of 14.9 dB and a minimum of 8.2 dB. The preview master is at −13.9 LUFS.
+
+To confirm: "Kena tinggal ada 3 biji gol". The second ASR pass heard "tinggal tu", and the graphic reads "Tinggal 3 biji gol pun".
 
 ## TimeoutEdit: edit decisions (final)
 

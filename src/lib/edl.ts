@@ -25,8 +25,8 @@ export type Chunk = {words: Word[]; from: number; to: number};
 
 type RawWord = {w: string; s: number; e: number};
 type Transcript = {segments: {words: RawWord[]}[]};
-/** Words starting in [s, e) collapse into `text`; `start` optionally re-times it (ASR onset error). */
-type Merge = {s: number; e: number; text: string; start?: number};
+/** Words starting in [s, e) collapse into `text`; `start`/`end` optionally re-time it (ASR timing error). */
+type Merge = {s: number; e: number; text: string; start?: number; end?: number};
 
 export type Edl = {
 	segments: Segment[];
@@ -77,7 +77,7 @@ export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix
 		for (const w of ws) {
 			const m = merge.find((x) => w.s >= x.s - 0.01 && w.s < x.e);
 			if (!m) res.push(w);
-			else if (!res.some((o) => o.w === m.text && o.s === (m.start ?? m.s))) res.push({w: m.text, s: m.start ?? m.s, e: m.e});
+			else if (!res.some((o) => o.w === m.text && o.s === (m.start ?? m.s))) res.push({w: m.text, s: m.start ?? m.s, e: m.end ?? m.e});
 		}
 		return res;
 	};

@@ -6,52 +6,81 @@ import {clamp, easeIn, pop, shake, window01} from '../../lib/anim';
 import {Check, Display, Pill, TopZone} from '../../components/ui';
 
 const {at, seg, segEnd} = EDL;
+const start = (id: string) => seg(id).outFrom;
 
 // ---------------------------------------------------------------- key moments (output frames)
 export const T = {
-	hook: seg('hook').outFrom,
+	hook: start('hook'),
 	tahun: at('hook', 52.66),
 	finalWord: at('hook', 53.52),
 	takSemua: at('hook', 53.74),
-	buat: at('hook', 54.62),
 	hookEnd: segEnd('hook'),
-	pressure: seg('pressure').outFrom,
+	harap: start('harap'),
+	terbaik: at('harap', 18.66),
+	harapFinal: at('harap', 20.42),
+	harapEnd: segEnd('harap'),
+	pressure: start('pressure'),
+	finalTu: at('pressure', 25.06),
 	noMore: at('pressure', 26.42),
 	pressureEnd: segEnd('pressure'),
-	semi: seg('semifinal').outFrom,
+	semi: start('semifinal'),
 	semiWord: at('semifinal', 30.48),
 	semiEnd: segEnd('semifinal'),
-	menangSeg: seg('menang').outFrom,
+	masuk1: start('masuk1'),
+	masukFinal: at('masuk1', 33.4),
+	masuk2: start('masuk2'),
+	adaDiFinal: at('masuk2', 35.28),
+	masukEnd: segEnd('masuk2'),
+	menangSeg: start('menang'),
 	menang: at('menang', 62.08),
 	buatlah: at('menang', 62.36),
 	menangEnd: segEnd('menang'),
-	jiwa: seg('jiwa').outFrom,
-	jiwaEnd: segEnd('jiwa'),
-	giveup: seg('giveup').outFrom,
+	menang2: start('menang2'),
+	menang2Word: at('menang2', 7.04),
+	menang2End: segEnd('menang2'),
+	jiwa1: start('jiwa1'),
+	jiwa2: start('jiwa2'),
+	tigaGol: at('jiwa2', 12.6),
+	jiwa2Word: at('jiwa2', 13.42),
+	jiwaEnd: segEnd('jiwa2'),
+	giveup: start('giveup'),
 	up: at('giveup', 69.42),
 	giveupEnd: segEnd('giveup'),
-	teknikalSeg: seg('teknikal').outFrom,
+	teknikalSeg: start('teknikal'),
 	sizing: at('teknikal', 78.62),
 	masalah: at('teknikal', 79.6),
 	teknikal: at('teknikal', 79.88),
 	bagus: at('teknikal', 80.84),
+	laju: at('teknikal', 81.56),
+	perlahan: at('teknikal', 82.06),
 	teknikalEnd: segEnd('teknikal'),
-	lawanSeg: seg('lawan').outFrom,
+	lawan0: start('lawan0'),
+	l0a: at('lawan0', 37.7),
+	l0b: at('lawan0', 39.0),
+	lawanSeg: start('lawan'),
 	lawan1: at('lawan', 42.92),
 	lawan2: at('lawan', 43.72),
-	extraSeg: seg('extra').outFrom,
+	extraSeg: start('extra'),
 	extra1: at('extra', 45.38),
 	tarik: at('extra', 45.94),
-	extra2: at('extra', 46.5),
 	extraEnd: segEnd('extra'),
-	mesti: seg('mesti').outFrom,
-	finalSeg: seg('final').outFrom,
+	jiwa3: start('jiwa3'),
+	jiwa3Word: at('jiwa3', 66.16),
+	jiwa3End: segEnd('jiwa3'),
+	ada: start('ada'),
+	mesti: start('mesti'),
+	finalSeg: start('final'),
 	finalPay: at('final', 49.84),
 	outro: EDL.cutEnd,
 	end: EDL.totalFrames,
 };
 
-export const SHAKE_HITS = [T.takSemua + 2, T.semiWord + 2, T.menang + 1, T.up + 1, T.lawan2 + 1, T.finalSeg + 1, T.finalPay + 1];
+export const SHAKE_HITS = [T.takSemua + 2, T.semiWord + 2, T.adaDiFinal + 1, T.menang + 1, T.menang2Word + 1, T.up + 1, T.l0b + 1, T.lawan2 + 1, T.finalSeg + 1, T.finalPay + 1];
+
+/** Low graphics band (y 975-1145) for the one close-up take whose face sits in the top band. */
+const LowZone: React.FC<{children: React.ReactNode}> = ({children}) => (
+	<div style={{position: 'absolute', left: 70, top: 975, width: 880, height: 170, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>{children}</div>
+);
 
 // ---------------------------------------------------------------- icons
 const Trophy: React.FC<{size: number; glow?: number}> = ({size, glow = 0}) => (
@@ -93,7 +122,7 @@ const Flame: React.FC<{size: number; flicker: number}> = ({size, flicker}) => (
 	</svg>
 );
 
-// ---------------------------------------------------------------- 1. hook: 2 TAHUN BERTURUT-TURUT DI FINAL
+// ---------------------------------------------------------------- 1. hook: 2X FINAL BERTURUT-TURUT
 const Hook: React.FC<{frame: number}> = ({frame}) => {
 	if (frame >= T.hookEnd) return null;
 	const a = pop(frame, T.hook + 1, 9, 0.7);
@@ -137,7 +166,27 @@ const Hook: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 2. FINAL = NO MORE PRESSURE (gauge drops)
+// ---------------------------------------------------------------- 2. BERHARAP YANG TERBAIK -> DUDUK DI FINAL
+const Harap: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.harap || frame >= T.harapEnd) return null;
+	const v = window01(frame, T.harap, T.harapEnd, 4);
+	const k = frame >= T.terbaik - 2 ? pop(frame, T.terbaik - 2, 10, 0.6) : 0;
+	const f = frame >= T.harapFinal - 2 ? pop(frame, T.harapFinal - 2, 9, 0.6) : 0;
+	return (
+		<TopZone>
+			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, opacity: v}}>
+				<Pill bg={C.navySoft} style={{transform: `scale(${pop(frame, T.harap, 12)})`}}>Coach berharap</Pill>
+				<Display size={130} color={C.gold} style={{transform: `scale(${0.3 + 0.7 * k})`, opacity: k, whiteSpace: 'nowrap'}}>Yang terbaik</Display>
+				<div style={{display: 'flex', alignItems: 'center', gap: 12, transform: `scale(${f})`}}>
+					<Trophy size={64} glow={f} />
+					<Pill bg={C.gold} color={C.navy} style={{fontSize: 34}}>Duduk di final</Pill>
+				</div>
+			</div>
+		</TopZone>
+	);
+};
+
+// ---------------------------------------------------------------- 3. FINAL = NO MORE PRESSURE (gauge drops)
 const Pressure: React.FC<{frame: number}> = ({frame}) => {
 	if (frame < T.pressure || frame >= T.pressureEnd) return null;
 	const v = window01(frame, T.pressure, T.pressureEnd, 4);
@@ -149,7 +198,7 @@ const Pressure: React.FC<{frame: number}> = ({frame}) => {
 			<div style={{display: 'flex', alignItems: 'center', gap: 30, opacity: v, transform: `scale(${0.7 + 0.3 * p})`}}>
 				<Gauge size={230} value={needle + wobble} />
 				<div style={{display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-start'}}>
-					<Pill bg={C.gold} color={C.navy}>Bila dah final</Pill>
+					<Pill bg={C.gold} color={C.navy} style={{opacity: frame >= T.finalTu - 2 ? 1 : 0.35}}>Bila dah final</Pill>
 					<Display size={92} style={{opacity: frame >= T.noMore ? 1 : 0.25}}>No more</Display>
 					<Display size={92} color={frame >= T.noMore ? C.green : C.red}>pressure</Display>
 				</div>
@@ -158,7 +207,7 @@ const Pressure: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 3. SEMIFINAL title slam
+// ---------------------------------------------------------------- 4. SEMIFINAL title slam
 const Semifinal: React.FC<{frame: number}> = ({frame}) => {
 	if (frame < T.semi || frame >= T.semiEnd) return null;
 	const v = window01(frame, T.semi, T.semiEnd, 4);
@@ -178,44 +227,99 @@ const Semifinal: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 4. KENA MENANG
-const KenaMenang: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.menangSeg || frame >= T.menangEnd) return null;
-	const v = window01(frame, T.menangSeg, T.menangEnd, 4);
-	const k = frame >= T.menang - 3 ? pop(frame, T.menang - 3, 8, 0.6) : 0;
-	const sub = frame >= T.buatlah ? pop(frame, T.buatlah, 12, 0.5) : 0;
-	return (
-		<TopZone>
-			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, opacity: v}}>
-				<Pill bg={C.navySoft} style={{transform: `scale(${pop(frame, T.menangSeg, 12)})`}}>Nak tak nak</Pill>
-				<Display size={160} color={C.gold} style={{transform: `scale(${frame >= T.menang - 3 ? 1.5 - 0.5 * k : 0})`, whiteSpace: 'nowrap'}}>
-					Kena menang
-				</Display>
-				<Pill bg={C.red} style={{transform: `scale(${sub})`, fontSize: 30}}>Walau macam mana cara sekalipun</Pill>
-			</div>
-		</TopZone>
+// ---------------------------------------------------------------- 5. road to final: SEMIFINAL -> FINAL
+const RoadToFinal: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.masuk1 || frame >= T.masukEnd) return null;
+	const v = window01(frame, T.masuk1, T.masukEnd, 4);
+	const fill = interpolate(frame, [T.masuk1, T.masukFinal, T.masuk2, T.adaDiFinal], [0.05, 0.6, 0.6, 1], clamp);
+	const lit = frame >= T.adaDiFinal ? pop(frame, T.adaDiFinal, 8, 0.6) : 0;
+	const node = (label: string, on: boolean) => (
+		<div style={{padding: '10px 22px', borderRadius: 14, background: on ? C.gold : C.navySoft, color: on ? C.navy : C.white, fontFamily: FONT_DISPLAY, fontSize: 58, letterSpacing: 2, transform: `scale(${on ? 1.15 - 0.15 * lit : 1})`, boxShadow: on ? `0 0 30px ${C.gold}` : '0 8px 20px rgba(0,0,0,0.35)'}}>{label}</div>
 	);
-};
-
-// ---------------------------------------------------------------- 5. JIWA NAK MENANG
-const Jiwa: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.jiwa || frame >= T.jiwaEnd) return null;
-	const v = window01(frame, T.jiwa, T.jiwaEnd, 3);
-	const p = pop(frame, T.jiwa, 9, 0.5);
 	return (
 		<TopZone>
-			<div style={{display: 'flex', alignItems: 'center', gap: 20, opacity: v, transform: `scale(${0.6 + 0.4 * p})`}}>
-				<Flame size={170} flicker={Math.sin(frame * 1.3)} />
-				<div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
-					<Display size={110}>Jiwa</Display>
-					<Display size={110} color={C.gold}>nak menang</Display>
+			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, opacity: v}}>
+				<Display size={96}>Kita mesti</Display>
+				<div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+					{node('Semifinal', false)}
+					<div style={{width: 200, height: 16, borderRadius: 8, background: 'rgba(255,255,255,0.25)', overflow: 'hidden'}}>
+						<div style={{width: `${fill * 100}%`, height: '100%', background: C.gold}} />
+					</div>
+					{node('Final', frame >= T.adaDiFinal)}
 				</div>
 			</div>
 		</TopZone>
 	);
 };
 
-// ---------------------------------------------------------------- 6. JANGAN GIVE UP stamp
+// ---------------------------------------------------------------- 6. KENA MENANG (+ close-up take in the low band)
+const KenaMenang: React.FC<{frame: number}> = ({frame}) => {
+	if (frame >= T.menangSeg && frame < T.menangEnd) {
+		const v = window01(frame, T.menangSeg, T.menangEnd, 4);
+		const k = frame >= T.menang - 3 ? pop(frame, T.menang - 3, 8, 0.6) : 0;
+		const sub = frame >= T.buatlah ? pop(frame, T.buatlah, 12, 0.5) : 0;
+		return (
+			<TopZone>
+				<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, opacity: v}}>
+					<Pill bg={C.navySoft} style={{transform: `scale(${pop(frame, T.menangSeg, 12)})`}}>Nak tak nak</Pill>
+					<Display size={160} color={C.gold} style={{transform: `scale(${frame >= T.menang - 3 ? 1.5 - 0.5 * k : 0})`, whiteSpace: 'nowrap'}}>
+						Kena menang
+					</Display>
+					<Pill bg={C.red} style={{transform: `scale(${sub})`, fontSize: 30}}>Walau macam mana cara sekalipun</Pill>
+				</div>
+			</TopZone>
+		);
+	}
+	if (frame >= T.menang2 && frame < T.menang2End) {
+		const v = window01(frame, T.menang2, T.menang2End, 3);
+		const k = frame >= T.menang2Word - 3 ? pop(frame, T.menang2Word - 3, 8, 0.6) : 0;
+		return (
+			<LowZone>
+				<div style={{display: 'flex', alignItems: 'center', gap: 18, opacity: v}}>
+					<Pill bg={C.navySoft}>Kita tetap</Pill>
+					<Display size={110} color={C.gold} style={{transform: `scale(${frame >= T.menang2Word - 3 ? 1.4 - 0.4 * k : 0})`, whiteSpace: 'nowrap'}}>
+						Kena menang
+					</Display>
+				</div>
+			</LowZone>
+		);
+	}
+	return null;
+};
+
+// ---------------------------------------------------------------- 7. JIWA NAK MENANG (x3 across the edit)
+const JiwaCard: React.FC<{frame: number; from: number; to: number; tag: React.ReactNode}> = ({frame, from, to, tag}) => {
+	const v = window01(frame, from, to, 3);
+	const p = pop(frame, from, 9, 0.5);
+	return (
+		<TopZone>
+			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, opacity: v}}>
+				{tag}
+				<div style={{display: 'flex', alignItems: 'center', gap: 20, transform: `scale(${0.6 + 0.4 * p})`}}>
+					<Flame size={150} flicker={Math.sin(frame * 1.3)} />
+					<div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
+						<Display size={100}>Jiwa</Display>
+						<Display size={100} color={C.gold}>nak menang</Display>
+					</div>
+				</div>
+			</div>
+		</TopZone>
+	);
+};
+
+const Jiwa: React.FC<{frame: number}> = ({frame}) => {
+	if (frame >= T.jiwa1 && frame < T.jiwaEnd) {
+		const gol = frame >= T.tigaGol - 2 ? pop(frame, T.tigaGol - 2, 10, 0.5) : 0;
+		const tag = frame >= T.jiwa2 ? <Pill bg={C.red} style={{transform: `scale(${gol})`}}>Tinggal 3 biji gol pun</Pill> : <Pill bg={C.navySoft}>Mesti ada</Pill>;
+		return <JiwaCard frame={frame} from={T.jiwa1} to={T.jiwaEnd} tag={tag} />;
+	}
+	if (frame >= T.jiwa3 && frame < T.jiwa3End) {
+		return <JiwaCard frame={frame} from={T.jiwa3} to={T.jiwa3End} tag={<Pill bg={C.red} dot style={{transform: `scale(${pop(frame, T.jiwa3, 10)})`}}>Lawan!</Pill>} />;
+	}
+	return null;
+};
+
+// ---------------------------------------------------------------- 8. JANGAN GIVE UP stamp
 const GiveUp: React.FC<{frame: number}> = ({frame}) => {
 	if (frame < T.giveup || frame >= T.giveupEnd + 4) return null;
 	const k = pop(frame, T.giveup, 8, 0.8);
@@ -243,19 +347,20 @@ const GiveUp: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 7. sizing vs teknikal checklist
+// ---------------------------------------------------------------- 9. sizing / teknikal / tempo checklist
 const Teknikal: React.FC<{frame: number}> = ({frame}) => {
 	if (frame < T.teknikalSeg || frame >= T.teknikalEnd) return null;
 	const v = window01(frame, T.teknikalSeg, T.teknikalEnd, 4);
 	const rows: {tag: string; text: string; t: number; good: boolean; tick: number}[] = [
 		{tag: 'Sizing', text: 'Tak ada masalah', t: T.sizing - 4, good: false, tick: T.masalah},
 		{tag: 'Teknikal', text: 'Kita bagus', t: T.teknikal - 4, good: true, tick: T.bagus},
+		{tag: 'Tempo', text: 'Diorang laju, kita perlahan', t: T.laju - 6, good: false, tick: T.perlahan + 4},
 	];
 	return (
 		<TopZone style={{justifyContent: 'flex-start'}}>
-			<div style={{display: 'flex', flexDirection: 'column', gap: 14, width: 780, opacity: v}}>
-				<div style={{display: 'flex', alignItems: 'center', gap: 16, transform: `translateY(${(1 - pop(frame, T.teknikalSeg, 12)) * -40}px)`}}>
-					<Display size={70}>Jangan takut</Display>
+			<div style={{display: 'flex', flexDirection: 'column', gap: 12, width: 800, opacity: v}}>
+				<div style={{transform: `translateY(${(1 - pop(frame, T.teknikalSeg, 12)) * -40}px)`}}>
+					<Display size={60}>Jangan takut</Display>
 				</div>
 				{rows.map((r) => {
 					const k = frame >= r.t ? pop(frame, r.t, 12, 0.5) : 0;
@@ -265,19 +370,19 @@ const Teknikal: React.FC<{frame: number}> = ({frame}) => {
 							style={{
 								display: 'flex',
 								alignItems: 'center',
-								gap: 18,
-								height: 96,
-								padding: '0 24px',
+								gap: 16,
+								height: 78,
+								padding: '0 22px',
 								borderRadius: 16,
 								background: r.good ? C.gold : C.navySoft,
 								boxShadow: '0 10px 26px rgba(0,0,0,0.35)',
-								transform: `translateX(${(1 - k) * 820}px)`,
+								transform: `translateX(${(1 - k) * 840}px)`,
 								opacity: k > 0.02 ? 1 : 0,
 							}}
 						>
-							<span style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 26, letterSpacing: 2, textTransform: 'uppercase', padding: '6px 12px', borderRadius: 8, background: r.good ? C.navy : C.gold, color: r.good ? C.gold : C.navy}}>{r.tag}</span>
-							<span style={{flex: 1, fontFamily: FONT_UI, fontWeight: 900, fontSize: 46, color: r.good ? C.navy : C.white, textTransform: 'uppercase', whiteSpace: 'nowrap'}}>{r.text}</span>
-							<Check size={58} progress={easeIn(frame, r.tick, 8)} />
+							<span style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 24, letterSpacing: 2, textTransform: 'uppercase', padding: '6px 12px', borderRadius: 8, background: r.good ? C.navy : C.gold, color: r.good ? C.gold : C.navy}}>{r.tag}</span>
+							<span style={{flex: 1, fontFamily: FONT_UI, fontWeight: 900, fontSize: r.text.length > 18 ? 34 : 42, color: r.good ? C.navy : C.white, textTransform: 'uppercase', whiteSpace: 'nowrap'}}>{r.text}</span>
+							<Check size={52} progress={easeIn(frame, r.tick, 8)} />
 						</div>
 					);
 				})}
@@ -286,26 +391,29 @@ const Teknikal: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 8. LAWAN TETAP LAWAN -> EXTRA TIME
+// ---------------------------------------------------------------- 10. LAWAN TETAP LAWAN -> EXTRA TIME
 const Lawan: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.lawanSeg || frame >= T.extraEnd) return null;
-	const v = window01(frame, T.lawanSeg, T.extraEnd, 4);
-	const l1 = frame >= T.lawan1 ? pop(frame, T.lawan1, 9, 0.6) : 0;
-	const l2 = frame >= T.lawan2 ? pop(frame, T.lawan2, 8, 0.6) : 0;
+	if (frame < T.lawan0 || frame >= T.extraEnd) return null;
+	const v = window01(frame, T.lawan0, T.extraEnd, 4);
+	// Both words pop on their first say, then punch again on every repeat.
+	const hitsA = [T.l0a, T.lawan1].filter((h) => frame >= h);
+	const hitsB = [T.l0b, T.lawan2].filter((h) => frame >= h);
+	const a = hitsA.length ? pop(frame, hitsA[hitsA.length - 1], 9, 0.6) : 0;
+	const b = hitsB.length ? pop(frame, hitsB[hitsB.length - 1], 8, 0.6) : 0;
+	const sa = hitsA.length > 1 ? 1.25 - 0.25 * a : a;
+	const sb = hitsB.length > 1 ? 1.25 - 0.25 * b : b;
 	const inExtra = frame >= T.extraSeg;
 	const et = inExtra ? pop(frame, T.extra1 - 2, 9, 0.6) : 0;
 	const tarik = frame >= T.tarik ? pop(frame, T.tarik, 10, 0.5) : 0;
-	// Clock ticks toward the final minute, then flips to extra time.
-	const sec = Math.min(59, Math.floor(interpolate(frame, [T.lawanSeg, T.lawan2], [40, 59], clamp)));
 	return (
 		<TopZone>
 			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, opacity: v}}>
 				{!inExtra ? (
 					<>
-						<Pill bg={C.red} dot>Sampai minit terakhir · {`00:${String(sec).padStart(2, '0')}`}</Pill>
+						<Pill bg={C.red} dot style={{opacity: frame >= T.lawanSeg ? 1 : 0}}>Sampai 50 minit terakhir</Pill>
 						<div style={{display: 'flex', gap: 34, alignItems: 'baseline'}}>
-							<Display size={112} style={{transform: `scale(${l1})`}}>Lawan</Display>
-							<Display size={112} color={C.gold} style={{transform: `scale(${l2})`}}>tetap lawan</Display>
+							<Display size={112} style={{transform: `scale(${sa})`}}>Lawan</Display>
+							<Display size={112} color={C.gold} style={{transform: `scale(${sb})`}}>tetap lawan</Display>
 						</div>
 					</>
 				) : (
@@ -322,10 +430,11 @@ const Lawan: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 9. KITA MESTI ... ADA KAT FINAL + end card
+// ---------------------------------------------------------------- 11. KITA MESTI ... ADA KAT FINAL + end card
 const Climax: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.mesti) return null;
-	const a = pop(frame, T.mesti + 1, 10, 0.6);
+	if (frame < T.ada) return null;
+	const inMesti = frame >= T.mesti;
+	const a = pop(frame, inMesti ? T.mesti + 1 : T.ada + 1, 10, 0.6);
 	const inFinal = frame >= T.finalSeg;
 	const b = inFinal ? pop(frame, T.finalPay - 3, 7, 0.7) : 0;
 	const outro = easeIn(frame, T.outro, 10);
@@ -333,6 +442,7 @@ const Climax: React.FC<{frame: number}> = ({frame}) => {
 		<TopZone>
 			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, transform: `translateY(${-30 * outro}px)`}}>
 				<Display size={inFinal ? 80 : 150} style={{transform: `scale(${a})`, opacity: a}}>Kita mesti</Display>
+				{!inMesti ? <Pill bg={C.gold} color={C.navy} style={{transform: `scale(${a})`, fontSize: 34}}>Ada final</Pill> : null}
 				{inFinal ? (
 					<div style={{display: 'flex', alignItems: 'center', gap: 18, transform: `scale(${frame >= T.finalPay - 3 ? 1.5 - 0.5 * b : 0})`}}>
 						<Trophy size={104} glow={b} />
@@ -350,21 +460,23 @@ const Climax: React.FC<{frame: number}> = ({frame}) => {
 export const Graphics: React.FC = () => {
 	const frame = useCurrentFrame();
 	const sh = shake(frame, SHAKE_HITS, 10, 7);
-	// Hard mask at the TikTok/IG safe area (x 60-960, y 250-620): slide-ins and
+	// Hard mask at the TikTok/IG safe area (x 60-960, y 250-1440): slide-ins and
 	// pop overshoots reveal from inside it instead of crossing the platform UI.
 	return (
-		<AbsoluteFill style={{clipPath: 'inset(250px 120px 1300px 60px)'}}>
-		<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px)`}}>
-			<Hook frame={frame} />
-			<Pressure frame={frame} />
-			<Semifinal frame={frame} />
-			<KenaMenang frame={frame} />
-			<Jiwa frame={frame} />
-			<GiveUp frame={frame} />
-			<Teknikal frame={frame} />
-			<Lawan frame={frame} />
-			<Climax frame={frame} />
-		</AbsoluteFill>
+		<AbsoluteFill style={{clipPath: 'inset(250px 120px 480px 60px)'}}>
+			<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px)`}}>
+				<Hook frame={frame} />
+				<Harap frame={frame} />
+				<Pressure frame={frame} />
+				<Semifinal frame={frame} />
+				<RoadToFinal frame={frame} />
+				<KenaMenang frame={frame} />
+				<Jiwa frame={frame} />
+				<GiveUp frame={frame} />
+				<Teknikal frame={frame} />
+				<Lawan frame={frame} />
+				<Climax frame={frame} />
+			</AbsoluteFill>
 		</AbsoluteFill>
 	);
 };
