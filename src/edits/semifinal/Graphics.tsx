@@ -100,6 +100,27 @@ const Trophy: React.FC<{size: number; glow?: number}> = ({size, glow = 0}) => (
 	</svg>
 );
 
+/** Medal on a ribbon; gold or silver. */
+const Medal: React.FC<{size: number; metal: 'gold' | 'silver'}> = ({size, metal}) => {
+	const [hi, mid, lo] = metal === 'gold' ? ['#FFF1B8', C.gold, '#B87900'] : ['#FFFFFF', '#C9CED6', '#7D8590'];
+	const id = `m-${metal}`;
+	return (
+		<svg width={size} height={size * 1.25} viewBox="0 0 80 100" style={{filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.45))'}}>
+			<defs>
+				<radialGradient id={id} cx="35%" cy="30%" r="75%">
+					<stop offset="0%" stopColor={hi} />
+					<stop offset="55%" stopColor={mid} />
+					<stop offset="100%" stopColor={lo} />
+				</radialGradient>
+			</defs>
+			<path d="M22 0 L40 34 L58 0 L46 0 L40 14 L34 0 Z" fill={C.red} stroke={C.navy} strokeWidth="3" />
+			<circle cx="40" cy="64" r="30" fill={`url(#${id})`} stroke={C.navy} strokeWidth="4" />
+			<circle cx="40" cy="64" r="20" fill="none" stroke={lo} strokeWidth="3" />
+			<path d="M40 51 L44 60 L53 61 L46 67 L48 76 L40 71 L32 76 L34 67 L27 61 L36 60 Z" fill={hi} />
+		</svg>
+	);
+};
+
 /** Half-circle pressure gauge; `value` 0..1 (needle angle). */
 const Gauge: React.FC<{size: number; value: number}> = ({size, value}) => {
 	const a = Math.PI * (1 - value);
@@ -203,11 +224,11 @@ const Pressure: React.FC<{frame: number}> = ({frame}) => {
 					<Display size={92} style={{opacity: frame >= T.noMore ? 1 : 0.25}}>No more</Display>
 					<Display size={92} color={frame >= T.noMore ? C.green : C.red}>pressure</Display>
 					<div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-						{[C.gold, C.red, C.blue, C.white].map((col, i) => {
-							const k = frame >= T.warna - 2 + i * 3 ? pop(frame, T.warna - 2 + i * 3, 9, 0.4) : 0;
-							return <div key={col} style={{width: 34, height: 34, borderRadius: 17, background: col, border: `4px solid ${C.navy}`, transform: `scale(${k})`}} />;
+						{(['gold', 'silver'] as const).map((m, i) => {
+							const k = frame >= T.warna - 2 + i * 4 ? pop(frame, T.warna - 2 + i * 4, 9, 0.5) : 0;
+							return <div key={m} style={{transform: `scale(${k}) rotate(${(1 - k) * (i ? 30 : -30)}deg)`}}><Medal size={66} metal={m} /></div>;
 						})}
-						<span style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 24, letterSpacing: 2, color: C.white, textTransform: 'uppercase', opacity: frame >= T.warna ? 1 : 0, textShadow: `0 3px 0 ${C.navy}`}}>Pilih lah warna apa</span>
+						<span style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 24, letterSpacing: 2, color: C.white, textTransform: 'uppercase', opacity: frame >= T.warna ? 1 : 0, textShadow: `0 3px 0 ${C.navy}`}}>Pingat emas atau perak</span>
 					</div>
 				</div>
 			</div>
