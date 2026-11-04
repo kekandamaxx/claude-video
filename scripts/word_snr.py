@@ -1,9 +1,12 @@
 """Per-word masking check: for every kept word, voice energy vs (music + sfx)
-energy over the word's own span in the rendered stems. Flags words < 8 dB."""
-import json, wave, numpy as np, sys
+energy over the word's own span in the rendered stems. Flags words < 8 dB.
+Usage: python3 scripts/word_snr.py <edit-id> <Composition>   (run scripts/stems.sh first)"""
+import json, re, wave, numpy as np, sys
 FPS = 30
-SEGS = [('hook', 8.72, 14.4), ('fiveMin', 0.0, 1.14), ('syamil', 20.04, 26.24), ('lineup', 31.0, 33.56), ('last3', 34.56, 42.83)]
-tr = json.load(open('src/data/transcript.json'))
+EDIT, COMP = sys.argv[1], sys.argv[2]
+src = open(f'src/edits/{EDIT}/edl.ts').read()
+SEGS = [(m[0], float(m[1]), float(m[2])) for m in re.findall(r"id: '(\w+)', srcStart: ([\d.]+), srcEnd: ([\d.]+)", src)]
+tr = json.load(open(f'src/edits/{EDIT}/transcript.json'))
 words, out = [], 0
 for _, a, b in SEGS:
     f0 = round(a * FPS); ln = round(b * FPS) - f0
@@ -15,7 +18,7 @@ for _, a, b in SEGS:
 def load(p):
     w = wave.open(p); x = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32) / 32768
     return x.reshape(-1, w.getnchannels()).mean(1), w.getframerate()
-v, sr = load('out/stem_voice.wav'); m, _ = load('out/stem_music.wav'); s, _ = load('out/stem_sfx.wav')
+v, sr = load(f'out/{COMP}/stem_voice.wav'); m, _ = load(f'out/{COMP}/stem_music.wav'); s, _ = load(f'out/{COMP}/stem_sfx.wav')
 e = lambda x: 10 * np.log10((x ** 2).mean() + 1e-12)
 low = 0; rows = []
 for txt, a, b in sorted(words, key=lambda r: r[1]):

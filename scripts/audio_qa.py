@@ -2,12 +2,13 @@
 For every 100 ms window where the voice stem is active, report how far the
 voice sits above music+sfx. Target: >= 10 dB (speech intelligibility margin)."""
 import sys, wave, numpy as np
+COMP = sys.argv[1] if len(sys.argv) > 1 else 'TimeoutEdit'
 
 def load(p):
     w = wave.open(p); a = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32) / 32768
     return a.reshape(-1, w.getnchannels()).mean(1), w.getframerate()
 
-v, sr = load('out/stem_voice.wav'); m, _ = load('out/stem_music.wav'); s, _ = load('out/stem_sfx.wav')
+v, sr = load(f'out/{COMP}/stem_voice.wav'); m, _ = load(f'out/{COMP}/stem_music.wav'); s, _ = load(f'out/{COMP}/stem_sfx.wav')
 n = min(len(v), len(m), len(s)); hop = sr // 10; k = n // hop
 def db(x): return 10 * np.log10((x[:k * hop].reshape(k, hop) ** 2).mean(1) + 1e-10)
 dv, dm, ds = db(v), db(m), db(s); bed = 10 * np.log10(10 ** (dm / 10) + 10 ** (ds / 10))

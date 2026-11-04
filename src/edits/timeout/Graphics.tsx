@@ -1,9 +1,11 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
-import {at, CUT_END, seg, TOTAL_FRAMES} from '../lib/edl';
-import {C, FONT_DISPLAY, FONT_UI} from '../lib/theme';
-import {clamp, easeIn, pop, shake, window01} from '../lib/anim';
-import {Ball, Check, Display, Pill, RotateIcon, TopZone} from './ui';
+import {EDL} from './edl';
+import {C, FONT_DISPLAY, FONT_UI} from '../../lib/theme';
+import {clamp, easeIn, pop, shake, window01} from '../../lib/anim';
+import {Ball, Check, Display, Pill, RotateIcon, TopZone} from '../../components/ui';
+
+const {at, seg} = EDL;
 
 // ---------------------------------------------------------------- key moments
 export const T = {
@@ -36,8 +38,8 @@ export const T = {
 	come1: at('last3', 41.28),
 	come2: at('last3', 41.84),
 	come3: at('last3', 42.5),
-	outro: CUT_END,
-	end: TOTAL_FRAMES,
+	outro: EDL.cutEnd,
+	end: EDL.totalFrames,
 };
 
 /** Frames where the camera and top graphics shake. */
