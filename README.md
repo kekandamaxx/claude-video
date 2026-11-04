@@ -5,7 +5,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | Composition | Source | Raw → cut | Status |
 |---|---|---|---|
 | `TimeoutEdit` | `IMG_7678.MOV`, handball timeout talk | 42.9 s → 25.0 s | final delivered, all corrections confirmed |
-| `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | v2 preview awaiting approval |
+| `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 
 ## Layout
 
@@ -70,7 +70,7 @@ Not used: 1.0–5.6 ("so/nak tak nak", the onset is unclear), 15.0–16.4, 20.8�
 
 QA results: `qa:faces` gives 0 of 1370 frames with an overlay on a face and 0 outside the safe area. `word_snr` gives 122 words with a median of 14.9 dB and a minimum of 8.2 dB. The preview master is at −13.9 LUFS.
 
-To confirm: "Kena tinggal ada 3 biji gol". The second ASR pass heard "tinggal tu", and the graphic reads "Tinggal 3 biji gol pun".
+Confirmed by the coach: "Kena tinggal ada 3 biji gol", shown on the graphic as "Tinggal 3 biji gol pun".
 
 ## TimeoutEdit: edit decisions (final)
 
