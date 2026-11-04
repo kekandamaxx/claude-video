@@ -50,7 +50,7 @@ The coach asked for 45–50 s, and for the rhetorical repeats to stay ("kena men
 |---|---|---|
 | 1 | 52.24–54.84 | **HOOK** Dua tahun berturut-turut berada di final. Tak semua orang boleh buat. |
 | 2 | 17.24–20.72 | Aku memang berharap yang terbaik, duduk di final. |
-| 3 | 23.36–27.40 | Korang pilih nak menang apa dah. Final tu, no more pressure. |
+| 3 | 23.36–27.40 | Korang pilih lah nak warna apa dah. Final tu, no more pressure. (coach's correction; ASR heard "pilih nak menang apa dah") |
 | 4 | 29.10–31.46 | Tetapi untuk game kali ni, semifinal kali ni, |
 | 5 | 32.58–33.80, 34.60–35.50 | Kita mesti masuk final. Kita mesti ada di final. (0.8 s pause cut) |
 | 6 | 59.50–63.94 | Nak tak nak, kita tetap kena menang. Buatlah macam mana cara sekalipun. |

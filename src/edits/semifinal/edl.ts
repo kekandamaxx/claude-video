@@ -20,7 +20,7 @@ const ABOVE = 765;
 const DEFS: SegmentDef[] = [
 	{id: 'hook', srcStart: 52.24, srcEnd: 54.84, zoomFrom: 1.0, zoomTo: 1.05, captionY: BELOW, zoomOriginY: 889, note: 'HOOK "Dua tahun berturut-turut berada di final. Tak semua orang boleh buat."'},
 	{id: 'harap', srcStart: 17.24, srcEnd: 20.72, zoomFrom: 1.0, zoomTo: 1.04, captionY: ABOVE, zoomOriginY: 1220, note: '"Aku memang berharap yang terbaik, duduk di final."'},
-	{id: 'pressure', srcStart: 23.36, srcEnd: 27.4, zoomFrom: 1.02, zoomTo: 1.06, captionY: ABOVE, zoomOriginY: 1111, note: '"Korang pilih nak menang apa dah. Final tu, no more pressure."'},
+	{id: 'pressure', srcStart: 23.36, srcEnd: 27.4, zoomFrom: 1.02, zoomTo: 1.06, captionY: ABOVE, zoomOriginY: 1111, note: '"Korang pilih lah nak warna apa dah. Final tu, no more pressure."'},
 	{id: 'semifinal', srcStart: 29.1, srcEnd: 31.46, zoomFrom: 1.0, zoomTo: 1.05, captionY: ABOVE, zoomOriginY: 1218, note: '"Tetapi untuk game kali ni, semifinal kali ni,"'},
 	{id: 'masuk1', srcStart: 32.58, srcEnd: 33.8, zoomFrom: 1.03, zoomTo: 1.05, captionY: ABOVE, zoomOriginY: 1208, note: '"Kita mesti masuk final."'},
 	{id: 'masuk2', srcStart: 34.6, srcEnd: 35.5, zoomFrom: 1.07, zoomTo: 1.08, captionY: ABOVE, zoomOriginY: 1140, note: '"Kita mesti ada di final." (0.8 s pause removed before it)'},
@@ -57,5 +57,8 @@ export const EDL = createEdl({
 		{s: 5.5, e: 5.51, text: 'KITA', start: 5.99, end: 6.36},
 		{s: 8.22, e: 8.23, text: 'JIWA', start: 8.55, end: 8.84},
 		{s: 65.6, e: 65.61, text: 'LAWAN', start: 65.76, end: 66.16},
+		// Coach's correction: "korang pilih lah nak warna apa dah" (ASR: "pilih nak menang apa dah").
+		{s: 24.0, e: 24.01, text: 'PILIH LAH'},
+		{s: 24.44, e: 24.45, text: 'WARNA'},
 	],
 });

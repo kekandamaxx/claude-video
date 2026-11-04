@@ -20,6 +20,7 @@ export const T = {
 	harapFinal: at('harap', 20.42),
 	harapEnd: segEnd('harap'),
 	pressure: start('pressure'),
+	warna: at('pressure', 24.44),
 	finalTu: at('pressure', 25.06),
 	noMore: at('pressure', 26.42),
 	pressureEnd: segEnd('pressure'),
@@ -201,6 +202,13 @@ const Pressure: React.FC<{frame: number}> = ({frame}) => {
 					<Pill bg={C.gold} color={C.navy} style={{opacity: frame >= T.finalTu - 2 ? 1 : 0.35}}>Bila dah final</Pill>
 					<Display size={92} style={{opacity: frame >= T.noMore ? 1 : 0.25}}>No more</Display>
 					<Display size={92} color={frame >= T.noMore ? C.green : C.red}>pressure</Display>
+					<div style={{display: 'flex', alignItems: 'center', gap: 10}}>
+						{[C.gold, C.red, C.blue, C.white].map((col, i) => {
+							const k = frame >= T.warna - 2 + i * 3 ? pop(frame, T.warna - 2 + i * 3, 9, 0.4) : 0;
+							return <div key={col} style={{width: 34, height: 34, borderRadius: 17, background: col, border: `4px solid ${C.navy}`, transform: `scale(${k})`}} />;
+						})}
+						<span style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 24, letterSpacing: 2, color: C.white, textTransform: 'uppercase', opacity: frame >= T.warna ? 1 : 0, textShadow: `0 3px 0 ${C.navy}`}}>Pilih lah warna apa</span>
+					</div>
 				</div>
 			</div>
 		</TopZone>

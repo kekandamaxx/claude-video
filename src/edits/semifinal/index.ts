@@ -80,7 +80,7 @@ export const semifinalEdit: EditConfig = {
 	},
 	captionY: 1290,
 	zoomOriginY: 1000,
-	captionKeys: new Set(['DUA', 'TAHUN', 'BERTURUT-TURUT', 'FINAL', 'TERBAIK', 'PILIH', 'NO', 'MORE', 'PRESSURE', 'SEMIFINAL', 'MASUK', 'MENANG', 'SEKALIPUN', 'JIWA', '3', 'GOL', 'GIVE', 'UP', 'SIZING', 'MASALAH', 'TEKNIKAL', 'BAGUS', 'LAJU', 'PERLAHAN', 'LAWAN', '50', 'TERAKHIR', 'EXTRA', 'TIME', 'MESTI']),
+	captionKeys: new Set(['DUA', 'TAHUN', 'BERTURUT-TURUT', 'FINAL', 'TERBAIK', 'WARNA', 'NO', 'MORE', 'PRESSURE', 'SEMIFINAL', 'MASUK', 'MENANG', 'SEKALIPUN', 'JIWA', '3', 'GOL', 'GIVE', 'UP', 'SIZING', 'MASALAH', 'TEKNIKAL', 'BAGUS', 'LAJU', 'PERLAHAN', 'LAWAN', '50', 'TERAKHIR', 'EXTRA', 'TIME', 'MESTI']),
 	captionAutoFit: true,
 	Graphics,
 	shakeHits: SHAKE_HITS,
