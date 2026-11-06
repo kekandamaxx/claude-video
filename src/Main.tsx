@@ -51,7 +51,7 @@ export const makeMain = (edit: EditConfig): React.FC<MainProps> => {
 		return (
 			<EditProvider edit={edit}>
 				<AbsoluteFill style={{background: '#000'}}>
-					<VideoLayer src={preview ? edit.media.proxy : edit.media.master} guides={guides} />
+					<VideoLayer src={preview ? edit.media.proxy : edit.media.master} guides={guides} preview={preview} />
 					<CutFlash />
 					<G />
 					<Captions />

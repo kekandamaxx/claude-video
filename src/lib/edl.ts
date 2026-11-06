@@ -16,8 +16,17 @@ export type SegmentDef = {
 	captionY?: number;
 	/** Zoom pivot (px from top); defaults to the edit's face-band centre. */
 	zoomOriginY?: number;
+	/** Picture from another source while the dialogue keeps running (J/L-cuts, B-roll, stills).
+	 *  Without it the picture comes from the edit's main clip at srcStart. */
+	visual?: Visual;
+	/** false = no dialogue (and no captions) in this segment; srcStart/srcEnd then only set its length. */
+	voice?: boolean;
 	note: string;
 };
+
+export type Visual =
+	| {kind: 'video'; master: string; proxy: string; srcStart: number}
+	| {kind: 'image'; src: string};
 
 export type Segment = SegmentDef & {srcFrom: number; len: number; outFrom: number};
 export type Word = {text: string; from: number; to: number; segId: string};
@@ -84,6 +93,7 @@ export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix
 
 	const raw: Chunk[] = [];
 	for (const s of segments) {
+		if (s.voice === false) continue;
 		for (const ts of transcript.segments) {
 			const words: Word[] = applyMerges(ts.words)
 				.filter((w) => w.s >= s.srcStart - 0.05 && w.e <= s.srcEnd + 0.1)

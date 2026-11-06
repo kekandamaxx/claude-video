@@ -73,17 +73,24 @@ export const AudioLayer: React.FC<{music: boolean; sfx: boolean; voice: boolean}
 	return (
 		<>
 			{voice
-				? e.edl.segments.map((s) => (
-						<Sequence key={s.id} from={s.outFrom} durationInFrames={s.len} name={`voice:${s.id}`} layout="none">
-							<Audio
-								src={staticFile(e.media.voice)}
-								trimBefore={s.srcFrom}
-								trimAfter={s.srcFrom + s.len}
-								// 2-frame fades hide clicks and room-tone jumps at each cut.
-								volume={(f) => interpolate(f, [0, 2, s.len - 2, s.len], [0, 1, 1, 0], clamp) * (e.voiceGain ? e.voiceGain(s.outFrom + f) : 1)}
-							/>
-						</Sequence>
-					))
+				? e.edl.segments.map((s, i, all) => {
+						if (s.voice === false) return null;
+						// Dialogue that runs on across a picture-only cut (B-roll / stills) is not faded.
+						const joins = (a?: (typeof all)[number], b?: (typeof all)[number]) => !!a && !!b && a.voice !== false && b.voice !== false && a.srcFrom + a.len === b.srcFrom;
+						const fin = joins(all[i - 1], s) ? 0.01 : 2;
+						const fout = joins(s, all[i + 1]) ? 0.01 : 2;
+						return (
+							<Sequence key={s.id} from={s.outFrom} durationInFrames={s.len} name={`voice:${s.id}`} layout="none">
+								<Audio
+									src={staticFile(e.media.voice)}
+									trimBefore={s.srcFrom}
+									trimAfter={s.srcFrom + s.len}
+									// 2-frame fades hide clicks and room-tone jumps at each real cut.
+									volume={(f) => interpolate(f, [0, fin, s.len - fout, s.len], [fin < 1 ? 1 : 0, 1, 1, fout < 1 ? 1 : 0], clamp) * (e.voiceGain ? e.voiceGain(s.outFrom + f) : 1)}
+								/>
+							</Sequence>
+						);
+					})
 				: null}
 			{music ? <Audio src={staticFile(e.media.music)} trimBefore={e.media.musicTrimFrames} volume={(f) => mix.music[Math.min(f, total - 1)]} /> : null}
 			{sfx ? e.cues.map((c, i) => <SfxCue key={i} cue={c} speechEnv={mix.speechEnv} total={total} bus={e.sfxBus} />) : null}

@@ -7,6 +7,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `TimeoutEdit` | `IMG_7678.MOV`, handball timeout talk | 42.9 s → 25.0 s | final delivered, all corrections confirmed |
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
+| `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | preview awaiting approval |
 
 ## Layout
 
@@ -42,6 +43,28 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## VivaEdit: edit decisions (21.1 s)
+
+Sources: a taste-test clip (the dialogue track), a 3.8 s pallet pan, and three stills of the Viva! pomegranate bottle. These are 478×850 and 720×1280 phone exports, upscaled with lanczos and a light unsharp (`scripts/prepare_viva.sh`). The music is Mixkit "Sounds Good", an upbeat track with only 18% of its energy in the voice band. Segments can now carry a `visual` (B-roll or still) while the dialogue runs on underneath (a J-cut). Dialogue that runs across a picture-only cut is not faded.
+
+| # | Picture | Dialogue (source time) |
+|---|---|---|
+| 1 | talk | **HOOK** sip, then "MasyaAllah" (4.60–6.62) |
+| 2 | talk | Awak pernah rasa tak? Selalu guava kita Malaysia warna apa? Warna pink kan? Tapi guava dia Mesir, ni colour dia. (7.36–12.84) |
+| 3 | talk | Tapi dia punya pekat, dia punya sedap tu. Ya Allah, memang sedap sangat. (13.30–16.60; 0.45 s pause cut) |
+| 4 | talk | Dia pekat, berapa persen ada dalam ni? (19.56–20.80; starts on the real onset) |
+| 5 | talk | 25… 25 persen. (22.22–23.80) |
+| 6 | pallet B-roll | Tak sabar akak nak promo kat korang (26.10–28.70) |
+| 7 | crates still | semua yang best-best (28.70–30.00) |
+| 8 | bottle still | …ni (30.00–30.90) |
+| 9 | bottle still + end card | Tunggu-tunggu (31.46–32.46) |
+
+Not used: "Dah dah bangun?" (off-mic), "Nak ni", "Memang sangat sedap guys" (it repeats "memang sedap sangat", and the camera whips to a second person's face) and the trailing "okay".
+
+The face data has four false detections removed: hands and the bottle cap below the chest. Real faces in this clip stay above y 900. QA results: 0 of 632 frames with an overlay on a face or outside the safe area. 58 words with a median of 18.7 dB and a minimum of 9.2 dB.
+
+To confirm: "Mesir" (ASR heard "mesin"), "akak" (ASR heard "kat akhir"), who says "25 persen" and what the 25% refers to, and whether the guava drink is a Viva! product. The graphics name Viva! only on the pomegranate stills. The added texts "Uji rasa" and "Promo akan datang" also need checking.
 
 ## BriefingEdit: edit decisions (18.6 s)
 
