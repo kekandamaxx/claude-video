@@ -4,6 +4,7 @@ import {makeMain, mainSchema} from './Main';
 import {FPS, HEIGHT, WIDTH} from './lib/edl';
 import {timeoutEdit} from './edits/timeout';
 import {semifinalEdit} from './edits/semifinal';
+import {briefingEdit} from './edits/briefing';
 
 const defaults = {preview: true, guides: false, music: true, sfx: true, voice: true};
 
@@ -11,6 +12,7 @@ const defaults = {preview: true, guides: false, music: true, sfx: true, voice: t
 const EDITS = [
 	{id: 'TimeoutEdit', edit: timeoutEdit},
 	{id: 'SemifinalEdit', edit: semifinalEdit},
+	{id: 'BriefingEdit', edit: briefingEdit},
 ];
 
 const COMPONENTS = EDITS.map((x) => ({...x, component: makeMain(x.edit)}));

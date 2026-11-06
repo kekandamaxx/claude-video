@@ -6,6 +6,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 |---|---|---|---|
 | `TimeoutEdit` | `IMG_7678.MOV`, handball timeout talk | 42.9 s → 25.0 s | final delivered, all corrections confirmed |
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
+| `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 
 ## Layout
 
@@ -41,6 +42,28 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## BriefingEdit: edit decisions (18.6 s)
+
+Two Whisper passes agree on every kept line. Faces sit low in this clip (y ≥ 998), so the captions use the band above the faces throughout. The music under speech is 2 dB lower than in the other edits because the delivery is quieter.
+
+| # | Source time | Speech |
+|---|---|---|
+| 1 | 10.60–12.82 | **HOOK** (cold open) Jangan beritahu. Dah banyak kali dah. |
+| 2 | 3.28–6.14 | Sekarang ni, bila dia siku-siku, kau panggil dia, "Man, Coach!" |
+| 3 | 7.58–9.36 | Biar kita orang ni yang beritahu. |
+| 4 | 13.78–17.36 | Nanti TD akan gaduh dekat. Nanti TD akan panggil dia. |
+| 5 | 20.20–21.42 | Sikit lagi, sikit lagi. |
+| 6 | 21.54–24.18 | Kau tak pernah pun main macam itu. Kau tak tahu kenapa. |
+| 7 | 24.62–25.52 | Kau akan tanya dia. |
+| 8 | 26.68–27.52 | Kena juga. |
+| 9 | 28.32–29.48 | Biasanya dia panggil macam ini. |
+
+Not used: 0.00–2.00 ("kau orang punya sikit karek, mana-mana kali lah", unclear) and a hallucinated line at 30.0 s (confidence 0.00).
+
+QA results: 0 of 558 frames with an overlay on a face or outside the safe area. 59 words with a median of 16.2 dB and a minimum of 9.4 dB.
+
+To confirm: "TD" (ASR heard "TDI"), "Man, Coach!", "gaduh dekat", and the end-card tagline "Biar coach cakap".
 
 ## SemifinalEdit: edit decisions (v2, 45.7 s)
 
