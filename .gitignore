@@ -4,3 +4,5 @@ out/
 # Mixkit assets are licensed for use in videos, not for redistribution as files).
 public/
 *.MOV
+# Friendship tribute: personal photos stay out of git (drop them here, then run scripts/prepare_friendship.sh).
+assets/friendship/photos/

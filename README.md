@@ -7,6 +7,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `TimeoutEdit` | `IMG_7678.MOV`, handball timeout talk | 42.9 s → 25.0 s | final delivered, all corrections confirmed |
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
+| `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | preview awaiting approval |
 
 ## Layout
@@ -142,3 +143,33 @@ Corrections confirmed by the coach are applied in `src/edits/timeout/edl.ts` (`f
 - "nasib baik kita pun ada" → "nasib baik **keeper** ada".
 - Confirmed as written: "2 aku tu keluarkan", "0 GOL", and the end card "UMPSA Handball · Last 3 minutes".
 - The closing "Ok / Come on" gets a +5 dB clip gain because it was recorded quieter.
+
+## FriendshipTribute: "A Friendship to Remember" (1920×1080, 30 fps, 2:52)
+
+A cinematic photo tribute. It is separate from the 9:16 coach-talk template and has its own code in `src/edits/friendship/`.
+
+```bash
+# 1. put the photos in assets/friendship/photos/ (jpg/png/webp; this folder is git-ignored)
+npm run prepare:friendship     # scan + faces + working copies + music + grain -> public/friendship/, photos.json
+npm run qa:friendship          # coverage, assets, face-safe framing per frame; EXPECTED_PHOTOS=31 to enforce a count
+npm run studio                 # preview; all on-screen text is editable as props
+npm run render:friendship      # -> out/FriendshipTribute/A-Friendship-to-Remember.mp4 (-14 LUFS, -1 dBTP)
+```
+
+| File | Role |
+|---|---|
+| `story.ts` | everything editable: scene order, photo per scene, motion, transitions, timings, text, grade, music |
+| `timeline.ts` | builds the clip list; throws on an unknown or duplicated photo; unlisted photos go to the journey scene |
+| `framing.ts` | face-safe Ken Burns: a window may never cut a protected face box (faces + headwear + chin) |
+| `PhotoShot.tsx` | one photo: cover moves, or the whole photo framed on its own blurred copy with parallax |
+| `FilmLook.tsx` | grade overlays, vignette, grain, flicker, dust, light leaks / film burn, bokeh |
+| `Typography.tsx` | word-by-word serif reveal (Cormorant Garamond italic), gold rule, spaced caps |
+| `scripts/friendship_scan.py` | YuNet face boxes, duplicate check, lanczos working copies, pre-blurred backdrops |
+
+Photos are only upscaled with lanczos into `public/`; the originals are never modified. If a photo is portrait, has faces too close to the edge, or would need more than 2.15× upscaling to fill the frame, it is shown whole on its own blurred backdrop and never cropped.
+
+Story (cut to the music): Opening 0–10 s → Beginning 10–44 s (boardroom, China trip) → Laughter 44–78 s (faster drift transitions) → Journey 78–119 s (strings enter; hospital and grave visits fall on the breakdown) → Appreciation 119–145 s (climax; the two big group photos with the thank-you lines) → Ending 145–172 s (closing lines, fade to black, "Some memories last forever.").
+
+Music: "We Will Get It" by Eugenio Mininni (Mixkit, free licence for use in videos; downloaded by the prep script and not committed). There is one beat-aligned cut, 97.45 s → 174.59 s, so the climax lands at 119 s. To use other music, put it at `public/friendship/music.wav` and adjust `MUSIC` in `story.ts`.
+
+Adding photos (the brief named 31; 16 were supplied): copy them into the folder and re-run `prepare:friendship`. Any photo `story.ts` does not list goes to the Journey scene. A scene grows when it would give a photo less than its `minHold`, and that also moves the later music sync points, so place the new photos in `story.ts` and check the timing in the Studio.
