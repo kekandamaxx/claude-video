@@ -12,7 +12,7 @@
     "qa:audio": "scripts/stems.sh ${COMP:-SemifinalEdit} && python3 scripts/word_snr.py ${EDIT:-semifinal} ${COMP:-SemifinalEdit} && python3 scripts/audio_qa.py ${COMP:-SemifinalEdit}",
     "typecheck": "tsc --noEmit",
     "prepare:friendship": "scripts/prepare_friendship.sh",
-    "qa:friendship": "esbuild scripts/friendship_qa.ts --bundle --platform=node --log-level=warning --outfile=out/.qa/friendship_qa.js && node out/.qa/friendship_qa.js",
+    "qa:friendship": "esbuild scripts/friendship_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/friendship_qa.js && node out/.qa/friendship_qa.js",
     "render:friendship": "scripts/render_friendship.sh"
   },
   "dependencies": {

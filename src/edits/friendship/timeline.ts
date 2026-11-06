@@ -1,3 +1,4 @@
+import beatsJson from './beats.json';
 import manifest from './photos.json';
 import {Layout, Motion, REMAINDER_SCENE, SCENES, SceneSpec, ShotSpec, TextKey, Transition} from './story';
 
@@ -10,27 +11,44 @@ export type Photo = {id: string; file: string; src: string; bg: string; width: n
 
 export type Clip = {
 	index: number;
-	photo: Photo;
+	photos: Photo[]; // 1 photo, or 2 for a side-by-side pair
 	scene: SceneSpec['key'];
-	/** Frames the clip is on screen (includes the transition overlaps). */
+	/** Frames on screen (including the transition overlaps and any hold into the next scene). */
 	from: number;
 	to: number;
-	/** The clip's own slot (no overlaps). */
+	/** The shot's own slot, downbeat to downbeat. */
 	slotFrom: number;
 	slotTo: number;
 	inT: {type: Transition; frames: number};
 	outT: {type: Transition; frames: number};
 	motion: Motion;
 	layout: Layout;
+	/** Frame the second photo of a pair starts to appear. */
+	pairFrom?: number;
 	text?: {key: TextKey; from: number; to: number};
+	/** Held into the ending: dims from slotTo. */
+	held: boolean;
 };
 
-export type SceneRange = {key: SceneSpec['key']; title: string; from: number; to: number};
+export type SceneRange = {key: SceneSpec['key']; title: string; from: number; to: number; fromBar: number};
 export type TransitionEvent = {type: Transition; from: number; frames: number};
 
-const f = (s: number) => Math.round(s * FPS);
+/** Downbeat grid of the soundtrack. Bars past the end of the track are extrapolated. */
+const GRID = beatsJson as {beat: number; downbeats: number[]};
+export const BEAT = GRID.beat;
+export const barTime = (bar: number) => {
+	const d = GRID.downbeats;
+	const i = Math.floor(bar);
+	const frac = bar - i;
+	const at = (k: number) => (k < d.length ? d[k] : d[d.length - 1] + (k - d.length + 1) * BEAT * 4);
+	return at(i) + frac * (at(i + 1) - at(i));
+};
+export const barFrame = (bar: number) => Math.round(barTime(bar) * FPS);
+export const beatsToFrames = (beats: number) => Math.round(beats * BEAT * FPS);
 
 export const PHOTOS: Photo[] = (manifest as {photos: Photo[]}).photos;
+
+const shotIds = (s: ShotSpec) => (s.pair ? [s.id, s.pair] : [s.id]);
 
 /** Scene specs with every manifest photo assigned exactly once (throws on unknown / duplicate ids). */
 export const resolveScenes = (scenes: SceneSpec[] = SCENES, photos: Photo[] = PHOTOS): SceneSpec[] => {
@@ -38,12 +56,14 @@ export const resolveScenes = (scenes: SceneSpec[] = SCENES, photos: Photo[] = PH
 	const seen = new Map<string, string>();
 	for (const s of scenes) {
 		for (const shot of s.shots) {
-			if (!known.has(shot.id)) throw new Error(`story.ts: scene "${s.key}" lists "${shot.id}", which is not in photos.json`);
-			if (seen.has(shot.id)) throw new Error(`story.ts: "${shot.id}" is used in "${seen.get(shot.id)}" and "${s.key}"`);
-			seen.set(shot.id, s.key);
+			for (const id of shotIds(shot)) {
+				if (!known.has(id)) throw new Error(`story.ts: scene "${s.key}" lists "${id}", which is not in photos.json`);
+				if (seen.has(id)) throw new Error(`story.ts: "${id}" is used in "${seen.get(id)}" and "${s.key}"`);
+				seen.set(id, s.key);
+			}
 		}
 	}
-	const rest: ShotSpec[] = photos.filter((p) => !seen.has(p.id)).map((p) => ({id: p.id, motion: 'auto'}));
+	const rest: ShotSpec[] = photos.filter((p) => !seen.has(p.id)).map((p) => ({id: p.id, bars: 2, motion: 'auto'}));
 	return scenes.map((s) => (s.key === REMAINDER_SCENE ? {...s, shots: [...s.shots, ...rest]} : s));
 };
 
@@ -54,55 +74,58 @@ export const buildTimeline = (scenes: SceneSpec[] = resolveScenes()) => {
 	const clips: Clip[] = [];
 	const ranges: SceneRange[] = [];
 	const transitions: TransitionEvent[] = [];
-	let t = 0; // seconds
+	let bar = 0;
 	let autoIdx = 0;
-	for (let si = 0; si < scenes.length; si++) {
-		const s = scenes[si];
-		const n = s.shots.length;
-		const seconds = Math.max(s.seconds, n * s.minHold);
-		const from = f(t);
-		const to = f(t + seconds);
-		ranges.push({key: s.key, title: s.title, from, to});
-		const slot = seconds / Math.max(1, n);
-		s.shots.forEach((shot, i) => {
-			const isFirst = i === 0;
-			const inT = isFirst && s.entry ? {type: s.entry.transition, frames: f(s.entry.seconds)} : {type: s.transition, frames: f(s.transitionSeconds)};
-			const slotFrom = f(t + i * slot);
-			const slotTo = f(t + (i + 1) * slot);
-			const photo = byId.get(shot.id)!;
+	for (const s of scenes) {
+		const fromBar = bar;
+		if (!s.shots.length) {
+			bar += s.bars ?? 0;
+		}
+		for (const shot of s.shots) {
+			const type = shot.transition ?? s.transition;
+			const frames = beatsToFrames(shot.transitionBeats ?? s.transitionBeats);
+			const slotFrom = barFrame(bar);
+			const slotTo = barFrame(bar + shot.bars);
 			const motion = shot.motion && shot.motion !== 'auto' ? shot.motion : AUTO_MOTIONS[autoIdx++ % AUTO_MOTIONS.length];
+			const beatF = (b: number) => slotFrom + beatsToFrames(b);
 			clips.push({
 				index: clips.length,
-				photo,
+				photos: shotIds(shot).map((id) => byId.get(id)!),
 				scene: s.key,
-				from: slotFrom - Math.floor(inT.frames / 2),
-				to: slotTo, // extended below once the next clip's transition is known
+				from: slotFrom - Math.floor(frames / 2),
+				to: slotTo,
 				slotFrom,
 				slotTo,
-				inT,
-				outT: {type: 'toBlack', frames: f(1.5)},
+				inT: {type, frames},
+				outT: {type: 'toBlack', frames: beatsToFrames(2)},
 				motion,
 				layout: shot.layout ?? 'auto',
-				text: shot.text ? {key: shot.text.key, from: slotFrom + f(shot.text.inAt), to: slotFrom + f(shot.text.outAt)} : undefined,
+				pairFrom: shot.pair ? beatF(shot.pairDelayBeats ?? 4) : undefined,
+				text: shot.text ? {key: shot.text.key, from: beatF(shot.text.inBeat), to: beatF(shot.text.outBeat)} : undefined,
+				held: !!shot.holdBars,
 			});
-			if (inT.type === 'lightLeak' || inT.type === 'filmBurn') transitions.push({type: inT.type, from: slotFrom - Math.floor(inT.frames / 2), frames: inT.frames});
-		});
-		t += seconds;
+			if (type === 'lightLeak' || type === 'filmBurn') transitions.push({type, from: slotFrom - Math.floor(frames / 2), frames});
+			bar += shot.bars;
+			if (shot.holdBars) clips[clips.length - 1].to = barFrame(bar + shot.holdBars);
+		}
+		ranges.push({key: s.key, title: s.title, from: barFrame(fromBar), to: barFrame(bar), fromBar});
 	}
-	// Outgoing side of each cut: the next clip's in-transition (or a fade to black for the last photo).
+	// Outgoing side of each cut: the next shot's transition, or a fade to black.
 	for (let i = 0; i < clips.length; i++) {
-		const next = clips[i + 1];
 		const c = clips[i];
+		const next = clips[i + 1];
+		if (c.held) {
+			c.outT = {type: 'toBlack', frames: beatsToFrames(4)};
+			continue; // `to` already set by holdBars; the ending scene controls its fade
+		}
 		if (next && next.slotFrom === c.slotTo) {
 			c.outT = next.inT.type === 'fadeFromBlack' ? {type: 'toBlack', frames: next.inT.frames} : next.inT;
 		} else {
-			// Followed by a text scene: use that scene's transition length (fade to black).
-			const nextScene = scenes.find((s) => ranges.find((r) => r.key === s.key)!.from === c.slotTo);
-			c.outT = {type: 'toBlack', frames: f(nextScene?.transitionSeconds || 1.5)};
+			c.outT = {type: 'toBlack', frames: beatsToFrames(3)};
 		}
 		c.to = c.slotTo + Math.ceil(c.outT.frames / 2);
 	}
-	const totalFrames = f(t);
+	const totalFrames = barFrame(bar);
 	return {clips, ranges, transitions, totalFrames};
 };
 

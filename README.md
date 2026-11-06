@@ -144,32 +144,64 @@ Corrections confirmed by the coach are applied in `src/edits/timeout/edl.ts` (`f
 - Confirmed as written: "2 aku tu keluarkan", "0 GOL", and the end card "UMPSA Handball · Last 3 minutes".
 - The closing "Ok / Come on" gets a +5 dB clip gain because it was recorded quieter.
 
-## FriendshipTribute: "A Friendship to Remember" (1920×1080, 30 fps, 2:52)
+## FriendshipTribute: "A Friendship to Remember" (1920×1080, 30 fps, 2:57)
 
 A cinematic photo tribute. It is separate from the 9:16 coach-talk template and has its own code in `src/edits/friendship/`.
 
 ```bash
 # 1. put the photos in assets/friendship/photos/ (jpg/png/webp; this folder is git-ignored)
-npm run prepare:friendship     # scan + faces + working copies + music + grain -> public/friendship/, photos.json
-npm run qa:friendship          # coverage, assets, face-safe framing per frame; EXPECTED_PHOTOS=31 to enforce a count
+npm run prepare:friendship     # faces, colour match, working copies, music, beat grid, grain -> public/friendship/
+npm run qa:friendship          # coverage, assets, cuts on downbeats, face-safe framing per frame; EXPECTED_PHOTOS=31 enforces a count
 npm run studio                 # preview; all on-screen text is editable as props
-npm run render:friendship      # -> out/FriendshipTribute/A-Friendship-to-Remember.mp4 (-14 LUFS, -1 dBTP)
+npm run render:friendship      # -> out/FriendshipTribute/friendship_final.mp4 (upload copy) + friendship_final_master.mp4
 ```
 
 | File | Role |
 |---|---|
-| `story.ts` | everything editable: scene order, photo per scene, motion, transitions, timings, text, grade, music |
-| `timeline.ts` | builds the clip list; throws on an unknown or duplicated photo; unlisted photos go to the journey scene |
-| `framing.ts` | face-safe Ken Burns: a window may never cut a protected face box (faces + headwear + chin) |
-| `PhotoShot.tsx` | one photo: cover moves, or the whole photo framed on its own blurred copy with parallax |
-| `FilmLook.tsx` | grade overlays, vignette, grain, flicker, dust, light leaks / film burn, bokeh |
+| `story.ts` | everything editable: shots in bars, pairs, motion, transitions in beats, text, camera speeds, grade, music |
+| `timeline.ts` | places every shot on the soundtrack's downbeats (`beats.json`); throws on an unknown or repeated photo |
+| `framing.ts` | face-safe moves at constant speed; a window may never cut a protected face box |
+| `PhotoShot.tsx` | full-frame moves, framed prints with parallax, side-by-side pairs, ending dim |
+| `FilmLook.tsx` | grade overlays, vignette, grain, flicker, dust, light leaks, film burn, bokeh |
 | `Typography.tsx` | word-by-word serif reveal (Cormorant Garamond italic), gold rule, spaced caps |
-| `scripts/friendship_scan.py` | YuNet face boxes, duplicate check, lanczos working copies, pre-blurred backdrops |
+| `scripts/friendship_scan.py` | YuNet faces, duplicate check, per-photo colour match, lanczos working copies, blurred backdrops |
+| `scripts/friendship_beats.py` | 76 BPM downbeat grid of the soundtrack |
 
-Photos are only upscaled with lanczos into `public/`; the originals are never modified. If a photo is portrait, has faces too close to the edge, or would need more than 2.15× upscaling to fill the frame, it is shown whole on its own blurred backdrop and never cropped.
+### v2 edit review (what changed from v1, and why)
 
-Story (cut to the music): Opening 0–10 s → Beginning 10–44 s (boardroom, China trip) → Laughter 44–78 s (faster drift transitions) → Journey 78–119 s (strings enter; hospital and grave visits fall on the breakdown) → Appreciation 119–145 s (climax; the two big group photos with the thank-you lines) → Ending 145–172 s (closing lines, fade to black, "Some memories last forever.").
+| Area | v1 | v2 |
+|---|---|---|
+| Music seam | cut from beat 4 to beat 1, so one bar had 5 beats | 99.80 s → 171.48 s, downbeat to downbeat; the beat grid is 4/4 throughout (bars 3.0–3.2 s) |
+| Cutting | equal slots per scene, cuts anywhere in the bar | every cut centred on a downbeat (QA: 13/13); shots last 2, 3 or 4 bars; dissolves in beats (laughter 1, beginning 2, journey 3, appreciation 4) |
+| Camera | eased moves that stalled inside dissolves; 7 zoom-ins; amount unrelated to length | constant speed, a fixed pace per second; 3 zoom-ins, 2 zoom-outs, 5 pans, 2 pair drifts, 2 framed drifts; no two neighbours alike |
+| Portraits | 5 portraits each alone on a blurred backdrop | two pairs: the elder on the bench + at the airport (the same man); the wedding + the scarf ceremony. The first print opens centred and both glide aside as the second arrives |
+| Colour | each photo as shot (boardroom L 31, night gathering yellow, wedding over-bright, China trip desaturated) | each photo pulled part-way to a shared exposure, white point and saturation before the film grade (values in `photos.json → match`) |
+| Text | thank-you lines over people's knees | the print lifts and shrinks; the line sits under it (QA: no face or print under the line) |
+| Opening | two lines on dark | lamp-glow rise, two lines, gold rule, title in spaced capitals; the text is gone before the first photo arrives |
+| Ending | cut to empty bokeh | the last group photo stays, dims and desaturates under the closing lines on the piano outro, fades to black, then the final card |
+| Music sync | climax at 119 s, near the scene change | strings enter on the elder pair (bar 25); hospital on the breakdown (bar 34); grave on the rebuild; climax (bar 40) opens the appreciation scene; outro under the closing lines |
 
-Music: "We Will Get It" by Eugenio Mininni (Mixkit, free licence for use in videos; downloaded by the prep script and not committed). There is one beat-aligned cut, 97.45 s → 174.59 s, so the climax lands at 119 s. To use other music, put it at `public/friendship/music.wav` and adjust `MUSIC` in `story.ts`.
+### Shot list (bars; 1 bar ≈ 3.12 s)
 
-Adding photos (the brief named 31; 16 were supplied): copy them into the folder and re-run `prepare:friendship`. Any photo `story.ts` does not list goes to the Journey scene. A scene grows when it would give a photo less than its `minHold`, and that also moves the later music sync points, so place the new photos in `story.ts` and check the timing in the Studio.
+| Bars | Scene | Shot | Move | Note |
+|---|---|---|---|---|
+| 0–3 | Opening | two lines + title | lamp glow | soft piano |
+| 3–6 | Beginning | 06 boardroom | pull out (framed) | colour lift: dark, flat original; 2.35× upscale needed, so framed |
+| 6–9 | | 02 numismatic wall | pan right | desaturated original, saturation restored |
+| 9–12 | | 03 mosque visit | drift right (framed) | portrait; travel direction continues |
+| 12–15 | | 04 Abu Waqqas tomb | push in | heads near the top edge, so the move is limited |
+| 15–17 | Laughter | 07 mamak night | pan left, film-burn entry | |
+| 17–19 | | 14 night stall | push in | strongest saturation in the set, toned down |
+| 19–21 | | 09 wicker chairs | pan right | yellow cast removed |
+| 21–25 | | 10 wedding + 11 scarf ceremony | pair, counter-drift | narrowest photo in the set (509 px) |
+| 25–29 | Journey | 16 bench + 15 airport, the elder | pair, light-leak entry | strings enter |
+| 29–32 | | 08 park meetup | pan left | |
+| 32–36 | | 12 hospital visit | slow push in | music seam and breakdown |
+| 36–40 | | 13 grave visit | slow pull out | rebuild |
+| 40–44 | Appreciation | 05 night gathering + "Through every moment…" | drift (framed, lifted) | climax; lowest-quality original (864 px, night) |
+| 44–52 | | 01 Raya group + "Thank you…", held under the closing lines | push in (framed, lifted) | the strongest group photo closes the film |
+| 52–57 | Ending | final card | | fade to black, piano outro |
+
+Music: "We Will Get It" by Eugenio Mininni (Mixkit, free licence for use in videos; downloaded by the prep script and not committed). To use other music, put it at `public/friendship/music.wav`, then run `python3 scripts/friendship_beats.py public/friendship/music.wav src/edits/friendship/beats.json` and re-time the bars in `story.ts`.
+
+Adding photos (the brief named 31; 16 were supplied): copy them into the folder and re-run `prepare:friendship`. Any photo `story.ts` does not list is appended to the Journey scene as a 2-bar shot. That makes the film longer and moves the later music sync points, so place new photos in `story.ts` by hand.

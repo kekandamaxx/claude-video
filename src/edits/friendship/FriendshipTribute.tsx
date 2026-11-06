@@ -3,8 +3,11 @@ import {AbsoluteFill, Audio, continueRender, delayRender, interpolate, staticFil
 import {z} from 'zod';
 import {Bokeh, Dust, Flicker, Grain, GradeOverlay, LightLeak, Vignette, WarmDark} from './FilmLook';
 import {PhotoShot} from './PhotoShot';
-import {ENDING, MUSIC, OPENING, TEXT, TextKey} from './story';
-import {FPS, sceneRange, TIMELINE} from './timeline';
+import {ENDING, GRADE, MUSIC, OPENING, TEXT, TextKey} from './story';
+import {beatsToFrames, FPS, sceneRange, TIMELINE} from './timeline';
+
+/** Distance from the frame bottom to the photo-text baseline box (QA checks faces against it). */
+export const TEXT_BOTTOM = 70;
 import {Caps, GoldRule, RevealLine} from './Typography';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
@@ -40,30 +43,45 @@ const useFonts = () => {
 	});
 };
 
-/** Two centred lines (opening and ending). */
-const TwoLines: React.FC<{a: string; b: string; aIn: number; bIn: number; out: number; outDur: number}> = ({a, b, aIn, bIn, out, outDur}) => (
+/** Two centred lines with a gold rule between them (opening and ending). */
+const TwoLines: React.FC<{a: string; b: string; aIn: number; bIn: number; out: number; outDur: number; children?: React.ReactNode}> = ({a, b, aIn, bIn, out, outDur, children}) => (
 	<AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 160px'}}>
 		<div style={{display: 'flex', flexDirection: 'column', gap: 30, alignItems: 'center'}}>
-			<RevealLine text={a} inAt={aIn} outAt={out} outDur={outDur} size={70} />
+			<RevealLine text={a} inAt={aIn} outAt={out} outDur={outDur} size={72} />
 			<GoldRule inAt={aIn + 30} outAt={out} outDur={outDur} width={220} />
-			<RevealLine text={b} inAt={bIn} outAt={out} outDur={outDur} size={70} />
+			<RevealLine text={b} inAt={bIn} outAt={out} outDur={outDur} size={72} />
+			{children}
 		</div>
 	</AbsoluteFill>
 );
 
+/** Warm light that slowly rises behind the opening lines, like a projector lamp warming up. */
+const LampGlow: React.FC<{from: number; peak: number; to: number}> = ({from, peak, to}) => {
+	const frame = useCurrentFrame();
+	const o = interpolate(frame, [from, peak, to - 20, to], [0, 1, 1, 0], clamp);
+	const r = interpolate(frame, [from, to], [34, 46], clamp);
+	return <AbsoluteFill style={{opacity: o * 0.8, background: `radial-gradient(ellipse ${r}% ${r * 0.62}% at 50% 52%, rgba(150, 92, 40, 0.5) 0%, rgba(90, 52, 22, 0.22) 45%, rgba(0,0,0,0) 100%)`}} />;
+};
+
 const Opening: React.FC<{p: FriendshipProps}> = ({p}) => {
 	const frame = useCurrentFrame();
 	const r = sceneRange('opening');
-	if (frame >= r.to + s(1)) return null;
+	if (frame >= r.to + s(1.5)) return null;
+	const b = (beats: number) => r.from + beatsToFrames(beats);
+	const O = OPENING;
 	const bgIn = interpolate(frame, [0, s(1.2)], [0, 1], clamp);
-	const bgOut = interpolate(frame, [r.from + s(OPENING.out), r.to + s(0.6)], [1, 0], clamp);
+	const bgOut = interpolate(frame, [b(O.out), r.to + s(0.8)], [1, 0], clamp);
 	return (
 		<AbsoluteFill>
 			<AbsoluteFill style={{opacity: bgIn * bgOut}}>
 				<WarmDark />
-				<Bokeh seed="open" opacity={0.85} />
+				<LampGlow from={0} peak={b(6)} to={r.to + s(0.8)} />
+				<Bokeh seed="open" opacity={0.8} />
 			</AbsoluteFill>
-			<TwoLines a={p.open1} b={p.open2} aIn={r.from + s(OPENING.line1In)} bIn={r.from + s(OPENING.line2In)} out={r.from + s(OPENING.out)} outDur={s(OPENING.outDur)} />
+			<TwoLines a={p.open1} b={p.open2} aIn={b(O.line1In)} bIn={b(O.line2In)} out={b(O.out)} outDur={beatsToFrames(O.outBeats)}>
+				<div style={{height: 6}} />
+				<Caps text={p.signature} inAt={b(O.titleIn)} outAt={b(O.out)} outDur={beatsToFrames(O.outBeats)} size={20} />
+			</TwoLines>
 		</AbsoluteFill>
 	);
 };
@@ -73,30 +91,31 @@ const Ending: React.FC<{p: FriendshipProps}> = ({p}) => {
 	const r = sceneRange('ending');
 	if (frame < r.from) return null;
 	const E = ENDING;
-	const at = (sec: number) => r.from + s(sec);
-	// Warm backdrop rises after the last photo, then everything fades to true black before the final card.
-	const bg = interpolate(frame, [at(0.6), at(2.4), at(E.out), at(E.out + E.outDur + 0.6)], [0, 1, 1, 0], clamp);
-	const finalGlow = interpolate(frame, [at(E.finalIn - 0.4), at(E.finalIn + 2), at(E.finalOut), at(E.finalOut + E.finalOutDur)], [0, 1, 1, 0], clamp);
+	const b = (beats: number) => r.from + beatsToFrames(beats);
+	// The closing lines sit over the last group photo as it dims; then true black, then the final card.
+	const scrim = interpolate(frame, [r.from, b(3), b(E.out), b(E.photoOut)], [0, 1, 1, 0], clamp);
+	const card = interpolate(frame, [b(E.finalIn - 2), b(E.finalIn + 4), b(E.finalOut), b(E.finalOut + E.finalOutBeats)], [0, 1, 1, 0], clamp);
 	return (
 		<AbsoluteFill>
-			<AbsoluteFill style={{opacity: bg}}>
+			<AbsoluteFill style={{opacity: scrim * 0.55, background: 'radial-gradient(ellipse 62% 40% at 50% 50%, rgba(10,5,2,0.9) 0%, rgba(10,5,2,0.35) 70%, rgba(10,5,2,0) 100%)'}} />
+			<AbsoluteFill style={{opacity: card}}>
 				<WarmDark />
-				<Bokeh seed="end" opacity={0.9} />
+				<Bokeh seed="end" opacity={0.55} count={18} />
+				<AbsoluteFill style={{background: 'radial-gradient(ellipse 40% 26% at 50% 50%, rgba(120, 72, 30, 0.35) 0%, rgba(0,0,0,0) 100%)'}} />
 			</AbsoluteFill>
-			<AbsoluteFill style={{opacity: finalGlow * 0.55, background: 'radial-gradient(ellipse 40% 26% at 50% 50%, rgba(120, 72, 30, 0.55) 0%, rgba(0,0,0,0) 100%)'}} />
-			<TwoLines a={p.end1} b={p.end2} aIn={at(E.line1In)} bIn={at(E.line2In)} out={at(E.out)} outDur={s(E.outDur)} />
+			<TwoLines a={p.end1} b={p.end2} aIn={b(E.line1In)} bIn={b(E.line2In)} out={b(E.out)} outDur={beatsToFrames(E.outBeats)} />
 			<AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
 				<div style={{display: 'flex', flexDirection: 'column', gap: 34, alignItems: 'center', transform: 'translateY(14px)'}}>
-					<RevealLine text={p.final} inAt={at(E.finalIn)} outAt={at(E.finalOut)} outDur={s(E.finalOutDur)} size={84} stagger={7} wordDur={44} />
-					<GoldRule inAt={at(E.signatureIn - 0.6)} outAt={at(E.finalOut)} outDur={s(E.finalOutDur)} width={300} />
-					<Caps text={p.signature} inAt={at(E.signatureIn)} outAt={at(E.finalOut)} outDur={s(E.finalOutDur)} />
+					<RevealLine text={p.final} inAt={b(E.finalIn)} outAt={b(E.finalOut)} outDur={beatsToFrames(E.finalOutBeats)} size={86} stagger={7} wordDur={44} />
+					<GoldRule inAt={b(E.signatureIn - 1)} outAt={b(E.finalOut)} outDur={beatsToFrames(E.finalOutBeats)} width={300} />
+					<Caps text={p.signature} inAt={b(E.signatureIn)} outAt={b(E.finalOut)} outDur={beatsToFrames(E.finalOutBeats)} />
 				</div>
 			</AbsoluteFill>
 		</AbsoluteFill>
 	);
 };
 
-/** Appreciation-scene text over a photo, on a soft scrim in the lower third. */
+/** Appreciation lines: set in the space under the (lifted) print, never over people. */
 const PhotoText: React.FC<{p: FriendshipProps}> = ({p}) => {
 	const frame = useCurrentFrame();
 	const c = TIMELINE.clips.find((cl) => cl.text && frame >= cl.text.from - 2 && frame <= cl.text.to + s(1.4));
@@ -105,9 +124,9 @@ const PhotoText: React.FC<{p: FriendshipProps}> = ({p}) => {
 	const scrim = interpolate(frame, [from - s(0.6), from + s(0.8), to, to + s(1.4)], [0, 1, 1, 0], clamp);
 	return (
 		<AbsoluteFill>
-			<AbsoluteFill style={{opacity: scrim, background: 'linear-gradient(0deg, rgba(8,4,2,0.78) 0%, rgba(8,4,2,0.5) 22%, rgba(8,4,2,0) 44%)'}} />
-			<AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 92}}>
-				<RevealLine text={p[c.text.key as TextKey]} inAt={from} outAt={to} outDur={s(1.2)} size={58} />
+			<AbsoluteFill style={{opacity: scrim, background: 'linear-gradient(0deg, rgba(8,4,2,0.6) 0%, rgba(8,4,2,0.3) 16%, rgba(8,4,2,0) 30%)'}} />
+			<AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: TEXT_BOTTOM}}>
+				<RevealLine text={p[c.text.key as TextKey]} inAt={from} outAt={to} outDur={s(1.2)} size={56} />
 			</AbsoluteFill>
 		</AbsoluteFill>
 	);
@@ -125,9 +144,9 @@ const QaOverlay: React.FC = () => {
 	const frame = useCurrentFrame();
 	return (
 		<AbsoluteFill>
-			<div style={{position: 'absolute', left: 0, right: 0, top: 1080 - 92 - 90, height: 90, outline: '3px dashed cyan'}} />
+			<div style={{position: 'absolute', left: 0, right: 0, top: 1080 - TEXT_BOTTOM - 75, height: 75, outline: '3px dashed cyan'}} />
 			<div style={{position: 'absolute', left: 30, top: 24, color: '#0f0', font: '28px monospace'}}>
-				{TIMELINE.clips.filter((c) => frame >= c.from && frame < c.to).map((c) => `${c.photo.id} [${c.motion}]`).join('  |  ')} f{frame}
+				{TIMELINE.clips.filter((c) => frame >= c.from && frame < c.to).map((c) => `${c.photos.map((x) => x.id).join('+')} [${c.motion}]`).join('  |  ')} f{frame}
 			</div>
 		</AbsoluteFill>
 	);
@@ -146,7 +165,7 @@ export const FriendshipTribute: React.FC<FriendshipProps> = (props) => {
 			{onPhotos ? (
 				<AbsoluteFill style={{isolation: 'isolate', background: '#000'}}>
 					{TIMELINE.clips.map((c) => (
-						<PhotoShot key={c.photo.id} clip={c} />
+						<PhotoShot key={c.index} clip={c} />
 					))}
 					<GradeOverlay />
 				</AbsoluteFill>
@@ -160,7 +179,7 @@ export const FriendshipTribute: React.FC<FriendshipProps> = (props) => {
 			<Ending p={props} />
 			<Dust />
 			<Flicker />
-			<Grain opacity={0.1 * grainOut} />
+			<Grain opacity={GRADE.grain * grainOut} />
 			<Curtain />
 			{props.qa ? <QaOverlay /> : null}
 			{props.music ? (

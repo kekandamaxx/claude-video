@@ -73,7 +73,14 @@
      "h": 0.0702,
      "score": 0.926
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.1,
+    "cast_b": -1.3,
+    "gamma": 1.02,
+    "white_gain": 1.0,
+    "saturation": 0.85
+   }
   },
   {
    "id": "02-numismatic-wall",
@@ -97,7 +104,14 @@
      "h": 0.0801,
      "score": 0.94
     }
-   ]
+   ],
+   "match": {
+    "cast_a": -0.86,
+    "cast_b": -0.03,
+    "gamma": 1.032,
+    "white_gain": 1.0,
+    "saturation": 1.25
+   }
   },
   {
    "id": "03-mosque-visit",
@@ -121,7 +135,14 @@
      "h": 0.0563,
      "score": 0.932
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.5,
+    "cast_b": -0.11,
+    "gamma": 0.9,
+    "white_gain": 1.0,
+    "saturation": 1.25
+   }
   },
   {
    "id": "04-abu-waqqas-tomb",
@@ -159,7 +180,14 @@
      "h": 0.0983,
      "score": 0.925
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 1.12,
+    "cast_b": 1.03,
+    "gamma": 0.912,
+    "white_gain": 1.0,
+    "saturation": 1.182
+   }
   },
   {
    "id": "05-night-gathering",
@@ -225,7 +253,14 @@
      "h": 0.1226,
      "score": 0.889
     }
-   ]
+   ],
+   "match": {
+    "cast_a": -0.17,
+    "cast_b": -5.19,
+    "gamma": 0.969,
+    "white_gain": 1.0,
+    "saturation": 0.97
+   }
   },
   {
    "id": "06-boardroom",
@@ -284,7 +319,14 @@
      "h": 0.0758,
      "score": 0.923
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 1.97,
+    "cast_b": -1.88,
+    "gamma": 0.7,
+    "white_gain": 1.02,
+    "saturation": 1.149
+   }
   },
   {
    "id": "07-mamak-night",
@@ -329,7 +371,14 @@
      "h": 0.0771,
      "score": 0.915
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.21,
+    "cast_b": -0.13,
+    "gamma": 1.008,
+    "white_gain": 1.06,
+    "saturation": 0.937
+   }
   },
   {
    "id": "08-park-meetup",
@@ -367,7 +416,14 @@
      "h": 0.0856,
      "score": 0.927
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.45,
+    "cast_b": 0.21,
+    "gamma": 0.906,
+    "white_gain": 1.042,
+    "saturation": 1.018
+   }
   },
   {
    "id": "09-wicker-chairs",
@@ -398,7 +454,14 @@
      "h": 0.1281,
      "score": 0.944
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.21,
+    "cast_b": -3.54,
+    "gamma": 0.918,
+    "white_gain": 1.011,
+    "saturation": 1.061
+   }
   },
   {
    "id": "10-wedding-dais",
@@ -429,7 +492,14 @@
      "h": 0.0645,
      "score": 0.934
     }
-   ]
+   ],
+   "match": {
+    "cast_a": -0.32,
+    "cast_b": 0.17,
+    "gamma": 1.3,
+    "white_gain": 1.0,
+    "saturation": 0.968
+   }
   },
   {
    "id": "11-yellow-scarves",
@@ -460,7 +530,14 @@
      "h": 0.1031,
      "score": 0.943
     }
-   ]
+   ],
+   "match": {
+    "cast_a": -1.02,
+    "cast_b": -1.26,
+    "gamma": 1.192,
+    "white_gain": 1.017,
+    "saturation": 0.966
+   }
   },
   {
    "id": "12-hospital-visit",
@@ -484,7 +561,14 @@
      "h": 0.2363,
      "score": 0.853
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.02,
+    "cast_b": -1.06,
+    "gamma": 0.976,
+    "white_gain": 1.057,
+    "saturation": 0.982
+   }
   },
   {
    "id": "13-grave-visit",
@@ -508,7 +592,14 @@
      "h": 0.0894,
      "score": 0.906
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 1.31,
+    "cast_b": -0.34,
+    "gamma": 1.177,
+    "white_gain": 1.052,
+    "saturation": 0.947
+   }
   },
   {
    "id": "14-night-stall",
@@ -539,7 +630,14 @@
      "h": 0.0537,
      "score": 0.888
     }
-   ]
+   ],
+   "match": {
+    "cast_a": -0.97,
+    "cast_b": 1.21,
+    "gamma": 0.937,
+    "white_gain": 1.008,
+    "saturation": 0.85
+   }
   },
   {
    "id": "15-airport-elder",
@@ -563,7 +661,14 @@
      "h": 0.221,
      "score": 0.919
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.37,
+    "cast_b": -0.31,
+    "gamma": 1.044,
+    "white_gain": 1.0,
+    "saturation": 1.065
+   }
   },
   {
    "id": "16-bench-elder",
@@ -587,7 +692,14 @@
      "h": 0.1337,
      "score": 0.931
     }
-   ]
+   ],
+   "match": {
+    "cast_a": 0.02,
+    "cast_b": 3.27,
+    "gamma": 1.217,
+    "white_gain": 1.0,
+    "saturation": 0.877
+   }
   }
  ]
 }

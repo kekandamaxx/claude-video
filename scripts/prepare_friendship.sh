@@ -6,8 +6,9 @@
 #   2. builds the soundtrack: Mixkit "We Will Get It" by Eugenio Mininni (id 598, Mixkit free
 #      licence: free for use in videos, not for redistribution, so it is downloaded here and not
 #      committed). Soft piano 0-78 s, strings 78-178 s, climax 196-222 s, piano outro.
-#      One beat-aligned cut (97.45 s -> 174.59 s; chroma+MFCC match 0.82 before / 0.89 after,
-#      0 dB level step) brings the climax to ~119 s, on the appreciation scene.
+#      One cut, downbeat to downbeat (99.80 s -> 171.48 s; chroma+MFCC match 0.78, 0.3 dB level
+#      step), so the bar structure stays 4/4 across the seam and the climax lands at ~124.7 s,
+#      on the appreciation scene. beats.json (the downbeat grid the edit snaps to) is written after.
 #      Replace the music: drop any file at public/friendship/music.wav and skip step 2.
 #   3. renders film-grain tiles.
 set -euo pipefail
@@ -20,16 +21,19 @@ cd "$ROOT"
 python3 scripts/friendship_scan.py "$PHOTOS"
 
 # Keep these in sync with MUSIC in src/edits/friendship/story.ts.
-CUT_FROM=97.45; CUT_TO=174.59; XF=0.5
+CUT_FROM=99.80; CUT_TO=171.48; XF=0.3
 if [ ! -f "$PUB/music.wav" ] || [ "${FORCE_MUSIC:-0}" = 1 ]; then
   curl -sSL -o "$TMP/m.mp3" https://assets.mixkit.co/music/598/598.mp3
-  A_END=$(python3 -c "print($CUT_FROM+$XF/2)"); B_START=$(python3 -c "print($CUT_TO-$XF/2)")
+  # Short equal-power crossfade that finishes just after the downbeat, so the downbeat attack is B's.
+  A_END=$(python3 -c "print($CUT_FROM+0.1)"); B_START=$(python3 -c "print($CUT_TO-$XF+0.1)")
   ffmpeg -v error -y -i "$TMP/m.mp3" -filter_complex "\
 [0:a]atrim=0:$A_END,asetpts=PTS-STARTPTS[a];\
 [0:a]atrim=start=$B_START,asetpts=PTS-STARTPTS[b];\
 [a][b]acrossfade=d=$XF:c1=qsin:c2=qsin,aresample=48000,\
 loudnorm=I=-16:TP=-1.5:LRA=14[out]" -map "[out]" -ac 2 "$PUB/music.wav"
 fi
+
+python3 scripts/friendship_beats.py "$PUB/music.wav" src/edits/friendship/beats.json
 
 # Film grain: 12 tiles of mid-grey gaussian noise (512x512), cycled per frame with offsets.
 for i in $(seq 0 11); do

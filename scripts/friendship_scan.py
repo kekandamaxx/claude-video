@@ -93,6 +93,39 @@ def iou(a, b):
     return inter / (a[2] * a[3] + b[2] * b[3] - inter + 1e-9)
 
 
+# Colour matching: every photo is pulled part-way toward one shared look before the film grade, so
+# phone shots from different years, cameras and lighting cut together. Partial strengths keep each
+# photo's own mood (night shots stay night shots) and never push skin tones far.
+MATCH = {'L_median': 52.0, 'a': 0.5, 'b': 4.0, 'chroma': 18.0}
+
+
+def colour_match(img):
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
+    L = lab[..., 0] * 100 / 255
+    a = lab[..., 1] - 128
+    b = lab[..., 2] - 128
+    C = np.hypot(a, b)
+    neutral = (L > 20) & (L < 90) & (C < 18)
+    na, nb = (float(a[neutral].mean()), float(b[neutral].mean())) if neutral.mean() > 0.02 else (MATCH['a'], MATCH['b'])
+    # 1. Cast: 60% of the way from the photo's neutral tones to the shared warm-neutral, capped.
+    da = float(np.clip(-0.6 * (na - MATCH['a']), -7, 7))
+    db = float(np.clip(-0.6 * (nb - MATCH['b']), -7, 7))
+    # 2. Exposure: gamma on L moving the median 50-60% of the way (log domain) to the target.
+    med = float(np.clip(np.median(L), 5, 95)) / 100
+    g_full = np.log(MATCH['L_median'] / 100) / np.log(med)
+    g = float(np.clip(g_full ** (0.6 if g_full < 1 else 0.5), 0.7, 1.3))
+    Ln = 100 * np.power(np.clip(L / 100, 0, 1), g)
+    # 3. White point: lift dull highlights a little (p98 toward 96).
+    p98 = float(np.percentile(Ln, 98))
+    gain = float(np.clip(96 / max(p98, 1), 1.0, 1.06))
+    Ln = np.clip(Ln * gain, 0, 100)
+    # 4. Saturation toward a shared chroma level, partially.
+    sat = float(np.clip((MATCH['chroma'] / max(float(C.mean()), 1)) ** 0.4, 0.85, 1.25))
+    out = np.dstack([Ln * 255 / 100, (a + da) * sat + 128, (b + db) * sat + 128])
+    out = cv2.cvtColor(np.clip(out, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR)
+    return out, {'cast_a': round(da, 2), 'cast_b': round(db, 2), 'gamma': round(g, 3), 'white_gain': round(gain, 3), 'saturation': round(sat, 3)}
+
+
 def ffmpeg(*args):
     subprocess.run(['ffmpeg', '-v', 'error', '-y', *args], check=True)
 
@@ -119,21 +152,25 @@ def main():
             raise SystemExit(f'duplicate photo: {f} == {hashes[digest]}')
         hashes[digest] = f
         faces = detect_faces(img, model)
+        matched, grade = colour_match(img)
+        tmp = os.path.join(CACHE, os.path.splitext(f)[0] + '.matched.png')
+        cv2.imwrite(tmp, matched)
         pid = os.path.splitext(f)[0]
         # Working copy: lanczos upscale (+ light unsharp) only when the original is smaller than needed.
         k = max(1.0, TARGET_W / w, TARGET_H / h)
         k = min(k, 4.0)
         ow, oh = int(round(w * k / 2) * 2), int(round(h * k / 2) * 2)
         flt = f'scale={ow}:{oh}:flags=lanczos' + (',unsharp=5:5:0.45:5:5:0.0' if k > 1.01 else '')
-        ffmpeg('-i', path, '-vf', flt, '-q:v', '1', os.path.join(PUB, 'img', pid + '.jpg'))
+        ffmpeg('-i', tmp, '-vf', flt, '-q:v', '1', os.path.join(PUB, 'img', pid + '.jpg'))
         # Backdrop: cover-fit, heavy blur, slightly darkened (blur baked here, not in the browser).
-        ffmpeg('-i', path, '-vf',
+        ffmpeg('-i', tmp, '-vf',
                'scale=1920:1080:force_original_aspect_ratio=increase:flags=bicubic,crop=1920:1080,'
                'gblur=sigma=38:steps=3,eq=brightness=-0.06:saturation=0.85',
                '-q:v', '2', os.path.join(PUB, 'bg', pid + '.jpg'))
         photos.append({'id': pid, 'file': f, 'src': f'friendship/img/{pid}.jpg', 'bg': f'friendship/bg/{pid}.jpg',
-                       'width': w, 'height': h, 'faces': faces})
-        print(f'{f:28s} {w}x{h}  faces={len(faces)}')
+                       'width': w, 'height': h, 'faces': faces, 'match': grade})
+        os.remove(tmp)
+        print(f'{f:28s} {w}x{h}  faces={len(faces)}  match={grade}')
     with open(MANIFEST, 'w') as fh:
         json.dump({'source': os.path.relpath(SRC, ROOT), 'count': len(photos), 'photos': photos}, fh, indent=1)
     print(f'{len(photos)} photos -> {os.path.relpath(MANIFEST, ROOT)}')
