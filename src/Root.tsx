@@ -8,6 +8,8 @@ import {briefingEdit} from './edits/briefing';
 import {vivaEdit} from './edits/viva';
 import {FriendshipTribute, friendshipDefaults, friendshipSchema} from './edits/friendship/FriendshipTribute';
 import * as FT from './edits/friendship/timeline';
+import {CapcutEdit, capcutDefaults, capcutSchema} from './edits/friendship/capcut/CapcutEdit';
+import {CAP, FPS as CAP_FPS, H as CAP_H, W as CAP_W} from './edits/friendship/capcut/timeline';
 
 const defaults = {preview: true, guides: false, music: true, sfx: true, voice: true};
 
@@ -36,6 +38,17 @@ export const RemotionRoot: React.FC = () => (
 			fps={FT.FPS}
 			width={FT.WIDTH}
 			height={FT.HEIGHT}
+		/>
+		{/* 90 s vertical beat edit (CapCut style) of the same photos. */}
+		<Composition
+			id="FriendshipCapcut"
+			component={CapcutEdit}
+			schema={capcutSchema}
+			defaultProps={capcutDefaults}
+			durationInFrames={CAP.totalFrames}
+			fps={CAP_FPS}
+			width={CAP_W}
+			height={CAP_H}
 		/>
 	</>
 );

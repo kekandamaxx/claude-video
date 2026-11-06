@@ -13,7 +13,10 @@
     "typecheck": "tsc --noEmit",
     "prepare:friendship": "scripts/prepare_friendship.sh",
     "qa:friendship": "esbuild scripts/friendship_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/friendship_qa.js && node out/.qa/friendship_qa.js",
-    "render:friendship": "scripts/render_friendship.sh"
+    "render:friendship": "scripts/render_friendship.sh",
+    "qa:capcut": "esbuild scripts/capcut_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/capcut_qa.js && node out/.qa/capcut_qa.js",
+    "prepare:song": "scripts/prepare_song.sh",
+    "render:capcut": "scripts/render_capcut.sh"
   },
   "dependencies": {
     "@fontsource/anton": "5.3.0",

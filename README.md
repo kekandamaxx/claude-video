@@ -205,3 +205,26 @@ npm run render:friendship      # -> out/FriendshipTribute/friendship_final.mp4 (
 Music: "We Will Get It" by Eugenio Mininni (Mixkit, free licence for use in videos; downloaded by the prep script and not committed). To use other music, put it at `public/friendship/music.wav`, then run `python3 scripts/friendship_beats.py public/friendship/music.wav src/edits/friendship/beats.json` and re-time the bars in `story.ts`.
 
 Adding photos (the brief named 31; 16 were supplied): copy them into the folder and re-run `prepare:friendship`. Any photo `story.ts` does not list is appended to the Journey scene as a 2-bar shot. That makes the film longer and moves the later music sync points, so place new photos in `story.ts` by hand.
+
+## FriendshipCapcut: 90 s vertical beat edit (1080×1920, 30 fps)
+
+The same 16 photos, cut the way a CapCut beat edit is:
+- hard cuts on the song's beats, with short punchy transitions: zoom punch, whip left/right, spin, white flash, shake and blur;
+- a scale "pulse" on every beat, bigger on the first beat of each bar;
+- clean, bright colour with no film grain;
+- bold pop-in titles and karaoke-style lyrics.
+
+Photos fill the screen when every face fits a 9:16 crop; otherwise they run full-width over a blurred copy of themselves.
+
+```bash
+npm run prepare:song -- /path/to/your-song.mp3 [start_seconds] [bpm_hint]   # -> public/friendship/song.wav + capcut/song_beats.json
+# your own timed lyrics (standard LRC, timestamps against the full song):
+#   public/friendship/lyrics.lrc      e.g.  [00:42.10] first line
+npm run qa:capcut                                # 16/16 photos once, ~90 s, every cut on a beat, faces clear of titles and lyrics
+npm run render:capcut                            # -> out/FriendshipTribute/friendship_capcut.mp4
+```
+
+- Song and lyrics are not part of the repo (`public/` is git-ignored), and no lyrics are written into the code. Until `prepare:song` is run with your song, the edit uses a 92 s section of the tribute soundtrack (Mixkit, licensed).
+- Set `SONG.showTitle = true` in `src/edits/friendship/capcut/config.ts` to show the "♪ Musafir Rindu" sticker on the opening once the real song is in.
+- The shot order, beat lengths and transitions are in `capcut/config.ts`. Beat counts scale together so the edit stays near `SONG.targetSeconds` (90) at any tempo.
+- The lyric line on each shot goes in the first band (bottom, top, lower) with no face in it. On the first and last shots the photo sits lower, so the big title never covers anyone.

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Downbeat grid of the tribute soundtrack -> src/edits/friendship/beats.json.
 
-Usage: python3 scripts/friendship_beats.py <music.wav> <out.json>
-The track is 76 BPM 4/4. Beats come from librosa's tracker with a 76 BPM prior; the bar phase is
+Usage: python3 scripts/friendship_beats.py <music.wav> <out.json> [bpm_hint]
+The tribute track is 76 BPM 4/4 (the default hint); pass 0 to let librosa estimate the tempo. Beats come from librosa's tracker with a 76 BPM prior; the bar phase is
 the beat phase with the most harmonic change (chord changes land on the downbeat).
 """
 import json
@@ -12,10 +12,12 @@ import librosa
 import numpy as np
 
 src, out = sys.argv[1], sys.argv[2]
+bpm_hint = float(sys.argv[3]) if len(sys.argv) > 3 else 76.0
 y, sr = librosa.load(src, sr=22050, mono=True)
 hop = 512
 oenv = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop)
-_, beats = librosa.beat.beat_track(onset_envelope=oenv, sr=sr, hop_length=hop, trim=False, start_bpm=76, tightness=400)
+_, beats = librosa.beat.beat_track(onset_envelope=oenv, sr=sr, hop_length=hop, trim=False, tightness=400,
+                                    **({'start_bpm': bpm_hint} if bpm_hint > 0 else {}))
 bt = librosa.frames_to_time(beats, sr=sr, hop_length=hop)
 ch = librosa.util.sync(librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=hop), beats, aggregate=np.median)
 nov = np.r_[0, 1 - np.sum(ch[:, 1:] * ch[:, :-1], 0) / (np.linalg.norm(ch[:, 1:], axis=0) * np.linalg.norm(ch[:, :-1], axis=0) + 1e-9)]
