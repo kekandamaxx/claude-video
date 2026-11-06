@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | preview awaiting approval |
+| `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
 
@@ -65,7 +65,7 @@ Not used: "Dah dah bangun?" (off-mic), "Nak ni", "Memang sangat sedap guys" (it 
 
 The face data has four false detections removed: hands and the bottle cap below the chest. Real faces in this clip stay above y 900. QA results: 0 of 632 frames with an overlay on a face or outside the safe area. 58 words with a median of 18.7 dB and a minimum of 9.2 dB.
 
-To confirm: "Mesir" (ASR heard "mesin"), "akak" (ASR heard "kat akhir"), who says "25 persen" and what the 25% refers to, and whether the guava drink is a Viva! product. The graphics name Viva! only on the pomegranate stills. The added texts "Uji rasa" and "Promo akan datang" also need checking.
+Confirmed as shown in the preview: "Mesir", "akak", "25% dalam ni", "Uji rasa" and "Promo akan datang".
 
 ## BriefingEdit: edit decisions (18.6 s)
 
