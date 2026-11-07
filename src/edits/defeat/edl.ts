@@ -77,13 +77,16 @@ export const TITLES: Title[] = [
 	{text: 'THIS IS NOT THE END.', at: 0, dur: 0}, // placed on the closing shot in build()
 ];
 
+/** Final score (UMPSA first). Shown in the hook after the first title, while the VO says "susah". */
+export const SCORE = {us: 16, them: 17, label: 'FULL TIME', note: 'LOST BY ONE GOAL', at: 3.7, dur: 4.0};
+
 /** Subtitles: source ranges of one clip, Malay as spoken + English. */
 export type Line = {clip: ClipId; from: number; to: number; ms: string; en: string};
 export const LINES: Line[] = [
 	{clip: 'clip2', from: 10.27, to: 13.1, ms: 'So bila kita nak buat comeback ni… susah.', en: 'So when we try to come back… it’s hard.'},
 	{clip: 'clip2', from: 2.8, to: 4.46, ms: 'Kita nak ikut dia main.', en: 'We tried to play their game.'},
 	{clip: 'clip2', from: 4.66, to: 6.54, ms: 'Sebab dia nak main laju, kita nak ikut laju.', en: 'They played fast, so we went fast too.'},
-	{clip: 'clip2', from: 7.08, to: 10.24, ms: 'So bila kita ikut dia laju, kita kena 5-1 tu.', en: 'And when we matched their pace, they hit us 5–1.'},
+	{clip: 'clip2', from: 7.08, to: 10.24, ms: 'So bila kita ikut dia laju, kita kena 5-1 tu.', en: 'And when we matched their pace, they went on a 5–1 run.'},
 	{clip: 'clip1', from: 9.26, to: 11.14, ms: 'Kadang-kadang kami dengan Aiman ni pun pening.', en: 'Sometimes even Aiman and I don’t have the answers.'},
 	{clip: 'clip1', from: 11.2, to: 13.2, ms: 'Nak atur kat dalam, nak atur kat luar.', en: 'Sorting it out on the court, and off it.'},
 	{clip: 'clip2', from: 14.76, to: 15.86, ms: 'Kita kena sabar.', en: 'We have to be patient.'},
@@ -238,7 +241,9 @@ const build = () => {
 		outroFrom: MUSIC.outroFrom,
 	};
 
-	return {placed, cutEnd, fadeOut, cardStart, total, voice, speech, captions, titles, sfx, music, outFrame};
+	const score = {start: f(SCORE.at), end: Math.min(f(SCORE.at + SCORE.dur), byId('black1').start - 2)};
+
+	return {placed, cutEnd, fadeOut, cardStart, total, voice, speech, captions, titles, score, sfx, music, outFrame};
 };
 
 export const EDL = build();

@@ -1,3 +1,4 @@
+import '@fontsource/montserrat/200.css';
 import '@fontsource/montserrat/300.css';
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/600.css';
@@ -6,7 +7,7 @@ import React, {useMemo, useState} from 'react';
 import {AbsoluteFill, Audio, continueRender, delayRender, Easing, interpolate, OffthreadVideo, random, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {z} from 'zod';
 import faces from './faces.json';
-import {ClipId, EDL, FPS, Placed, Shot} from './edl';
+import {ClipId, EDL, FPS, Placed, SCORE, Shot} from './edl';
 
 export const defeatSchema = z.object({
 	preview: z.boolean(),
@@ -115,6 +116,36 @@ const Title: React.FC<{text: string; start: number; end: number}> = ({text, star
 				})}
 			</div>
 			<div style={{marginTop: 22, height: 2, width: 160 * rule, background: 'rgba(236,231,223,0.55)'}} />
+		</div>
+	);
+};
+
+/**
+ * Final score in the hook. No card, no box: a spaced label, the two numbers in light weight
+ * (ours bright, theirs dimmed and arriving a beat later), a hairline, and the margin.
+ */
+const ScoreLine: React.FC = () => {
+	const frame = useCurrentFrame();
+	const {start, end} = EDL.score;
+	if (frame < start - 1 || frame > end + 1) return null;
+	const l = frame - start;
+	const ease = {...clamp, easing: Easing.out(Easing.cubic)};
+	const settle = (a: number, d = 24) => interpolate(l, [a, a + d], [0, 1], ease);
+	const out = interpolate(frame, [end - 20, end], [0, 1], {...clamp, easing: Easing.in(Easing.sin)});
+	const num = (v: number, p: number, dim: boolean) => (
+		<span style={{display: 'inline-block', width: 190, textAlign: 'center', opacity: p * (dim ? 0.55 : 1), filter: `blur(${(1 - p) * 10}px)`, transform: `translateY(${(1 - p) * 14}px)`}}>{v}</span>
+	);
+	const rule = settle(40, 30);
+	return (
+		<div style={{position: 'absolute', left: 60, width: 900, top: 300, height: 270, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 1 - out, filter: `blur(${out * 6}px)`, color: INK, textShadow: '0 2px 18px rgba(0,0,0,0.65)'}}>
+			<div style={{fontFamily: SANS, fontWeight: 400, fontSize: 24, letterSpacing: '0.5em', paddingLeft: '0.5em', opacity: settle(0) * 0.8}}>{SCORE.label}</div>
+			<div style={{marginTop: 6, fontFamily: SANS, fontWeight: 200, fontSize: 128, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center'}}>
+				{num(SCORE.us, settle(6), false)}
+				<span style={{display: 'inline-block', width: 56, height: 2, background: 'rgba(236,231,223,0.6)', opacity: settle(10)}} />
+				{num(SCORE.them, settle(22), true)}
+			</div>
+			<div style={{marginTop: 10, height: 1.5, width: 220 * rule, background: 'rgba(236,231,223,0.45)'}} />
+			<div style={{marginTop: 18, fontFamily: SANS, fontWeight: 300, fontSize: 26, letterSpacing: '0.42em', paddingLeft: '0.42em', opacity: settle(46, 30) * 0.85}}>{SCORE.note}</div>
 		</div>
 	);
 };
@@ -272,7 +303,7 @@ const Guides: React.FC = () => (
 const useFonts = () => {
 	const [handle] = useState(() => delayRender('fonts'));
 	useState(() => {
-		Promise.all([document.fonts.load('300 46px Montserrat'), document.fonts.load('600 37px Montserrat'), document.fonts.load('400 34px Montserrat'), document.fonts.load('italic 500 35px "Cormorant Garamond"')])
+		Promise.all([document.fonts.load('200 128px Montserrat'), document.fonts.load('300 46px Montserrat'), document.fonts.load('600 37px Montserrat'), document.fonts.load('400 34px Montserrat'), document.fonts.load('italic 500 35px "Cormorant Garamond"')])
 			.then(() => continueRender(handle))
 			.catch(() => continueRender(handle));
 		return null;
@@ -284,6 +315,7 @@ const Text: React.FC = () => (
 		{EDL.titles.map((t, i) => (
 			<Title key={i} {...t} />
 		))}
+		<ScoreLine />
 		<Captions />
 		<EndCard />
 	</>
