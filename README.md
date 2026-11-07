@@ -9,6 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
+| `DefeatEdit` | "After the Loss": 5 post-game clips, cinematic documentary | 100.5 s → 57.4 s | preview awaiting approval |
 
 ## Layout
 
@@ -44,6 +45,44 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## DefeatEdit: "After the Loss" (57.4 s, preview awaiting approval)
+
+A post-game documentary edit, not a highlight reel. It has its own code in `src/edits/defeat/` (picture and dialogue placed separately, so a line can run as a voice-over on a shot whose speaker is off-screen).
+
+```bash
+npm run prepare:defeat -- clip1.mov clip2.mov clip3.mov clip4.mov clip5.mov   # -> public/defeat/
+COMP=DefeatEdit npm run preview          # -> out/DefeatEdit/preview.mp4 (half scale)
+COMP=DefeatEdit npm run qa:faces         # titles + subtitles vs faces and safe area, every frame
+npm run qa:defeat-audio                  # per-word voice vs music + SFX + room
+COMP=DefeatEdit npm run render:final     # only after the preview is approved
+```
+
+Sources (464×832, 60 fps phone clips): clip1 `2f5c468e` and clip2 `346a431c` are night wides behind the seated team (coach off-screen); clip3 `8ddfb44c` and clip4 `67dbb485` show the two coaches standing; clip5 `b91101ac` is the coach from behind, players with heads down. Clip5's speech is buried in crowd noise (Whisper large-v3 returns only its "terima kasih kerana menonton" hallucination, with and without denoise), so it is picture-only. Clip4 is not used: its lines are individual player notes ("Luqman, out. I don't know why"), which read as blame in this piece.
+
+| # | Time | Picture | Sound | Text |
+|---|---|---|---|---|
+| 1 | 0.0–8.0 | **HOOK** clip5 0.4–4.4, 0.5× slow motion, fade up | room an octave down, sub drone, low hit; VO clip2 10.26–13.25 "So bila kita nak buat comeback ni… susah." (+3 dB) | NOT THE RESULT WE WANTED. |
+| 2 | 8.0–8.5 | black | trailer impact | |
+| 3 | 8.5–16.1 | clip2 2.62–10.26 | "Kita nak ikut dia main. Sebab dia nak main laju… kita kena 5-1 tu." | |
+| 4 | 16.1–20.4 | clip1 9.14–13.36 | "Kadang-kadang kami dengan Aiman ni pun pening. Nak atur kat dalam, nak atur kat luar." | |
+| 5 | 20.0–24.8 | **SILENCE** clip5 9.4–11.8, 0.5×, dissolve | no words: room, drone, two heartbeats | |
+| 6 | 24.8–31.5 | clip2 14.62–15.92, dissolve to 17.5–23.2 | "Kita kena sabar." / "Kalau kita kena tinggal 3-4 biji… kita kena ambil satu… satu… satu." | |
+| 7 | 31.5–34.7 | **PIVOT** clip1 15.45–18.65 | "Kembali ni, kita… kena reset." (the pause is kept) | |
+| 8 | 34.7–35.2 | black | low hit; the strings enter here | |
+| 9 | 35.2–49.3 | clip3 8.2–22.27 | "Okay, relax, settle down. Nanti kita pergi makan… Semua berlapar kan. Tempat main ni, tempat main-main." … "Reset, reset, reset, reset." "Jalan." | BUT WE FOUGHT TOGETHER. (in the pause after "Alright") |
+| 10 | 48.8–53.6 | **CLOSE** clip1 0.2–2.6 (the whole team under the tent), 0.5×, dissolve, fade to black | piano outro, wind swoosh | THIS IS NOT THE END. |
+| 11 | 54.1–57.4 | end card | low hit, music fades | UMPSA HANDBALL |
+
+Not used: "Memang sangat fine. That's why kalau rasa confident you must come out. Jangan tunggu." (coaching instruction, breaks the mood), "Sebab kita kena tinggal 5-1" (said again, better, at 9.47), "Dah cakap banyak kali dah" (repetition), "Dapat goal sebijik, tahan… ambil lagi satu" (tactical detail), clip3 "Besok kacau… benda boleh jadi" (tomorrow's adjustments), all of clip4.
+
+Look: 60 fps sources, lanczos upscale with light unsharp; 0.5× shots use real frames. Grade is desaturated (0.6) with cool shadows, warm skin lift, the tent's clipped lights pulled down (the title band), a vignette and moving grain. Slow 3–6% pushes only. Titles: Montserrat Light, spaced capitals that settle word by word out of a blur in the tent-ceiling band (y ≈ 355–495). Subtitles: Malay as spoken (Montserrat SemiBold) with an English line (Cormorant Garamond italic), bottom edge at y 1428, x 150–910.
+
+Sound: each clip's dialogue through the coach-talk chain, normalised per clip. Music: Mixkit "Silent Descent" (id 614, free licence for use in videos): sparse piano, strings timed to enter on the black after "reset", then a crossfade to the track's own piano outro for the close. Drone synthesised in the prep script. SFX: Mixkit bass hit, trailer impact, heartbeat, wind swoosh, all ducked under speech.
+
+QA: 0 of 1719 frames with text on a face or outside the safe area (face boxes from YuNet at 5 fps; detections without a neighbour within 0.4 s and jersey backs below y 1340 in clips 3–4 removed). 102 words, median 17.4 dB and minimum 8.7 dB above music + SFX + room. Preview master −14.0 LUFS.
+
+To confirm: "Kadang-kadang kami dengan Aiman ni pun pening" (two ASR passes heard "kadang-kadang pening" and "kena pening"; the name Aiman), the English for "Tempat main ni, tempat main-main" ("It's a game. It's where we play."), "kita kena 5-1" read as "they hit us 5–1", and whether clip4 should stay out.
 
 ## VivaEdit: edit decisions (21.1 s)
 

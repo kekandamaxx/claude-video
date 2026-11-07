@@ -16,7 +16,9 @@
     "render:friendship": "scripts/render_friendship.sh",
     "qa:capcut": "esbuild scripts/capcut_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/capcut_qa.js && node out/.qa/capcut_qa.js",
     "prepare:song": "scripts/prepare_song.sh",
-    "render:capcut": "scripts/render_capcut.sh"
+    "render:capcut": "scripts/render_capcut.sh",
+    "prepare:defeat": "scripts/prepare_defeat.sh",
+    "qa:defeat-audio": "esbuild scripts/defeat_words.ts --bundle --platform=node --log-level=warning --outfile=out/.qa/defeat_words.js && node out/.qa/defeat_words.js && scripts/stems.sh DefeatEdit && python3 scripts/defeat_word_snr.py"
   },
   "dependencies": {
     "@fontsource/anton": "5.3.0",

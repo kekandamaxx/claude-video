@@ -9,6 +9,8 @@ import {vivaEdit} from './edits/viva';
 import {FriendshipTribute, friendshipDefaults, friendshipSchema} from './edits/friendship/FriendshipTribute';
 import * as FT from './edits/friendship/timeline';
 import {CapcutEdit, capcutDefaults, capcutSchema} from './edits/friendship/capcut/CapcutEdit';
+import {DefeatEdit, defeatDefaults, defeatSchema} from './edits/defeat/DefeatEdit';
+import {EDL as DEFEAT, FPS as D_FPS, HEIGHT as D_H, WIDTH as D_W} from './edits/defeat/edl';
 import {CAP, FPS as CAP_FPS, H as CAP_H, W as CAP_W} from './edits/friendship/capcut/timeline';
 
 const defaults = {preview: true, guides: false, music: true, sfx: true, voice: true};
@@ -50,5 +52,7 @@ export const RemotionRoot: React.FC = () => (
 			width={CAP_W}
 			height={CAP_H}
 		/>
+		{/* "After the Loss": cinematic post-game documentary edit of five clips. */}
+		<Composition id="DefeatEdit" component={DefeatEdit} schema={defeatSchema} defaultProps={defeatDefaults} durationInFrames={DEFEAT.total} fps={D_FPS} width={D_W} height={D_H} />
 	</>
 );
