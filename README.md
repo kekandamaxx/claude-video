@@ -62,7 +62,7 @@ Sources (464×832, 60 fps phone clips): clip1 `2f5c468e` and clip2 `346a431c` ar
 
 | # | Time | Picture | Sound | Text |
 |---|---|---|---|---|
-| 1 | 0.0–8.0 | **HOOK** clip5 0.4–4.4, 0.5× slow motion, fade up | room an octave down, sub drone, low hit; VO clip2 10.26–13.25 "So bila kita nak buat comeback ni… susah." (+3 dB) | NOT THE RESULT WE WANTED. |
+| 1 | 0.0–8.0 | **HOOK** clip5 0.4–4.4, 0.5× slow motion, fade up | room an octave down, sub drone, low hit; VO clip2 10.26–13.25 "So bila kita nak buat comeback ni… susah." (+3 dB) | NOT THE RESULT WE WANTED. (0.45–3.35), then the score line FULL TIME · 16 – 17 · LOST BY ONE GOAL (3.7–7.7) |
 | 2 | 8.0–8.5 | black | trailer impact | |
 | 3 | 8.5–16.1 | clip2 2.62–10.26 | "Kita nak ikut dia main. Sebab dia nak main laju… kita kena 5-1 tu." | |
 | 4 | 16.1–20.4 | clip1 9.14–13.36 | "Kadang-kadang kami dengan Aiman ni pun pening. Nak atur kat dalam, nak atur kat luar." | |
@@ -82,7 +82,9 @@ Sound: each clip's dialogue through the coach-talk chain, normalised per clip. M
 
 QA: 0 of 1719 frames with text on a face or outside the safe area (face boxes from YuNet at 5 fps; detections without a neighbour within 0.4 s and jersey backs below y 1340 in clips 3–4 removed). 102 words, median 17.4 dB and minimum 8.7 dB above music + SFX + room. Preview master −14.0 LUFS.
 
-To confirm: "Kadang-kadang kami dengan Aiman ni pun pening" (two ASR passes heard "kadang-kadang pening" and "kena pening"; the name Aiman), the English for "Tempat main ni, tempat main-main" ("It's a game. It's where we play."), "kita kena 5-1" read as "they hit us 5–1", and whether clip4 should stay out.
+Final score confirmed: 16–17, lost by one goal. "Kita kena 5-1 tu" is a 5–1 run during the game, subtitled "they went on a 5–1 run". The score line is the only graphic beyond the titles: no box or icons, ours bright, theirs dimmed and a beat later.
+
+To confirm: "Kadang-kadang kami dengan Aiman ni pun pening" (two ASR passes heard "kadang-kadang pening" and "kena pening"; the name Aiman), the English for "Tempat main ni, tempat main-main" ("It's a game. It's where we play."), and whether clip4 should stay out.
 
 ## VivaEdit: edit decisions (21.1 s)
 
