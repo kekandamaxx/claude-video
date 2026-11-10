@@ -9,7 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
-| `HuddleEdit` | 4 chat uploads of one pre-match huddle (line-up, positions, tactics, mindset, cheer); Remotion + HyperFrames overlays | 50.6 s → 26.4 s | preview v2 awaiting approval |
+| `HuddleEdit` | 4 chat uploads of one pre-match huddle (line-up, positions, tactics, mindset, cheer); Remotion + HyperFrames overlays | 50.6 s → 26.4 s | final delivered (v2 approved) |
 
 ## Layout
 
@@ -47,7 +47,7 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## HuddleEdit: edit decisions (preview v2, 26.4 s)
+## HuddleEdit: edit decisions (final, 26.4 s)
 
 Four clips of the same huddle are joined into one source by `scripts/prepare_huddle.sh` (clip1 0–24.13, clip2 24.13–31.53, clip3 31.53–46.10, clip4 46.10–50.63; each cut to whole 30 fps frames). The audio is a noisy outdoor phone mic, so every line was checked on four ASR passes (Whisper large-v3 and large-v2 on the raw, denoised and DeepFilterNet-cleaned audio), and the word times were re-set against the voice envelope.
 
@@ -80,7 +80,9 @@ Not used: clip1 0–5.0 (unintelligible on every pass); 5.0–9.4 "yang lain tu 
 - Music: Mixkit "Rising Forest" (123 BPM, 1% of its energy in 1–4 kHz), with 3 bars of its steady section repeated (`public/huddle/audio/music_bed.wav`) so that its break sits under "Ingat, kena tinggal, jangan mental down" and the drop lands on "Boleh". SFX: Mixkit, including tape rewind (hook → line-up), shutter (freeze), movie impact, trailer whoosh, crowd.
 - QA: 0 of 791 frames with an overlay on a face or outside the safe area; 55 words with a median of 17.4 dB and a minimum of 10.5 dB over music + SFX; the preview master is at −14 LUFS.
 
-Confirmed by the coach: "Afiq, okay?", "wing kiri", "45 kiri", "pressure". To confirm: "Main full pressure" ("main" vs "my"), "Syahmi" (ASR: Syami/Syamil), "captain aku simpan dulu", "footwork", "basic instruction" (ASR: "basic institution"), "jangan mental down" (one pass heard "jaga"), and the words of the team shout (no caption is shown for it).
+Confirmed by the coach: "Afiq, okay?", "wing kiri", "45 kiri", "pressure"; v2 approved as shown ("Main full pressure", "Syahmi", "captain aku simpan dulu", "footwork", "basic instruction", "jangan mental down"; no caption on the team shout).
+
+Final: `COMP=HuddleEdit npm run render:final` gives `out/HuddleEdit/final.mp4` (−14.0 LUFS, −3.3 dBTP). Remotion writes full-range BT.601, so the upload copy `out/HuddleEdit/huddle_final.mp4` is converted to broadcast-range BT.709 (yuv420p, CRF 16, the same conversion as `render_friendship.sh`).
 
 ```bash
 scripts/prepare_huddle.sh clip1.mov clip2.mov clip3.mov clip4.mov   # c1b4f450, 468186b5, a97f3b21, 531bc622
