@@ -6,3 +6,6 @@ public/
 *.MOV
 # Friendship tribute: personal photos stay out of git (drop them here, then run scripts/prepare_friendship.sh).
 assets/friendship/photos/
+# HyperFrames per-project state (history, check artifacts)
+hyperframes/*/.hyperframes/
+hyperframes/*/renders/

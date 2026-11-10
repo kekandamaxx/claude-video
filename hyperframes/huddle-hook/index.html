@@ -1,0 +1,142 @@
+<!doctype html>
+<!--
+  HuddleEdit hook: kinetic type for "Budak perempuan kena tinggal 3 gol tau..." (open loop).
+  Rendered as a transparent WebM by scripts/render_huddle_hf.sh and laid over the footage
+  by Remotion (src/edits/huddle/Graphics.tsx). Word times are variables, so the render
+  script passes the values computed from src/edits/huddle/edl.ts.
+  Layout: everything sits in the low band y 890-1420 (coach's face ends at y ~840 here;
+  captions are hidden on this segment, so the caption band is free), x 80-940.
+-->
+<html
+  lang="ms"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"tBudak","type":"number","label":"Budak (s)","default":0.07},
+    {"id":"tPerempuan","type":"number","label":"perempuan (s)","default":0.2},
+    {"id":"tKena","type":"number","label":"kena (s)","default":0.63},
+    {"id":"tTinggal","type":"number","label":"tinggal (s)","default":0.83},
+    {"id":"t3","type":"number","label":"3 (s)","default":1.07},
+    {"id":"tGol","type":"number","label":"gol (s)","default":1.23},
+    {"id":"tTau","type":"number","label":"tau (s)","default":1.57},
+    {"id":"tEnd","type":"number","label":"segment end (s)","default":2.2}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: 'Anton'; src: url('assets/fonts/anton.woff2') format('woff2'); font-weight: 400; }
+      @font-face { font-family: 'MontserratBlack'; src: url('assets/fonts/montserrat-900.woff2') format('woff2'); font-weight: 900; }
+      :root {
+        --gold: #ffc72c;
+        --gold-deep: #f2a900;
+        --navy: #0a1633;
+        --red: #ff2d3d;
+        --white: #ffffff;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: absolute; inset: 0; font-family: 'Anton', sans-serif; color: var(--white); }
+      .layer { position: absolute; inset: 0; }
+      /* Scrim: a soft navy wash behind the type, only in the low band. */
+      #hk-scrim {
+        position: absolute; left: 0; right: 0; top: 860px; height: 600px;
+        background: linear-gradient(180deg, rgba(10,22,51,0) 0%, rgba(10,22,51,0.62) 30%, rgba(10,22,51,0.7) 75%, rgba(10,22,51,0) 100%);
+      }
+      #hk-tag {
+        position: absolute; left: 0; width: 1080px; top: 900px; display: flex; justify-content: center;
+      }
+      .pill {
+        display: inline-flex; align-items: center; gap: 14px; padding: 10px 24px; border-radius: 999px;
+        background: rgba(10,22,51,0.9); font-family: 'MontserratBlack', sans-serif; font-weight: 900;
+        font-size: 28px; letter-spacing: 4px; text-transform: uppercase; color: var(--white);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      }
+      .dot { width: 14px; height: 14px; border-radius: 7px; background: var(--red); box-shadow: 0 0 12px var(--red); }
+      .line { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center; gap: 26px; }
+      .w {
+        display: inline-block; text-transform: uppercase; line-height: 0.95; letter-spacing: 1px;
+        text-shadow: 0 6px 0 var(--navy), 0 14px 30px rgba(0,0,0,0.5);
+      }
+      #hk-l1 { top: 975px; }
+      #hk-l1 .w { font-size: 96px; }
+      #hk-l2 { top: 1080px; }
+      #hk-l2 .w { font-size: 124px; }
+      #hk-score { position: absolute; left: 0; width: 1080px; top: 1215px; display: flex; justify-content: center; align-items: center; gap: 22px; }
+      #hk-board {
+        position: relative; display: flex; align-items: center; gap: 18px; padding: 6px 34px 10px 30px;
+        border-radius: 22px; background: var(--navy); border: 6px solid var(--gold);
+        box-shadow: 0 0 0 6px rgba(10,22,51,0.6), 0 18px 40px rgba(0,0,0,0.5), 0 0 60px rgba(255,45,61,0.45);
+      }
+      #hk-minus { font-size: 196px; line-height: 1; color: var(--red); text-shadow: 0 0 24px rgba(255,45,61,0.6); }
+      #hk-gol { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+      #hk-gol-word { font-size: 92px; line-height: 0.9; color: var(--gold); }
+      #hk-gol-sub { font-family: 'MontserratBlack', sans-serif; font-size: 28px; letter-spacing: 5px; color: rgba(255,255,255,0.8); }
+      #hk-dots { display: flex; gap: 16px; align-items: flex-end; height: 140px; padding-bottom: 26px; }
+      .d { width: 22px; height: 22px; border-radius: 11px; background: var(--white); box-shadow: 0 4px 0 var(--navy); }
+      /* Glitch-out slices used on the exit. */
+      #hk-slices { position: absolute; left: 0; right: 0; top: 880px; height: 560px; pointer-events: none; }
+      .slice { position: absolute; left: 0; width: 1080px; height: 14px; background: rgba(255,199,44,0.85); mix-blend-mode: screen; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="2.45" data-width="1080" data-height="1920">
+      <div id="hk-all" class="clip layer" data-start="0" data-duration="2.45" data-track-index="0" data-layout-allow-overlap>
+        <div id="hk-scrim"></div>
+        <div id="hk-tag"><div class="pill" id="hk-pill"><span class="dot"></span>UMPSA Handball · Pre-match</div></div>
+        <div class="line" id="hk-l1"><span class="w" id="hk-budak">Budak</span><span class="w" id="hk-perempuan">perempuan</span></div>
+        <div class="line" id="hk-l2"><span class="w" id="hk-kena">kena</span><span class="w" id="hk-tinggal">tinggal</span></div>
+        <div id="hk-score">
+          <div id="hk-board">
+            <div id="hk-minus" class="w">-3</div>
+            <div id="hk-gol"><div id="hk-gol-word" class="w">GOL</div><div id="hk-gol-sub">TERTINGGAL</div></div>
+          </div>
+          <div id="hk-dots"><div class="d" id="hk-d1"></div><div class="d" id="hk-d2"></div><div class="d" id="hk-d3"></div></div>
+        </div>
+        <div id="hk-slices">
+          <div class="slice" id="hk-s1" style="top: 70px"></div>
+          <div class="slice" id="hk-s2" style="top: 190px; height: 22px"></div>
+          <div class="slice" id="hk-s3" style="top: 310px"></div>
+          <div class="slice" id="hk-s4" style="top: 430px; height: 26px"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      const T = Object.assign({tBudak: 0.07, tPerempuan: 0.2, tKena: 0.63, tTinggal: 0.83, t3: 1.07, tGol: 1.23, tTau: 1.57, tEnd: 2.2}, v);
+      const tl = gsap.timeline({ paused: true });
+      // Context pill and scrim come in under the first word.
+      tl.fromTo('#hk-scrim', { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' }, 0);
+      tl.fromTo('#hk-pill', { opacity: 0, y: 14, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.3, ease: 'expo.out' }, 0);
+      // Per word: slam in from slightly large with blur, then dead still.
+      const slam = (sel, t, from = 1.5) => {
+        tl.fromTo(sel, { opacity: 0, scale: from, filter: 'blur(10px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.16, ease: 'expo.out' }, t);
+      };
+      slam('#hk-budak', T.tBudak);
+      slam('#hk-perempuan', T.tPerempuan);
+      slam('#hk-kena', T.tKena, 1.35);
+      slam('#hk-tinggal', T.tTinggal, 1.35);
+      // The score: the board drops in on "3", the red -3 lands hard, GOL on "gol".
+      tl.fromTo('#hk-board', { opacity: 0, scale: 2.2, rotation: -6 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.22, ease: 'back.out(1.6)' }, T.t3 - 0.04);
+      tl.fromTo('#hk-minus', { scale: 1.8 }, { scale: 1, duration: 0.2, ease: 'expo.out' }, T.t3 - 0.04);
+      tl.fromTo('#hk-score', { x: 0 }, { keyframes: [{ x: -16, duration: 0.03 }, { x: 12, duration: 0.03 }, { x: -7, duration: 0.03 }, { x: 0, duration: 0.05 }] }, T.t3 + 0.16);
+      tl.fromTo('#hk-gol-word', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.18, ease: 'expo.out' }, T.tGol);
+      tl.fromTo('#hk-gol-sub', { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' }, T.tGol + 0.08);
+      // "tau..." : three dots, the sentence is left hanging.
+      ['#hk-d1', '#hk-d2', '#hk-d3'].forEach((d, i) => {
+        tl.fromTo(d, { opacity: 0, scale: 0, y: 0 }, { opacity: 1, scale: 1, duration: 0.14, ease: 'back.out(2.4)' }, T.tTau + i * 0.1);
+      });
+      // Exit: glitch slices sweep, everything smears out (the cut to the line-up rides on it).
+      const out = T.tEnd - 0.16;
+      ['#hk-s1', '#hk-s2', '#hk-s3', '#hk-s4'].forEach((s, i) => {
+        tl.fromTo(s, { opacity: 0, x: i % 2 ? 600 : -600 }, { opacity: 0.9, x: 0, duration: 0.06, ease: 'power3.in' }, out - 0.06 + i * 0.015);
+        tl.to(s, { opacity: 0, x: i % 2 ? -500 : 500, duration: 0.08, ease: 'power3.in' }, out + 0.02 + i * 0.015);
+      });
+      tl.to(['#hk-l1', '#hk-l2', '#hk-score', '#hk-tag'], { opacity: 0, x: 90, filter: 'blur(14px)', duration: 0.14, ease: 'power3.in', stagger: 0.02 }, out);
+      tl.to('#hk-scrim', { opacity: 0, duration: 0.2, ease: 'power2.in' }, out);
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

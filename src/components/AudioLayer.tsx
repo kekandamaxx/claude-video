@@ -11,6 +11,7 @@ const HIT: Record<string, number> = {
 	pop_hard: 0, pop_light: 0.02, riser: 2.53, swoosh_accent: 0.11, swoosh_wind: 0.43,
 	tick: 0.66, whoosh_cine: 0.71, whoosh_fast: 1.07, zoom_impact: 0.41, heartbeat: 0.09,
 	buzzer: 0.05, crowd: 0, whoosh_hit: 3.16,
+	tape_rewind: 0.3, shutter: 0.13, movie_impact: 1.17, trailer_whoosh: 3.15, crowd_chant: 0, heart_single: 0.02,
 };
 
 const SFX_UNDER_SPEECH = 0.2; // -14 dB extra on the SFX bus while a word is spoken

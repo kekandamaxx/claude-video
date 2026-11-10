@@ -16,7 +16,9 @@
     "render:friendship": "scripts/render_friendship.sh",
     "qa:capcut": "esbuild scripts/capcut_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/capcut_qa.js && node out/.qa/capcut_qa.js",
     "prepare:song": "scripts/prepare_song.sh",
-    "render:capcut": "scripts/render_capcut.sh"
+    "render:capcut": "scripts/render_capcut.sh",
+    "prepare:huddle": "scripts/prepare_huddle.sh",
+    "render:huddle-hf": "scripts/render_huddle_hf.sh"
   },
   "dependencies": {
     "@fontsource/anton": "5.3.0",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@types/react": "19.1.8",
+    "hyperframes": "0.9.20",
     "typescript": "5.8.3"
   }
 }

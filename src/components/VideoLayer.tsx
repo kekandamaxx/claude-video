@@ -86,13 +86,17 @@ export const FaceMask: React.FC = () => {
 	const e = useEdit();
 	const frame = useCurrentFrame();
 	const sh = shake(frame, e.shakeHits, 14, 7);
-	const s = e.edl.segmentAt(frame);
-	if (!s || s.visual) return null; // B-roll / stills carry no detected faces
-	const f = frame - s.outFrom;
+	// The outro holds the last segment's last frame, so its faces stay protected too.
+	const segs = e.edl.segments;
+	const s = frame >= e.edl.cutEnd ? segs[segs.length - 1] : e.edl.segmentAt(frame);
+	if (!s) return null;
+	// B-roll / stills carry no detected faces unless they come from the main clip (facesAt).
+	if (s.visual && s.visual.facesAt === undefined) return null;
+	const f = Math.min(frame - s.outFrom, s.len - 1);
 	const drift = interpolate(f, [0, s.len], [s.zoomFrom, s.zoomTo], clamp);
-	const p = s.outFrom === 0 ? 1 : pop(f, 0, 14, 0.5);
+	const p = s.outFrom === 0 || frame >= e.edl.cutEnd ? 1 : pop(f, 0, 14, 0.5);
 	const z = drift * (1 + 0.1 * (1 - p));
-	const t = (s.srcFrom + f) / 30;
+	const t = s.visual ? (s.visual.facesAt as number) + (s.visual.kind === 'video' ? f / 30 : 0) : (s.srcFrom + f) / 30;
 	const near = e.faces.reduce((a, b) => (Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a));
 	return (
 		<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px) scale(1.03)`}}>

@@ -7,7 +7,7 @@ import {clamp, pop} from '../lib/anim';
 export const Captions: React.FC = () => {
 	const e = useEdit();
 	const frame = useCurrentFrame();
-	const chunk = e.edl.chunks.find((c) => frame >= c.from && frame < c.to);
+	const chunk = e.edl.chunks.find((c) => frame >= c.from && frame < c.to && !c.hidden);
 	if (!chunk) return null;
 	// Caption band centre: per segment (picked from the measured face band) or the edit default.
 	const cy = e.edl.seg(chunk.words[0].segId).captionY ?? e.captionY;

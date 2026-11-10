@@ -6,6 +6,7 @@ import {timeoutEdit} from './edits/timeout';
 import {semifinalEdit} from './edits/semifinal';
 import {briefingEdit} from './edits/briefing';
 import {vivaEdit} from './edits/viva';
+import {huddleEdit} from './edits/huddle';
 import {FriendshipTribute, friendshipDefaults, friendshipSchema} from './edits/friendship/FriendshipTribute';
 import * as FT from './edits/friendship/timeline';
 import {CapcutEdit, capcutDefaults, capcutSchema} from './edits/friendship/capcut/CapcutEdit';
@@ -19,6 +20,7 @@ const EDITS = [
 	{id: 'SemifinalEdit', edit: semifinalEdit},
 	{id: 'BriefingEdit', edit: briefingEdit},
 	{id: 'VivaEdit', edit: vivaEdit},
+	{id: 'HuddleEdit', edit: huddleEdit},
 ];
 
 const COMPONENTS = EDITS.map((x) => ({...x, component: makeMain(x.edit)}));

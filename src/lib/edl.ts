@@ -21,16 +21,21 @@ export type SegmentDef = {
 	visual?: Visual;
 	/** false = no dialogue (and no captions) in this segment; srcStart/srcEnd then only set its length. */
 	voice?: boolean;
+	/** true = the words still drive ducking and graphics timing, but no captions are drawn
+	 *  (the segment's graphic already shows the line, e.g. kinetic type). */
+	hideCaptions?: boolean;
 	note: string;
 };
 
+/** `facesAt`: source time (in the edit's main clip) whose faces.json samples apply to this
+ *  picture, for B-roll or stills taken from the main clip itself; face QA then covers them. */
 export type Visual =
-	| {kind: 'video'; master: string; proxy: string; srcStart: number}
-	| {kind: 'image'; src: string};
+	| {kind: 'video'; master: string; proxy: string; srcStart: number; facesAt?: number}
+	| {kind: 'image'; src: string; facesAt?: number};
 
 export type Segment = SegmentDef & {srcFrom: number; len: number; outFrom: number};
 export type Word = {text: string; from: number; to: number; segId: string};
-export type Chunk = {words: Word[]; from: number; to: number};
+export type Chunk = {words: Word[]; from: number; to: number; hidden?: boolean};
 
 type RawWord = {w: string; s: number; e: number};
 type Transcript = {segments: {words: RawWord[]}[]};
@@ -103,7 +108,7 @@ export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix
 					to: at(s.id, Math.min(w.e, s.srcEnd)),
 					segId: s.id,
 				}));
-			if (words.length) raw.push({words, from: words[0].from, to: words[words.length - 1].to});
+			if (words.length) raw.push({words, from: words[0].from, to: words[words.length - 1].to, hidden: s.hideCaptions});
 		}
 	}
 	raw.sort((a, b) => a.from - b.from);
