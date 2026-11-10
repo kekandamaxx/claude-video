@@ -162,6 +162,57 @@
    ]
   },
   {
+   "start": 26.1,
+   "end": 26.98,
+   "text": "Wing kiri,",
+   "words": [
+    {
+     "w": "Wing",
+     "s": 26.1,
+     "e": 26.4
+    },
+    {
+     "w": "kiri,",
+     "s": 26.4,
+     "e": 26.98
+    }
+   ]
+  },
+  {
+   "start": 28.24,
+   "end": 29.38,
+   "text": "45 kiri.",
+   "words": [
+    {
+     "w": "45",
+     "s": 28.24,
+     "e": 28.88
+    },
+    {
+     "w": "kiri.",
+     "s": 28.9,
+     "e": 29.38
+    }
+   ]
+  },
+  {
+   "start": 31.98,
+   "end": 33.48,
+   "text": "Afiq, okay?",
+   "words": [
+    {
+     "w": "Afiq,",
+     "s": 31.98,
+     "e": 32.42
+    },
+    {
+     "w": "okay?",
+     "s": 33.24,
+     "e": 33.48
+    }
+   ]
+  },
+  {
    "start": 33.95,
    "end": 35.22,
    "text": "Keeper, Syahmi.",
@@ -221,6 +272,28 @@
      "w": "dulu.",
      "s": 36.76,
      "e": 37.1
+    }
+   ]
+  },
+  {
+   "start": 38.62,
+   "end": 39.32,
+   "text": "Main full pressure.",
+   "words": [
+    {
+     "w": "Main",
+     "s": 38.62,
+     "e": 38.76
+    },
+    {
+     "w": "full",
+     "s": 38.76,
+     "e": 38.96
+    },
+    {
+     "w": "pressure.",
+     "s": 38.96,
+     "e": 39.32
     }
    ]
   },
@@ -401,5 +474,10 @@
     }
    ]
   }
- ]
+ ],
+ "corrections": {
+  "pressure": "confirmed by the coach (ASR heard 'pleasure')",
+  "Afiq, okay?": "confirmed by the coach",
+  "Wing kiri / 45 kiri": "confirmed by the coach"
+ }
 }

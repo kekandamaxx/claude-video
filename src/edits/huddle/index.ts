@@ -18,10 +18,17 @@ const CUES: Cue[] = [
 	{sfx: 'tick', at: T.tau + 7, vol: 0.25},
 	// Rewind to the start of the talk (flashback): the line-up
 	{sfx: 'tape_rewind', at: T.hookEnd - 3, vol: 0.4, dur: 22},
+	{sfx: 'swoosh_accent', at: T.afiq - 2, vol: 0.3},
+	{sfx: 'pop_light', at: T.okay, vol: 0.35},
 	{sfx: 'swoosh_accent', at: T.keeper - 2, vol: 0.3},
 	{sfx: 'pop_light', at: T.syahmi, vol: 0.4},
 	{sfx: 'swoosh_accent', at: T.captainW - 2, vol: 0.3},
 	{sfx: 'shutter', at: T.simpan + 4, vol: 0.35},
+	// Positions board: WING KIRI, 45 KIRI
+	{sfx: 'whoosh_fast', at: T.wingSeg, vol: 0.32},
+	{sfx: 'pop_hard', at: T.wingW, vol: 0.3},
+	{sfx: 'swoosh_accent', at: T.ffSeg, vol: 0.25},
+	{sfx: 'pop_hard', at: T.ff, vol: 0.3},
 	// SEMUA BOLEH MOVE + footprints
 	{sfx: 'whoosh_fast', at: T.move - 1, vol: 0.45},
 	...[0, 1, 2, 3, 4, 5].map((i): Cue => ({sfx: 'pop_light', at: T.semua2 + i * 2, vol: 0.16})),
@@ -37,7 +44,10 @@ const CUES: Cue[] = [
 	{sfx: 'swoosh_accent', at: T.release + 1, vol: 0.38},
 	{sfx: 'pop_light', at: T.release + 9, vol: 0.4},
 	{sfx: 'pop_light', at: T.faham, vol: 0.3},
-	// 40 MINIT stopwatch
+	// FULL PRESSURE gauge -> 40 MINIT stopwatch
+	{sfx: 'swoosh_wind', at: T.pressureSeg, vol: 0.3},
+	{sfx: 'zoom_impact', at: T.full + 3, vol: 0.28},
+	{sfx: 'bass_hit', at: T.pressure, vol: 0.35},
 	{sfx: 'zoom_impact', at: T.forty, vol: 0.3},
 	{sfx: 'tick', at: T.forty + 3, vol: 0.22},
 	{sfx: 'tick', at: T.forty + 7, vol: 0.22},
@@ -67,12 +77,14 @@ export const huddleEdit: EditConfig = {
 		master: 'huddle/video/master.mp4',
 		proxy: 'huddle/video/proxy.mp4',
 		voice: 'huddle/audio/voice.wav',
-		music: 'shared/music/rising_forest.wav',
-		musicTrimFrames: 6, // the drop at 16.16 s lands on "Boleh" (15.97 s out)
+		music: 'huddle/audio/music_bed.wav',
+		// Drop at 21.32 s in the bed lands on "Boleh" (20.70 s out); the break (19.25-21.32 s)
+		// sits under "Ingat, kena tinggal, jangan mental down".
+		musicTrimFrames: 19,
 	},
 	captionY: 1300,
 	zoomOriginY: 600,
-	captionKeys: new Set(['MOVE', 'FOOTWORK', 'BASIC', 'TEBUK', 'RELEASE', 'FAHAM', 'KEEPER', 'SYAHMI', 'CAPTAIN', 'SIMPAN', '40', 'MINIT', 'INGAT', 'TINGGAL', 'MENTAL', 'DOWN']),
+	captionKeys: new Set(['AFIQ', 'WING', 'KIRI', '45', 'PRESSURE', 'MOVE', 'FOOTWORK', 'BASIC', 'TEBUK', 'RELEASE', 'FAHAM', 'KEEPER', 'SYAHMI', 'CAPTAIN', 'SIMPAN', '40', 'MINIT', 'INGAT', 'TINGGAL', 'MENTAL', 'DOWN']),
 	captionAutoFit: true,
 	maxFaceHeight: 330, // the coach is close to the lens in clip3 (faces up to 311 px); 353 px is a back-of-head false hit
 	Graphics,

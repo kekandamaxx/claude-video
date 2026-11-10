@@ -17,12 +17,19 @@ export const T = {
 	gol: at('hook', 44.55),
 	tau: at('hook', 44.86),
 	hookEnd: segEnd('hook'),
+	afiq: at('afiq', 31.98),
+	okay: at('afiq', 33.24),
 	keeper: at('keeper', 33.95),
 	syahmi: at('keeper', 34.76),
 	captainSeg: start('captain'),
 	captainW: at('captain', 36.04),
 	simpan: at('captain', 36.46),
 	lineupEnd: segEnd('captain'),
+	wingSeg: start('wing'),
+	wingW: at('wing', 26.1),
+	ffSeg: start('fortyfive'),
+	ff: at('fortyfive', 28.24),
+	posEnd: segEnd('fortyfive'),
 	moveSeg: start('move'),
 	korang: at('move', 9.62),
 	move: at('move', 10.62),
@@ -39,6 +46,9 @@ export const T = {
 	faham: at('tebuk', 16.64),
 	macam: at('tebuk', 17.52),
 	tebukEnd: segEnd('tebuk'),
+	pressureSeg: start('forty'),
+	full: at('forty', 38.76),
+	pressure: at('forty', 38.96),
 	forty: at('forty', 39.38),
 	minit: at('forty', 39.8),
 	ingat: at('forty', 40.64),
@@ -73,6 +83,13 @@ const Glove: React.FC<{size: number}> = ({size}) => (
 	<svg width={size} height={size} viewBox="0 0 100 100">
 		<path d="M30 92 V58 L18 44 Q14 36 22 34 L34 46 V16 Q34 9 41 9 Q47 9 47 16 V40 V10 Q47 4 54 4 Q60 4 60 10 V40 V14 Q60 8 66 8 Q72 8 72 14 V42 V22 Q72 16 78 16 Q84 16 84 22 V62 Q84 80 70 92 Z" fill={C.gold} stroke={C.navy} strokeWidth="5" strokeLinejoin="round" />
 		<rect x="28" y="78" width="46" height="14" rx="4" fill={C.navy} />
+	</svg>
+);
+
+const Jersey: React.FC<{size: number}> = ({size}) => (
+	<svg width={size} height={size} viewBox="0 0 100 100">
+		<path d="M34 8 L50 16 L66 8 L92 24 L82 44 L72 40 V92 H28 V40 L18 44 L8 24 Z" fill={C.gold} stroke={C.navy} strokeWidth="5" strokeLinejoin="round" />
+		<path d="M40 10 Q50 24 60 10" fill="none" stroke={C.navy} strokeWidth="5" />
 	</svg>
 );
 
@@ -145,7 +162,7 @@ const HfOverlay: React.FC<{src: string}> = ({src}) => <OffthreadVideo src={stati
 const Row: React.FC<{frame: number; at: number; icon: React.ReactNode; label: string; children: React.ReactNode}> = ({frame, at: t, icon, label, children}) => {
 	const k = frame >= t ? pop(frame, t, 13, 0.6) : 0;
 	return (
-		<div style={{display: 'flex', alignItems: 'center', gap: 22, height: 88, padding: '0 28px', transform: `translateX(${(1 - k) * -120}px)`, opacity: Math.min(1, k * 1.5)}}>
+		<div style={{display: 'flex', alignItems: 'center', gap: 22, height: 74, padding: '0 28px', transform: `translateX(${(1 - k) * -120}px)`, opacity: Math.min(1, k * 1.5)}}>
 			{icon}
 			<div style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 30, letterSpacing: 4, color: C.gold, width: 200}}>{label}</div>
 			<div style={{flex: 1, display: 'flex', alignItems: 'center', gap: 14}}>{children}</div>
@@ -153,33 +170,98 @@ const Row: React.FC<{frame: number; at: number; icon: React.ReactNode; label: st
 	);
 };
 
+const Divider: React.FC<{show: boolean}> = ({show}) => <div style={{height: 3, margin: '0 28px', background: 'rgba(255,255,255,0.12)', opacity: show ? 1 : 0}} />;
+
 const Lineup: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.keeper - 3 || frame >= T.lineupEnd) return null;
+	if (frame < T.afiq - 3 || frame >= T.lineupEnd) return null;
 	const v = interpolate(frame, [T.lineupEnd - 6, T.lineupEnd], [1, 0], clamp);
-	const panel = pop(frame, T.keeper - 3, 14, 0.6);
+	const panel = pop(frame, T.afiq - 3, 14, 0.6);
+	const ok = frame >= T.okay - 1 ? pop(frame, T.okay - 1, 10, 0.5) : 0;
 	const name = frame >= T.syahmi - 1 ? pop(frame, T.syahmi - 1, 10, 0.5) : 0;
 	const lock = frame >= T.simpan ? easeIn(frame, T.simpan, 6) : 0;
 	const simpan = frame >= T.simpan + 2 ? pop(frame, T.simpan + 2, 10, 0.5) : 0;
+	// Three rows need a taller band than LOW: y 870-1160 (faces end at y ~810 in this take).
 	return (
-		<LowZone>
+		<LowZone style={{top: 870, height: 290}}>
 			<div style={{width: 780, opacity: v, transform: `translateY(${(1 - v) * 30}px)`}}>
-				<div style={{display: 'flex', marginBottom: 10, transform: `scale(${panel})`, transformOrigin: 'left center'}}>
+				<div style={{display: 'flex', marginBottom: 8, transform: `scale(${panel})`, transformOrigin: 'left center'}}>
 					<Pill bg={C.gold} color={C.navy} style={{fontSize: 28, padding: '8px 20px'}}>Line-up</Pill>
 				</div>
-				<div style={{...glass, padding: '8px 0', transform: `scaleY(${panel})`, transformOrigin: 'top center'}}>
-					<Row frame={frame} at={T.keeper - 2} icon={<Glove size={70} />} label="KEEPER">
-						<Display size={74} style={{transform: `scale(${name})`, transformOrigin: 'left center'}}>Syahmi</Display>
-					</Row>
-					<div style={{height: 3, margin: '0 28px', background: 'rgba(255,255,255,0.12)', opacity: frame >= T.captainW - 2 ? 1 : 0}} />
-					<Row frame={frame} at={T.captainW - 2} icon={<Armband size={70} />} label="CAPTAIN">
-						<div style={{transform: `scale(${frame >= T.simpan - 2 ? 1 : 0})`}}>
-							<Lock size={64} closed={lock} />
+				<div style={{...glass, padding: '6px 0', transform: `scaleY(${panel})`, transformOrigin: 'top center'}}>
+					<Row frame={frame} at={T.afiq - 1} icon={<Jersey size={60} />} label="PLAYER">
+						<Display size={64}>Afiq</Display>
+						<div style={{transform: `scale(${ok})`, marginLeft: 6}}>
+							<Pill bg={C.green} color={C.navy} style={{fontSize: 28, padding: '6px 16px'}}>Okay?</Pill>
 						</div>
-						<Display size={62} style={{transform: `scale(${simpan})`, transformOrigin: 'left center', whiteSpace: 'nowrap'}}>Simpan dulu</Display>
+					</Row>
+					<Divider show={frame >= T.keeper - 2} />
+					<Row frame={frame} at={T.keeper - 2} icon={<Glove size={60} />} label="KEEPER">
+						<Display size={64} style={{transform: `scale(${name})`, transformOrigin: 'left center'}}>Syahmi</Display>
+					</Row>
+					<Divider show={frame >= T.captainW - 2} />
+					<Row frame={frame} at={T.captainW - 2} icon={<Armband size={60} />} label="CAPTAIN">
+						<div style={{transform: `scale(${frame >= T.simpan - 2 ? 1 : 0})`}}>
+							<Lock size={56} closed={lock} />
+						</div>
+						<Display size={56} style={{transform: `scale(${simpan})`, transformOrigin: 'left center', whiteSpace: 'nowrap'}}>Simpan dulu</Display>
 					</Row>
 				</div>
 			</div>
 		</LowZone>
+	);
+};
+
+// ---------------------------------------------------------------- 3b. positions: WING KIRI, 45 KIRI (attack shape, goal at the top)
+// Seen from behind the attack, so the players' left is the viewer's left.
+const SLOTS = [
+	{id: 'lw', x: 70, y: 46, label: 'Wing kiri', lx: 40, ly: 80},
+	{id: 'lb', x: 210, y: 190, label: '45 kiri', lx: 252, ly: 136},
+	{id: 'cb', x: 410, y: 222, label: '', lx: 0, ly: 0},
+	{id: 'rb', x: 610, y: 190, label: '', lx: 0, ly: 0},
+	{id: 'rw', x: 750, y: 46, label: '', lx: 0, ly: 0},
+	{id: 'pv', x: 410, y: 112, label: '', lx: 0, ly: 0},
+];
+
+const Positions: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.wingSeg || frame >= T.posEnd) return null;
+	const v = interpolate(frame, [T.posEnd - 5, T.posEnd], [1, 0], clamp);
+	const inP = pop(frame, T.wingSeg, 13, 0.6);
+	const hit = (id: string) => (id === 'lw' ? T.wingW : id === 'lb' ? T.ff : null);
+	return (
+		// Pinned to the top of the band at 86 %: small background faces reach y ~500 late in clip2.
+		<TopZone style={{justifyContent: 'flex-start', paddingTop: 4}}>
+			<div style={{position: 'relative', width: 820, height: 280, opacity: v * Math.min(1, inP * 1.5), transform: `scale(${0.86 * (0.9 + 0.1 * inP)})`, transformOrigin: 'top center', ...glass}}>
+				<svg width={820} height={280} viewBox="0 0 820 280" style={{position: 'absolute', inset: 0}}>
+					<rect x="360" y="0" width="100" height="14" fill="none" stroke={C.white} strokeWidth="5" opacity="0.8" />
+					<path d="M 250 0 A 160 120 0 0 0 570 0" fill="none" stroke={C.white} strokeWidth="4" opacity="0.55" />
+					<path d="M 170 0 A 240 185 0 0 0 650 0" fill="none" stroke={C.white} strokeWidth="4" strokeDasharray="14 12" opacity="0.35" />
+					{SLOTS.map((p) => {
+						const t = hit(p.id);
+						const on = t !== null && frame >= t - 1;
+						const k = on ? pop(frame, (t as number) - 1, 9, 0.6) : 0;
+						const ring = on ? interpolate(frame, [(t as number) - 1, (t as number) + 14], [0, 1], clamp) : 0;
+						return (
+							<g key={p.id} transform={`translate(${p.x} ${p.y})`}>
+								{on ? <circle r={26 + 40 * ring} fill="none" stroke={C.gold} strokeWidth={6 * (1 - ring)} opacity={1 - ring} /> : null}
+								<circle r={on ? 24 + 6 * k : 20} fill={on ? C.gold : 'rgba(255,255,255,0.28)'} stroke={on ? C.white : C.navy} strokeWidth="5" />
+							</g>
+						);
+					})}
+				</svg>
+				{SLOTS.filter((p) => p.label).map((p) => {
+					const t = hit(p.id) as number;
+					const k = frame >= t ? pop(frame, t, 10, 0.5) : 0;
+					return (
+						<div key={p.id} style={{position: 'absolute', left: p.lx, top: p.ly, transform: `scale(${k})`, transformOrigin: 'left center'}}>
+							<Display size={58} color={C.gold} style={{whiteSpace: 'nowrap'}}>{p.label}</Display>
+						</div>
+					);
+				})}
+				<div style={{position: 'absolute', right: 26, top: 216}}>
+					<Pill bg="rgba(255,255,255,0.14)" style={{fontSize: 26, padding: '6px 16px', boxShadow: 'none'}}>Posisi</Pill>
+				</div>
+			</div>
+		</TopZone>
 	);
 };
 
@@ -351,11 +433,45 @@ const Board: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
+// ---------------------------------------------------------------- 7a. MAIN FULL PRESSURE gauge (hands over to the stopwatch on "40")
+const Gauge: React.FC<{size: number; value: number}> = ({size, value}) => {
+	const a = -120 + 240 * value;
+	return (
+		<svg width={size} height={size * 0.72} viewBox="0 0 100 72" style={{filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.45))'}}>
+			<path d="M 12 64 A 40 40 0 0 1 88 64" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="12" strokeLinecap="round" />
+			<path d="M 12 64 A 40 40 0 0 1 88 64" fill="none" stroke={C.red} strokeWidth="12" strokeLinecap="round" strokeDasharray="126" strokeDashoffset={126 * (1 - value)} />
+			<line x1="50" y1="64" x2={50 + 32 * Math.sin((a * Math.PI) / 180)} y2={64 - 32 * Math.cos((a * Math.PI) / 180)} stroke={C.white} strokeWidth="6" strokeLinecap="round" />
+			<circle cx="50" cy="64" r="7" fill={C.white} />
+		</svg>
+	);
+};
+
+const Pressure: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.pressureSeg || frame >= T.forty + 2) return null;
+	const k = pop(frame, T.pressureSeg + 1, 12, 0.5);
+	const needle = frame >= T.full - 2 ? easeIn(frame, T.full - 2, 9) : 0;
+	const n = 1 - Math.pow(1 - needle, 3);
+	const wob = needle >= 1 ? Math.sin((frame - T.full) * 1.7) * 0.02 : 0;
+	const word = frame >= T.pressure - 1 ? pop(frame, T.pressure - 1, 15, 0.6) : 0;
+	const out = interpolate(frame, [T.forty - 2, T.forty + 2], [1, 0], clamp);
+	return (
+		<LowZone>
+			<div style={{display: 'flex', alignItems: 'center', gap: 26, padding: '18px 40px', ...glass, opacity: out, transform: `scale(${k * (1 - 0.15 * (1 - out))})`}}>
+				<Gauge size={190} value={Math.min(1, n * 0.97 + wob)} />
+				<div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+					<div style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 40, letterSpacing: 10, color: C.white}}>FULL</div>
+					<Display size={104} color={C.red} style={{transform: `scale(${word})`, transformOrigin: 'left center', paddingRight: 8}}>Pressure</Display>
+				</div>
+			</div>
+		</LowZone>
+	);
+};
+
 // ---------------------------------------------------------------- 7. 40 MINIT stopwatch
 const Forty: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.forty - 3 || frame >= T.fortyEnd) return null;
+	if (frame < T.forty - 1 || frame >= T.fortyEnd) return null;
 	const v = interpolate(frame, [T.fortyEnd - 4, T.fortyEnd], [1, 0], clamp);
-	const k = pop(frame, T.forty - 3, 12, 0.5);
+	const k = pop(frame, T.forty - 1, 12, 0.5);
 	const roll = frame >= T.forty ? easeIn(frame, T.forty, 13) : 0;
 	const n = Math.round(40 * (1 - Math.pow(1 - roll, 2)));
 	const lab = frame >= T.minit - 1 ? pop(frame, T.minit - 1, 10, 0.5) : 0;
@@ -421,9 +537,11 @@ export const Graphics: React.FC = () => {
 					<HfOverlay src="huddle/hf/hook.webm" />
 				</Sequence>
 				<Lineup frame={frame} />
+				<Positions frame={frame} />
 				<Move frame={frame} />
 				<Basic frame={frame} />
 				<Board frame={frame} />
+				<Pressure frame={frame} />
 				<Forty frame={frame} />
 				<Mental frame={frame} />
 				<Sequence from={T.finale} durationInFrames={T.end - T.finale} name="hf:finale" layout="none">

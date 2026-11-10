@@ -37,13 +37,18 @@ ffmpeg -v error -y -i "$PUB/audio/voice.wav" -ar 16000 "$PUB/audio/voice16k.wav"
 mkdir -p "$PUB/img"
 ffmpeg -v error -y -ss 48.5 -i "$PUB/video/master.mp4" -frames:v 1 -q:v 1 "$PUB/img/freeze.jpg"
 # Music bed: Mixkit "Rising Forest" (id 471, 123 BPM). 87% of its energy is below 150 Hz,
-# 1% in 1-4 kHz, so it stays out of the voice; its break (13.5-15.5 s) sits under
-# "kena tinggal, jangan mental down" and the drop (16.16 s) lands on "Boleh menang".
+# 1% in 1-4 kHz, so it stays out of the voice. Break 13.4-15.48 s, drop at 15.48 s.
 if [ ! -f "$SHARED/music/rising_forest.wav" ]; then
   curl -sSL -o "$TMP/rf.mp3" https://assets.mixkit.co/music/471/471.mp3
   ffmpeg -v error -y -i "$TMP/rf.mp3" -t 60 -ar 48000 -ac 2 -af "\
 equalizer=f=1800:t=o:w=1.5:g=-6,equalizer=f=3500:t=o:w=1:g=-4,\
 loudnorm=I=-14:TP=-1.5:LRA=11" "$SHARED/music/rising_forest.wav"
 fi
+# The edit is 26.4 s, so the bed repeats 3 bars (5.854 s at 123 BPM) of its steady
+# section (12.258 s back to 6.404 s, 20 ms crossfade): the break moves to 19.25-21.32 s
+# and the drop to 21.32 s, which musicTrimFrames lands on "Boleh".
+ffmpeg -v error -y -i "$SHARED/music/rising_forest.wav" -filter_complex \
+  "[0]atrim=0:12.2576,asetpts=PTS-STARTPTS[a];[0]atrim=6.4039,asetpts=PTS-STARTPTS[b];[a][b]acrossfade=d=0.02:c1=tri:c2=tri" \
+  -ar 48000 "$PUB/audio/music_bed.wav"
 "$ROOT/scripts/prepare_shared.sh"
 rm -rf "$TMP"; echo "media ready in $PUB"

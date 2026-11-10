@@ -6,8 +6,10 @@ import cv2, json, sys, os
 # False hits checked by eye: from 24.1 s to 49.6 s (clip2, clip3, clip4) the players nearest the lens show
 # the back of the head or an ear, which YuNet scores 0.75-0.78 at y > 820; every real face
 # in those clips has its top above y 760.
+# In clip2 the ears of the two nearest players score 0.80-0.83 at y > 1000; the lowest
+# real face there (the boy on the right, facing the lens) starts at y 914.
 def false_hit(t, b):
-    return 24.1 <= t < 49.6 and b[1] > 820 and b[4] < 0.8
+    return (24.1 <= t < 49.6 and b[1] > 820 and b[4] < 0.8) or (24.1 <= t < 31.6 and b[1] > 1000)
 def clean(samples):
     return [{'t': s['t'], 'faces': [b for b in s['faces'] if not false_hit(s['t'], b)]} for s in samples]
 if sys.argv[1] == '--clean-only':

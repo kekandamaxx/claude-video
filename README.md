@@ -9,7 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
-| `HuddleEdit` | 4 chat uploads of one pre-match huddle (tactics, line-up, mindset, cheer); Remotion + HyperFrames overlays | 50.6 s → 21.6 s | preview awaiting approval |
+| `HuddleEdit` | 4 chat uploads of one pre-match huddle (line-up, positions, tactics, mindset, cheer); Remotion + HyperFrames overlays | 50.6 s → 26.4 s | preview v2 awaiting approval |
 
 ## Layout
 
@@ -47,7 +47,7 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## HuddleEdit: edit decisions (preview, 21.6 s)
+## HuddleEdit: edit decisions (preview v2, 26.4 s)
 
 Four clips of the same huddle are joined into one source by `scripts/prepare_huddle.sh` (clip1 0–24.13, clip2 24.13–31.53, clip3 31.53–46.10, clip4 46.10–50.63; each cut to whole 30 fps frames). The audio is a noisy outdoor phone mic, so every line was checked on four ASR passes (Whisper large-v3 and large-v2 on the raw, denoised and DeepFilterNet-cleaned audio), and the word times were re-set against the voice envelope.
 
@@ -56,26 +56,31 @@ Story: the hook opens a loop, the payoff closes it just before the cheer, and no
 | # | Picture | Source | Speech |
 |---|---|---|---|
 | 1 | clip3 | 43.30–45.50 | **HOOK** "Budak perempuan kena tinggal 3 gol tau…" (kinetic type, HyperFrames; stops before "boleh menang") |
-| 2 | clip3 | 33.85–35.32 | Keeper, Syahmi. |
-| 3 | clip3 | 35.58–37.22 | Alright, captain aku simpan dulu. (0.26 s pause cut) |
-| 4 | clip1 | 9.56–11.82 | Korang semua boleh move. Semua ada footwork. |
-| 5 | clip2 B-roll | 12.28–14.26 | Remember, basic instruction. |
-| 6 | clip1 | 15.06–17.96 | Tebuk, release. Faham tak tebuk, release tu macam mana? |
-| 7 | clip3 | 39.34–41.12 | 40 minit. Ingat, |
-| 8 | clip3 | 41.46–43.08 | kena tinggal, jangan mental down. (0.34 s pause cut) |
-| 9 | clip3 | 45.56–46.10 | **PAYOFF** Boleh menang. (HyperFrames flip: -3 → MENANG) |
-| 10 | clip4 | 46.10–48.62 | hands in, coach's call |
-| 11 | freeze (48.50) | 48.62–49.50 | team shout; end card (HyperFrames) |
+| 2 | clip3 | 31.92–33.56 | Afiq, okay? |
+| 3 | clip3 | 33.86–35.32 | Keeper, Syahmi. (0.3 s pause cut) |
+| 4 | clip3 | 35.58–37.22 | Alright, captain aku simpan dulu. (0.26 s pause cut) |
+| 5 | clip2 | 26.04–27.06 | Wing kiri, |
+| 6 | clip2 | 28.18–29.44 | 45 kiri. (positions board) |
+| 7 | clip1 | 9.56–11.82 | Korang semua boleh move. Semua ada footwork. |
+| 8 | clip1 | 12.28–14.26 | Remember, basic instruction. (0.46 s pause cut) |
+| 9 | clip1 | 15.06–17.96 | Tebuk, release. Faham tak tebuk, release tu macam mana? |
+| 10 | clip3 | 38.54–41.12 | Main full pressure. 40 minit. Ingat, |
+| 11 | clip3 | 41.46–43.08 | kena tinggal, jangan mental down. (0.34 s pause cut) |
+| 12 | clip3 | 45.56–46.10 | **PAYOFF** Boleh menang. (HyperFrames flip: -3 → MENANG) |
+| 13 | clip4 | 46.10–48.62 | hands in, coach's call |
+| 14 | freeze (48.50) | 48.62–49.50 | team shout; end card (HyperFrames) |
 
-Not used: clip1 0–5.0 (unintelligible on every pass); 5.0–9.4 "yang lain tu tak boleh move / dia tu memang ada orang setting" (unclear); 18.4–24.1, the second "tebuk, release" (a repeat); all of clip2's speech ("wing kiri", "45 kiri", low confidence); "Afiq, okay?" and "Boleh? Okay, my full pleasure" (unclear); the end of clip4 where the huddle breaks up.
+v2 (coach's corrections): "Afiq, okay?" and "wing kiri" / "45 kiri" are back in, so the line-up runs into the positions; "pressure", not "pleasure". Clip2 now plays as itself, so the "basic" line uses its own clip1 picture.
 
-- Layout: faces sit at y 640–1120 in clip1/clip2, so graphics use the top band; the coach's face fills y 260–840 in clip3/clip4, so graphics use the low band (y 900–1145). Captions are at y 1170–1430 throughout. The tactics board is pinned to the top of its band at 86% because faces rise to y ~570 late in that take.
-- `faces.json` drops 5 false hits (back of a head or an ear of the nearest players, score < 0.8, top below y 820; `scripts/huddle_faces.py`).
+Not used: clip1 0–5.0 (unintelligible on every pass); 5.0–9.4 "yang lain tu tak boleh move / dia tu memang ada orang setting" (unclear); 18.4–24.1, the second "tebuk, release" (a repeat); clip2's "Man, ok", the short word after "wing kiri" (27.36–27.82, unclear) and "Man, 45…" (cut off by the end of the clip); "Boleh?" before "main full pressure" (it would blur the payoff "Boleh menang"); the end of clip4 where the huddle breaks up.
+
+- Layout: faces sit at y 490–1150 in clip1/clip2, so graphics use the top band (the positions and tactics boards are pinned to its top at 86%, because small background faces rise to y ~500); the coach's face fills y 260–840 in clip3/clip4, so graphics use the low band (y 870–1160). Captions are at y 1170–1430 throughout.
+- `faces.json` drops the false hits of `scripts/huddle_faces.py`: the back of a head or an ear of the nearest players (score < 0.8 and top below y 820; in clip2 also any box below y 1000).
 - HyperFrames: `hyperframes/huddle-hook` and `hyperframes/huddle-finale` (HTML + GSAP, pinned CLI 0.9.20, telemetry off). `npm run render:huddle-hf` takes their word times from the EDL (`scripts/huddle_hf.ts`) and renders VP9+alpha WebM to `public/huddle/hf/`; Remotion lays them over the footage with `OffthreadVideo transparent`.
-- Music: Mixkit "Rising Forest" (123 BPM, 1% of its energy in 1–4 kHz). Its break sits under "kena tinggal, jangan mental down" and the drop lands on "Boleh". SFX: Mixkit, including tape rewind (hook → line-up), shutter (freeze), movie impact, trailer whoosh, crowd.
-- QA: 0 of 649 frames with an overlay on a face or outside the safe area; 46 words with a median of 18.2 dB and a minimum of 11.2 dB over music + SFX; the preview master is at −14 LUFS.
+- Music: Mixkit "Rising Forest" (123 BPM, 1% of its energy in 1–4 kHz), with 3 bars of its steady section repeated (`public/huddle/audio/music_bed.wav`) so that its break sits under "Ingat, kena tinggal, jangan mental down" and the drop lands on "Boleh". SFX: Mixkit, including tape rewind (hook → line-up), shutter (freeze), movie impact, trailer whoosh, crowd.
+- QA: 0 of 791 frames with an overlay on a face or outside the safe area; 55 words with a median of 17.4 dB and a minimum of 10.5 dB over music + SFX; the preview master is at −14 LUFS.
 
-To confirm: "Syahmi" (ASR: Syami/Syamil), "captain aku simpan dulu", "footwork", "basic instruction" (ASR: "basic institution"), "jangan mental down" (one pass heard "jaga"), and the words of the team shout (no caption is shown for it).
+Confirmed by the coach: "Afiq, okay?", "wing kiri", "45 kiri", "pressure". To confirm: "Main full pressure" ("main" vs "my"), "Syahmi" (ASR: Syami/Syamil), "captain aku simpan dulu", "footwork", "basic instruction" (ASR: "basic institution"), "jangan mental down" (one pass heard "jaga"), and the words of the team shout (no caption is shown for it).
 
 ```bash
 scripts/prepare_huddle.sh clip1.mov clip2.mov clip3.mov clip4.mov   # c1b4f450, 468186b5, a97f3b21, 531bc622
