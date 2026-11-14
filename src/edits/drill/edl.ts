@@ -27,7 +27,7 @@ const DEFS: SegmentDef[] = [
 	{id: 'floor', srcStart: 24.3, srcEnd: 26.04, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 635, zoomOriginY: 990, note: '"Kalau dia flow base, korang macam ni." (coach\'s correction; ASR heard "floor base")'},
 	{id: 'kena', srcStart: 26.9, srcEnd: 29.06, zoomFrom: 1.28, zoomTo: 1.34, zoomOriginX: 729, zoomOriginY: 1015, note: '"Sebab itulah korang punya defense kena macam ni."'},
 	{id: 'sebab', srcStart: 33.22, srcEnd: 34.6, zoomFrom: 1.3, zoomTo: 1.36, zoomOriginX: 710, zoomOriginY: 928, note: '"Itu defense. Sebab apa?"'},
-	{id: 'berdua', srcStart: 35.2, srcEnd: 36.72, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 660, zoomOriginY: 932, note: '"Bila korang berdua, korang tak ada reverse." (to confirm: "reverse")'},
+	{id: 'berdua', srcStart: 35.2, srcEnd: 36.72, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 660, zoomOriginY: 932, note: '"Bila korang berdua, korang tak ada reverse." ("reverse" confirmed by the coach)'},
 	{id: 'banyak', srcStart: 37.04, srcEnd: 38.36, zoomFrom: 1.3, zoomTo: 1.36, zoomOriginX: 695, zoomOriginY: 951, note: 'CLIMAX: "Bila defense, korang banyak reverse."'},
 ];
 

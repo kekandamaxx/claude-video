@@ -9,7 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
-| `DrillEdit` | `IMG_6114/6115/6116.MOV`, defence drill talk (3 clips) | 41.3 s → 19.9 s + 2.5 s end card | preview awaiting approval |
+| `DrillEdit` | `IMG_6114/6115/6116.MOV`, defence drill talk (3 clips) | 41.3 s → 19.9 s + 2.5 s end card | final delivered, all corrections confirmed |
 
 ## Layout
 
@@ -76,7 +76,7 @@ Not used: "That's why" lead-ins, "Okay? Right?", the repeated "tutup", "Alright?
 
 QA results: 0 of 672 frames with an overlay on a face or outside the safe area. 75 words, median 20.8 dB above music+SFX, none under 8 dB; the music sits at 0.055 under speech (5 dB under the coach edits) because the phone mic is quiet on an open court. The preview master is at -14 LUFS.
 
-Confirmed by the coach: "jalan, tutup, tutup" (ASR heard "top"/"tok"), "flow base" (ASR heard "floor base"), "reverse". Still open: "korang" vs "kau" (the passes differ) and the end card "Defense Drill · UMPSA Handball".
+Confirmed by the coach: "jalan, tutup, tutup" (ASR heard "top"/"tok"), "flow base" (ASR heard "floor base"), "reverse", "korang" (one pass heard "kau") and the end card "Defense Drill · UMPSA Handball".
 
 ## VivaEdit: edit decisions (21.1 s)
 
