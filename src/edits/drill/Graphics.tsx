@@ -27,17 +27,18 @@ export const T = {
 	touchW: at('touch', 7.81),
 	patah: at('touch', 8.21),
 	touchEnd: segEnd('touch'),
-	// jalan / lama-lama
+	// jalan, tutup, jalan, tutup, tutup, tutup / lama-lama
 	jalanSeg: start('jalan'),
 	jalan: at('jalan', 12.29),
-	toks: [at('jalan', 12.55), at('jalan', 12.96), at('jalan', 13.23), at('jalan', 13.57)],
+	jalan2: at('jalan', 12.84),
+	tutups: [at('jalan', 12.55), at('jalan', 12.96), at('jalan', 13.23), at('jalan', 13.57)],
 	lama: start('lama'),
 	lamaEnd: segEnd('lama'),
 	// itu satu
 	satuSeg: start('satu'),
 	satuW: at('satu', 18.2),
 	satuEnd: segEnd('satu'),
-	// floor base, korang macam ni
+	// flow base, korang macam ni
 	floorSeg: start('floor'),
 	korangF: at('floor', 25.46),
 	macamF: at('floor', 25.64),
@@ -81,14 +82,6 @@ const UTurn: React.FC<{size: number; progress: number}> = ({size, progress}) => 
 	<svg width={size} height={size} viewBox="0 0 100 100">
 		<path d="M78 86 V42 A26 26 0 0 0 26 42 V70" fill="none" stroke={C.navy} strokeWidth="13" strokeLinecap="round" strokeDasharray="190" strokeDashoffset={190 * (1 - progress)} />
 		<path d="M10 58 L26 80 L42 58" fill="none" stroke={C.navy} strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" opacity={progress > 0.85 ? 1 : 0} />
-	</svg>
-);
-
-/** Sneaker sole seen from above (left foot; mirror for right). */
-const Sole: React.FC<{size: number; color: string}> = ({size, color}) => (
-	<svg width={size * 0.5} height={size} viewBox="0 0 50 100" style={{filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.5))'}}>
-		<path d="M25 3 C40 3 46 18 45 36 C44 50 38 56 37 64 C36 76 40 96 25 97 C12 98 13 80 13 66 C13 56 5 48 5 34 C5 16 12 3 25 3 Z" fill={color} stroke={C.navy} strokeWidth="5" />
-		<path d="M12 30 H38 M12 42 H38 M18 76 H33" stroke={C.navy} strokeWidth="4" strokeLinecap="round" opacity="0.55" />
 	</svg>
 );
 
@@ -148,38 +141,49 @@ const TouchSteps: React.FC<{f: number}> = ({f}) => {
 	);
 };
 
-/** "bila jalan, tok, jalan, tok, tok, tok" + "lama-lama" */
-const Footsteps: React.FC<{f: number}> = ({f}) => {
+/** "bila jalan, tutup, jalan, tutup, tutup, tutup" + "lama-lama": the word on screen follows
+ *  the voice, and two walls close the space around the attacker (white dot) on every "tutup". */
+const JalanTutup: React.FC<{f: number}> = ({f}) => {
 	const vis = window01(f, T.jalan - 4, T.lamaEnd + 3, 4);
 	if (vis <= 0) return null;
-	const title = pop(f, T.jalan - 4, 11);
+	const words = [
+		{t: T.jalan, text: 'Jalan'},
+		{t: T.tutups[0], text: 'Tutup'},
+		{t: T.jalan2, text: 'Jalan'},
+		...T.tutups.slice(1).map((t) => ({t, text: 'Tutup'})),
+	];
+	const cur = [...words].reverse().find((w) => f >= w.t - 2) ?? words[0];
+	const wp = pop(f, cur.t - 2, 9);
 	const lamaIn = pop(f, T.lama, 12);
 	const fill = interpolate(f, [T.lama + 2, T.lamaEnd - 2], [0, 1], {...clamp, easing: (x) => 1 - (1 - x) ** 2});
-	const xs = [190, 370, 550, 730];
+	// Walls step inward on each "tutup": 4 steps from the edges to the attacker.
+	const closed = T.tutups.reduce((a, t) => a + Math.min(1.1, pop(f, t - 2, 10)), 0) / T.tutups.length;
+	const TRACK = 680;
+	const WALL = 56;
+	const travel = TRACK / 2 - WALL - 38;
+	const hit = Math.max(0, ...T.tutups.map((t) => interpolate(f, [t - 1, t + 6], [1, 0], clamp) * (f >= t - 1 ? 1 : 0)));
+	const tutup = cur.text === 'Tutup';
+	const wall = (side: 'l' | 'r'): React.CSSProperties => ({
+		position: 'absolute', top: 6, width: WALL, height: 108, borderRadius: 14, background: C.gold, border: `5px solid ${C.navy}`,
+		boxShadow: '0 8px 18px rgba(0,0,0,0.45)', [side === 'l' ? 'left' : 'right']: travel * closed,
+	});
 	return (
 		<Band style={{opacity: vis, justifyContent: 'flex-start', paddingTop: 6}}>
 			<div style={{position: 'relative', height: 132, width: '100%'}}>
-				<Display size={128} style={{position: 'absolute', width: '100%', textAlign: 'center', opacity: title * (1 - lamaIn), transform: `scale(${0.6 + 0.4 * title}) translateY(${-30 * lamaIn}px)`}}>
-					Jalan
+				<Display size={128} color={tutup ? C.gold : C.white} style={{position: 'absolute', width: '100%', textAlign: 'center', opacity: 1 - lamaIn, transform: `scale(${0.7 + 0.3 * wp}) translateY(${-30 * lamaIn}px)`}}>
+					{cur.text}
 				</Display>
 				<Display size={120} color={C.gold} style={{position: 'absolute', width: '100%', textAlign: 'center', opacity: lamaIn, transform: `scale(${0.7 + 0.3 * lamaIn})`}}>
 					Lama-lama
 				</Display>
 			</div>
-			<div style={{position: 'relative', width: '100%', height: 150, marginTop: 6}}>
-				{T.toks.map((t, i) => {
-					const p = pop(f, t - 1, 9);
-					const ring = interpolate(f, [t, t + 10], [0, 1], clamp);
-					const left = i % 2 === 0;
-					return (
-						<div key={i} style={{position: 'absolute', left: xs[i] - 40, top: left ? 0 : 40, opacity: Math.min(1, p * 2) * (1 - 0.5 * lamaIn), transform: `rotate(${left ? 78 : 102}deg) scale(${(left ? 1 : -1) * (0.4 + 0.6 * p)}, ${0.4 + 0.6 * p})`}}>
-							<Sole size={100} color={i === T.toks.length - 1 ? C.gold : C.white} />
-							<div style={{position: 'absolute', left: -20, top: 10, width: 90, height: 90, borderRadius: 45, border: `4px solid ${C.gold}`, transform: `scale(${0.5 + ring})`, opacity: (1 - ring) * 0.9}} />
-						</div>
-					);
-				})}
+			<div style={{position: 'relative', width: TRACK, height: 120, marginTop: 10, borderRadius: 20, background: 'rgba(10,22,51,0.72)', border: '3px solid rgba(255,255,255,0.35)', opacity: 1 - 0.4 * lamaIn}}>
+				<div style={wall('l')} />
+				<div style={wall('r')} />
+				<div style={{position: 'absolute', left: TRACK / 2 - 30, top: 30, width: 60, height: 60, borderRadius: 30, background: C.white, border: `5px solid ${C.navy}`, transform: `scale(${1 - 0.15 * hit})`}} />
+				<div style={{position: 'absolute', left: TRACK / 2 - 70, top: -10, width: 140, height: 140, borderRadius: 70, border: `5px solid ${C.gold}`, opacity: hit * 0.9, transform: `scale(${1.4 - 0.4 * hit})`}} />
 			</div>
-			<div style={{width: 680, height: 30, borderRadius: 15, background: C.navySoft, border: `4px solid ${C.white}`, overflow: 'hidden', opacity: lamaIn, marginTop: 4}}>
+			<div style={{width: 680, height: 30, borderRadius: 15, background: C.navySoft, border: `4px solid ${C.white}`, overflow: 'hidden', opacity: lamaIn, marginTop: 14}}>
 				<div style={{width: `${fill * 100}%`, height: '100%', background: `linear-gradient(90deg, ${C.goldDeep}, ${C.gold})`}} />
 			</div>
 		</Band>
@@ -211,7 +215,7 @@ const Satu: React.FC<{f: number}> = ({f}) => {
 	);
 };
 
-/** "Kalau dia floor base, korang MACAM NI." */
+/** "Kalau dia flow base, korang MACAM NI." */
 const MacamNi: React.FC<{f: number}> = ({f}) => {
 	const vis = window01(f, T.korangF - 3, T.floorEnd + 3, 3);
 	if (vis <= 0) return null;
@@ -325,7 +329,7 @@ export const Graphics: React.FC = () => {
 	return (
 		<AbsoluteFill style={{pointerEvents: 'none'}}>
 			<TouchSteps f={f} />
-			<Footsteps f={f} />
+			<JalanTutup f={f} />
 			<Satu f={f} />
 			<MacamNi f={f} />
 			<KenaDefense f={f} />

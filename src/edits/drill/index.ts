@@ -21,9 +21,9 @@ const CUES: Cue[] = [
 	{sfx: 'pop_light', at: T.bola - 3, vol: 0.4},
 	{sfx: 'pop_hard', at: T.touchW - 1, vol: 0.4},
 	{sfx: 'swoosh_accent', at: T.patah, vol: 0.4},
-	// jalan, tok, tok ... lama-lama
+	// jalan, tutup ... lama-lama: a snap on every "tutup" as the walls close
 	{sfx: 'whoosh_fast', at: T.jalanSeg - 2, vol: 0.35},
-	...T.toks.map((t) => ({sfx: 'tick', at: t, vol: 0.35})),
+	...T.tutups.map((t, n) => ({sfx: 'pop_hard', at: t, vol: 0.22 + 0.04 * n})),
 	{sfx: 'swoosh_wind', at: T.lama + 2, vol: 0.3},
 	// itu satu
 	{sfx: 'impact_fast', at: T.satuW, vol: 0.45},
@@ -62,7 +62,7 @@ export const drillEdit: EditConfig = {
 	},
 	captionY: CAPTION_Y,
 	zoomOriginY: 940,
-	captionKeys: new Set(['ATTACK', 'DEFENSE', 'TOUCH', 'PATAH', 'BALIK', 'LOMPAT', 'MOVE', 'TOK', 'LAMA-LAMA', 'SATU', 'MACAM', 'KENA', 'APA', 'BERDUA', 'REVERSE', 'BANYAK']),
+	captionKeys: new Set(['ATTACK', 'DEFENSE', 'TOUCH', 'PATAH', 'BALIK', 'LOMPAT', 'MOVE', 'TUTUP', 'FLOW', 'LAMA-LAMA', 'SATU', 'MACAM', 'KENA', 'APA', 'BERDUA', 'REVERSE', 'BANYAK']),
 	captionAutoFit: true,
 	// Wider than the default (x 90-930, still inside x 60-960): 4-word chunks stay on 2 lines.
 	captionZone: {x: 90, w: 840},

@@ -54,7 +54,7 @@ Three clips joined into one source by `scripts/prepare_drill.sh` (6114 at 0.000 
 
 Motion graphics are split between two engines:
 - **HyperFrames** (`hyperframes/drill`, HTML + GSAP): the hook title, the ATTACK → DEFENSE swap and the end card. `hyperframes/render.sh drill` renders a transparent VP9 WebM (`public/drill/overlay/hf_overlay.webm`, 22.4 s) that Remotion lays over the whole edit from frame 0. Its `data-start` values are output seconds; the word times come from `T` in `src/edits/drill/Graphics.tsx`.
-- **Remotion** (`src/edits/drill/Graphics.tsx`): touch / patah balik steps, footsteps on each "tok", the lama-lama bar, the "01" stamp, "macam ni" chevrons, "defense kena macam ni", "sebab apa?" glitch, and the berdua-vs-defense cards.
+- **Remotion** (`src/edits/drill/Graphics.tsx`): touch / patah balik steps, walls closing the space on each "tutup", the lama-lama bar, the "01" stamp, "macam ni" chevrons, "defense kena macam ni", "sebab apa?" glitch, and the berdua-vs-defense cards.
 
 Layout: every face sits at y 824-1081 and the coach demonstrates with his whole body, so the floor stays clear. Captions go above the heads (centre y 700, x 90-930, at most 4 words, split on phrase breaks) and graphics in the top band (y 260-650). Each take zooms 1.16-1.4x, pivoting on the coach's face (`zoomOriginX`/`zoomOriginY`).
 
@@ -63,20 +63,20 @@ Layout: every face sits at y 824-1081 and the coach demonstrates with his whole 
 | 1 | 20.76-22.36 | **HOOK** (cold open) Melainkan dia lompat, baru you move. |
 | 2 | 0.72-4.32 | Sekarang ni kita bukan cerita pasal attack ni, kita nak cerita pasal korang punya defense. |
 | 3 | 5.58-8.76 | Aku kata, bila dapat bola je, korang kena touch, korang patah balik. |
-| 4 | 12.04-13.86 | Bila jalan, tok, jalan, tok, tok, tok. (the next five "tok" cut) |
+| 4 | 12.04-13.86 | Bila jalan, tutup, jalan, tutup, tutup, tutup. (the next four "tutup" cut; ASR heard "top") |
 | 5 | 14.36-15.26 | Lama-lama. |
 | 6 | 17.86-18.50 | Itu satu. |
-| 7 | 24.30-26.04 | Kalau dia floor base, korang macam ni. |
+| 7 | 24.30-26.04 | Kalau dia flow base, korang macam ni. |
 | 8 | 26.90-29.06 | Sebab itulah korang punya defense kena macam ni. |
 | 9 | 33.22-34.60 | Itu defense. Sebab apa? |
 | 10 | 35.20-36.72 | Bila korang berdua, korang tak ada reverse. |
 | 11 | 37.04-38.36 | **CLIMAX** Bila defense, korang banyak reverse. |
 
-Not used: "That's why" lead-ins, "Okay? Right?", the repeated "tok", "Alright?", 30.1-31.1 ("Defense 3, lompat" / "Defend drill, nampak?": the passes disagree), "Okay?" before "Itu defense", the trailing "Right? Okay." and all dead air.
+Not used: "That's why" lead-ins, "Okay? Right?", the repeated "tutup", "Alright?", 30.1-31.1 ("Defense 3, lompat" / "Defend drill, nampak?": the passes disagree), "Okay?" before "Itu defense", the trailing "Right? Okay." and all dead air.
 
 QA results: 0 of 672 frames with an overlay on a face or outside the safe area. 75 words, median 20.8 dB above music+SFX, none under 8 dB; the music sits at 0.055 under speech (5 dB under the coach edits) because the phone mic is quiet on an open court. The preview master is at -14 LUFS.
 
-To confirm: "floor base" (one pass heard "flow, base"), "reverse" (a focused pass heard "ribes"), "korang" vs "kau" (the passes differ), and the end card "Defense Drill · UMPSA Handball".
+Confirmed by the coach: "jalan, tutup, tutup" (ASR heard "top"/"tok"), "flow base" (ASR heard "floor base"), "reverse". Still open: "korang" vs "kau" (the passes differ) and the end card "Defense Drill · UMPSA Handball".
 
 ## VivaEdit: edit decisions (21.1 s)
 

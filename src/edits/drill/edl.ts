@@ -2,7 +2,7 @@
 // joined into one source (scripts/prepare_drill.sh): IMG_6114 at 0.000 s, IMG_6115 at
 // 5.455 s, IMG_6116 at 20.403 s. 41.3 s raw -> 19.9 s cut + 2.5 s end card.
 //
-// Dropped: "That's why" lead-ins, "Okay? Right?" (9.8-11.0), the 2nd-8th repeated "tok"
+// Dropped: "That's why" lead-ins, "Okay? Right?" (9.8-11.0), the last four repeated "tutup"
 // after 13.86, "Okay?" after "lama-lama", "Alright?" (16.8-17.8), "Defend drill / Defense 3,
 // lompat" (30.1-31.1; the two Whisper passes disagree and the focused pass hallucinates),
 // "Okay?" (32.6-33.0), the trailing "Right? Okay." and all dead air.
@@ -21,10 +21,10 @@ const DEFS: SegmentDef[] = [
 	{id: 'hook', srcStart: 20.76, srcEnd: 22.36, zoomFrom: 1.3, zoomTo: 1.38, zoomOriginX: 682, zoomOriginY: 984, note: 'HOOK (cold open): "Melainkan dia lompat, baru you move."'},
 	{id: 'bukan', srcStart: 0.72, srcEnd: 4.32, zoomFrom: 1.16, zoomTo: 1.24, zoomOriginX: 595, zoomOriginY: 900, note: '"Sekarang ni kita bukan cerita pasal attack ni, kita nak cerita pasal korang punya defense."'},
 	{id: 'touch', srcStart: 5.58, srcEnd: 8.76, zoomFrom: 1.22, zoomTo: 1.28, zoomOriginX: 540, zoomOriginY: 943, note: '"Aku kata, bila dapat bola je, korang kena touch, korang patah balik."'},
-	{id: 'jalan', srcStart: 12.04, srcEnd: 13.86, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 571, zoomOriginY: 925, note: '"Bila jalan, tok, jalan, tok, tok, tok" (the next five "tok" cut)'},
+	{id: 'jalan', srcStart: 12.04, srcEnd: 13.86, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 571, zoomOriginY: 925, note: '"Bila jalan, tutup, jalan, tutup, tutup, tutup" (coach\'s correction; ASR heard "top"/"tok"; the next four "tutup" cut)'},
 	{id: 'lama', srcStart: 14.36, srcEnd: 15.26, zoomFrom: 1.32, zoomTo: 1.35, zoomOriginX: 566, zoomOriginY: 911, note: '"Lama-lama"'},
 	{id: 'satu', srcStart: 17.86, srcEnd: 18.5, zoomFrom: 1.36, zoomTo: 1.38, zoomOriginX: 455, zoomOriginY: 891, note: '"Itu satu."'},
-	{id: 'floor', srcStart: 24.3, srcEnd: 26.04, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 635, zoomOriginY: 990, note: '"Kalau dia floor base, korang macam ni." (to confirm: "floor base")'},
+	{id: 'floor', srcStart: 24.3, srcEnd: 26.04, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 635, zoomOriginY: 990, note: '"Kalau dia flow base, korang macam ni." (coach\'s correction; ASR heard "floor base")'},
 	{id: 'kena', srcStart: 26.9, srcEnd: 29.06, zoomFrom: 1.28, zoomTo: 1.34, zoomOriginX: 729, zoomOriginY: 1015, note: '"Sebab itulah korang punya defense kena macam ni."'},
 	{id: 'sebab', srcStart: 33.22, srcEnd: 34.6, zoomFrom: 1.3, zoomTo: 1.36, zoomOriginX: 710, zoomOriginY: 928, note: '"Itu defense. Sebab apa?"'},
 	{id: 'berdua', srcStart: 35.2, srcEnd: 36.72, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 660, zoomOriginY: 932, note: '"Bila korang berdua, korang tak ada reverse." (to confirm: "reverse")'},
@@ -36,7 +36,7 @@ export const EDL = createEdl({
 	transcript,
 	outroFrames: 75,
 	maxChunkWords: 4,
-	fix: {'top,': 'TOK,', 'top.': 'TOK.', top: 'TOK', ini: 'NI', lompat: 'LOMPAT,', 'baru,': 'BARU'},
+	fix: {'top,': 'TUTUP,', 'top.': 'TUTUP.', top: 'TUTUP', floor: 'FLOW', ini: 'NI', lompat: 'LOMPAT,', 'baru,': 'BARU'},
 	merge: [
 		// "(Sebab) itulah" ends at 0.76, inside the first take's 0.72 in-point: keep it out of the captions.
 		{s: 0.69, e: 0.71, text: ''},
