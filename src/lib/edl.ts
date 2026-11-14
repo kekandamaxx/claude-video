@@ -16,6 +16,9 @@ export type SegmentDef = {
 	captionY?: number;
 	/** Zoom pivot (px from top); defaults to the edit's face-band centre. */
 	zoomOriginY?: number;
+	/** Zoom pivot (px from left); defaults to the frame centre. Set it to the speaker's face
+	 *  when they stand off-centre, so a punch-in grows them in place instead of pushing them out. */
+	zoomOriginX?: number;
 	/** Picture from another source while the dialogue keeps running (J/L-cuts, B-roll, stills).
 	 *  Without it the picture comes from the edit's main clip at srcStart. */
 	visual?: Visual;
@@ -51,8 +54,8 @@ export type Edl = {
 	speech: boolean[];
 };
 
-export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix?: Record<string, string>; merge?: Merge[]; outroFrames: number}): Edl => {
-	const {defs, transcript, fix = {}, merge = [], outroFrames} = opts;
+export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix?: Record<string, string>; merge?: Merge[]; outroFrames: number; maxChunkWords?: number}): Edl => {
+	const {defs, transcript, fix = {}, merge = [], outroFrames, maxChunkWords} = opts;
 	let out = 0;
 	const segments: Segment[] = defs.map((d) => {
 		const srcFrom = Math.round(d.srcStart * FPS);
@@ -95,15 +98,40 @@ export const createEdl = (opts: {defs: SegmentDef[]; transcript: Transcript; fix
 	for (const s of segments) {
 		if (s.voice === false) continue;
 		for (const ts of transcript.segments) {
-			const words: Word[] = applyMerges(ts.words)
-				.filter((w) => w.s >= s.srcStart - 0.05 && w.e <= s.srcEnd + 0.1)
+			const kept = applyMerges(ts.words).filter((w) => w.s >= s.srcStart - 0.05 && w.e <= s.srcEnd + 0.1);
+			// Phrase ends (raw ASR punctuation), used to split long lines on natural breaks.
+			const phraseEnd = kept.map((w) => /[.,!?]$/.test(fix[w.w] ?? w.w));
+			const words: Word[] = kept
 				.map((w) => ({
 					text: (fix[w.w] ?? w.w).replace(/[.,!?]/g, '').toUpperCase(),
 					from: at(s.id, Math.max(w.s, s.srcStart)),
 					to: at(s.id, Math.min(w.e, s.srcEnd)),
 					segId: s.id,
 				}));
-			if (words.length) raw.push({words, from: words[0].from, to: words[words.length - 1].to});
+			// A merge with empty text drops a word from the captions.
+			const live = words.map((w, i) => ({w, end: phraseEnd[i]})).filter((x) => x.w.text !== '');
+			if (!maxChunkWords) {
+				if (live.length) raw.push({words: live.map((x) => x.w), from: live[0].w.from, to: live[live.length - 1].w.to});
+				continue;
+			}
+			// Short caption chunks: break at phrase ends, then split each phrase into
+			// near-equal parts of at most maxChunkWords words.
+			const phrases: Word[][] = [[]];
+			live.forEach((x, i) => {
+				phrases[phrases.length - 1].push(x.w);
+				if (x.end && i < live.length - 1) phrases.push([]);
+			});
+			for (const ph of phrases) {
+				if (!ph.length) continue;
+				const parts = Math.ceil(ph.length / maxChunkWords);
+				let i = 0;
+				for (let k = 0; k < parts; k++) {
+					const size = Math.floor(ph.length / parts) + (k < ph.length % parts ? 1 : 0);
+					const part = ph.slice(i, i + size);
+					i += size;
+					raw.push({words: part, from: part[0].from, to: part[part.length - 1].to});
+				}
+			}
 		}
 	}
 	raw.sort((a, b) => a.from - b.from);

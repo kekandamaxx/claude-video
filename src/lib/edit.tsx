@@ -26,6 +26,9 @@ export type EditConfig = {
 	/** Face boxes taller than this are treated as false positives in QA (default 320 px). */
 	maxFaceHeight?: number;
 	Graphics: React.FC;
+	/** Transparent motion-graphics plate (e.g. a HyperFrames WebM/ProRes 4444 render) laid over
+	 *  the whole edit from frame 0, between the edit's own graphics and the captions. */
+	overlay?: {src: string};
 	shakeHits: number[];
 	cues: Cue[];
 	/** Extra per-output-frame dialogue gain (clip gain automation). */

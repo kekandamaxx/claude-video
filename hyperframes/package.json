@@ -1,0 +1,12 @@
+{
+  "name": "drill-hyperframes",
+  "private": true,
+  "description": "HyperFrames motion-graphic overlays (transparent ProRes 4444) composited into the Remotion edits",
+  "scripts": {
+    "render": "./render.sh"
+  },
+  "devDependencies": {
+    "gsap": "^3.15.0",
+    "hyperframes": "0.9.46"
+  }
+}

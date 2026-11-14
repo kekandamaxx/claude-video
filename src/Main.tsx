@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {AbsoluteFill, continueRender, delayRender} from 'remotion';
+import {AbsoluteFill, continueRender, delayRender, OffthreadVideo, staticFile} from 'remotion';
 import {z} from 'zod';
 import {VideoLayer, CutFlash, FaceMask} from './components/VideoLayer';
 import {Captions} from './components/Captions';
@@ -41,6 +41,7 @@ export const makeMain = (edit: EditConfig): React.FC<MainProps> => {
 						{qa === 'faces' ? <FaceMask /> : (
 							<>
 								<G />
+								{edit.overlay ? <OffthreadVideo src={staticFile(edit.overlay.src)} transparent muted /> : null}
 								<Captions />
 							</>
 						)}
@@ -54,6 +55,7 @@ export const makeMain = (edit: EditConfig): React.FC<MainProps> => {
 					<VideoLayer src={preview ? edit.media.proxy : edit.media.master} guides={guides} preview={preview} />
 					<CutFlash />
 					<G />
+					{edit.overlay ? <OffthreadVideo src={staticFile(edit.overlay.src)} transparent muted /> : null}
 					<Captions />
 					{guides ? <SafeZoneGuides /> : null}
 					<AudioLayer music={music} sfx={sfx} voice={voice} />

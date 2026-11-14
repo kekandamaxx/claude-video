@@ -6,3 +6,8 @@ public/
 *.MOV
 # Friendship tribute: personal photos stay out of git (drop them here, then run scripts/prepare_friendship.sh).
 assets/friendship/photos/
+# Source clips downloaded from Drive, HyperFrames installs and its local caches.
+assets/src/
+hyperframes/node_modules/
+hyperframes/*/.hyperframes/
+hyperframes/*/renders/

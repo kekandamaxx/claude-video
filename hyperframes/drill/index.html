@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- Motion-graphics plate for the Remotion composition DrillEdit (src/edits/drill).
+         Rendered with a transparent background (WebM VP9 alpha) and laid over the whole edit
+         from frame 0, so every data-start below is in OUTPUT seconds of DrillEdit (30 fps).
+         Word times come from src/edits/drill/Graphics.tsx (T); keep the two in step. -->
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: absolute; inset: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="22.4" data-width="1080" data-height="1920">
+      <!-- 0.00-2.00  hook: "Melainkan dia lompat, baru you move." -->
+      <div id="hook" data-composition-id="hook" data-composition-src="compositions/hook.html"
+           data-start="0" data-duration="2" data-track-index="1" data-track-kind="graphics"
+           data-width="1080" data-height="1920"></div>
+      <!-- 2.60-6.50  "bukan cerita pasal ATTACK ... korang punya DEFENSE" -->
+      <div id="swap" data-composition-id="swap" data-composition-src="compositions/swap.html"
+           data-start="2.6" data-duration="3.9" data-track-index="2" data-track-kind="graphics"
+           data-width="1080" data-height="1920"></div>
+      <!-- 19.90-22.40  end card over the held last frame -->
+      <div id="endcard" data-composition-id="endcard" data-composition-src="compositions/endcard.html"
+           data-start="19.9" data-duration="2.5" data-track-index="3" data-track-kind="graphics"
+           data-width="1080" data-height="1920"></div>
+    </div>
+    <script>
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

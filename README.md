@@ -9,6 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
+| `DrillEdit` | `IMG_6114/6115/6116.MOV`, defence drill talk (3 clips) | 41.3 s → 19.9 s + 2.5 s end card | preview awaiting approval |
 
 ## Layout
 
@@ -21,6 +22,8 @@ src/edits/<id>/           per video: edl.ts (cuts), Graphics.tsx, index.ts (SFX 
 scripts/prepare_media.sh  <id> <source.MOV> → public/<id>/ (master, proxy, voice); public/shared/ (music, SFX)
 scripts/render.sh         <Comp> preview|final → out/<Comp>/, loudness-mastered to −14 LUFS / −1 dBTP
 scripts/overlap_qa.py     every frame: overlays vs face boxes, and overlays vs the safe area
+scripts/video_faces.py    YuNet faces at 5 fps (1x + 2x pass for distant faces) → faces.json
+hyperframes/<id>/         HyperFrames overlay project (HTML + GSAP) → transparent WebM plate (EditConfig.overlay)
 scripts/stems.sh + word_snr.py + audio_qa.py   per-word voice masking check
 ```
 
@@ -44,6 +47,34 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## DrillEdit: edit decisions (19.9 s + 2.5 s end card)
+
+Three clips joined into one source by `scripts/prepare_drill.sh` (6114 at 0.000 s, 6115 at 5.455 s, 6116 at 20.403 s). Whisper large-v3 ran on the joined track and on each clip alone; the kept lines agree in both passes except where noted.
+
+Motion graphics are split between two engines:
+- **HyperFrames** (`hyperframes/drill`, HTML + GSAP): the hook title, the ATTACK → DEFENSE swap and the end card. `hyperframes/render.sh drill` renders a transparent VP9 WebM (`public/drill/overlay/hf_overlay.webm`, 22.4 s) that Remotion lays over the whole edit from frame 0. Its `data-start` values are output seconds; the word times come from `T` in `src/edits/drill/Graphics.tsx`.
+- **Remotion** (`src/edits/drill/Graphics.tsx`): touch / patah balik steps, footsteps on each "tok", the lama-lama bar, the "01" stamp, "macam ni" chevrons, "defense kena macam ni", "sebab apa?" glitch, and the berdua-vs-defense cards.
+
+Layout: every face sits at y 824-1081 and the coach demonstrates with his whole body, so the floor stays clear. Captions go above the heads (centre y 720, at most 4 words, split on phrase breaks) and graphics in the top band (y 260-650). Each take zooms 1.16-1.4x, pivoting on the coach's face (`zoomOriginX`/`zoomOriginY`).
+
+| # | Source time | Speech |
+|---|---|---|
+| 1 | 20.76-22.36 | **HOOK** (cold open) Melainkan dia lompat, baru you move. |
+| 2 | 0.72-4.32 | Sekarang ni kita bukan cerita pasal attack ni, kita nak cerita pasal korang punya defense. |
+| 3 | 5.58-8.76 | Aku kata, bila dapat bola je, korang kena touch, korang patah balik. |
+| 4 | 12.04-13.86 | Bila jalan, tok, jalan, tok, tok, tok. (the next five "tok" cut) |
+| 5 | 14.36-15.26 | Lama-lama. |
+| 6 | 17.86-18.50 | Itu satu. |
+| 7 | 24.30-26.04 | Kalau dia floor base, korang macam ni. |
+| 8 | 26.90-29.06 | Sebab itulah korang punya defense kena macam ni. |
+| 9 | 33.22-34.60 | Itu defense. Sebab apa? |
+| 10 | 35.20-36.72 | Bila korang berdua, korang tak ada reverse. |
+| 11 | 37.04-38.36 | **CLIMAX** Bila defense, korang banyak reverse. |
+
+Not used: "That's why" lead-ins, "Okay? Right?", the repeated "tok", "Alright?", 30.1-31.1 ("Defense 3, lompat" / "Defend drill, nampak?": the passes disagree), "Okay?" before "Itu defense", the trailing "Right? Okay." and all dead air.
+
+To confirm: "floor base" (one pass heard "flow, base"), "reverse" (a focused pass heard "ribes"), "korang" vs "kau" (the passes differ), and the end card "Defense Drill · UMPSA Handball".
 
 ## VivaEdit: edit decisions (21.1 s)
 
