@@ -20,9 +20,9 @@ export const Captions: React.FC = () => {
 			<div
 				style={{
 					position: 'absolute',
-					left: CAPTION_ZONE.x,
+					left: e.captionZone?.x ?? CAPTION_ZONE.x,
 					top: cy - CAPTION_ZONE.h / 2,
-					width: CAPTION_ZONE.w,
+					width: e.captionZone?.w ?? CAPTION_ZONE.w,
 					height: CAPTION_ZONE.h,
 					display: 'flex',
 					alignItems: 'center',

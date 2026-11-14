@@ -130,14 +130,14 @@ const TouchSteps: React.FC<{f: number}> = ({f}) => {
 		boxShadow: '0 10px 26px rgba(0,0,0,0.45)', opacity: Math.min(1, p * 1.5), transform: `translateX(${(1 - p) * from}px) scale(${0.7 + 0.3 * p})`,
 	});
 	return (
-		<Band style={{opacity: vis, justifyContent: 'flex-start', paddingTop: 20, gap: 22}}>
+		<Band style={{opacity: vis, justifyContent: 'flex-start', paddingTop: 0, gap: 14}}>
 			<Pill style={{opacity: pill, transform: `translateY(${(1 - pill) * -20}px)`}}>Bila dapat bola</Pill>
-			<div style={{...chip(c1, -220), position: 'relative'}}>
+			<div style={{...chip(c1, -80), position: 'relative'}}>
 				<Num n="1" size={84} />
 				<span style={{fontFamily: FONT_DISPLAY, fontSize: 92, color: C.white, lineHeight: 1}}>TOUCH</span>
 				<div style={{position: 'absolute', left: 14 + 42 - 60, top: '50%', width: 120, height: 120, marginTop: -60, borderRadius: 60, border: `5px solid ${C.gold}`, transform: `scale(${0.7 + ring})`, opacity: 1 - ring}} />
 			</div>
-			<div style={chip(c2, 220)}>
+			<div style={chip(c2, 80)}>
 				<Num n="2" size={84} />
 				<span style={{fontFamily: FONT_DISPLAY, fontSize: 92, color: C.gold, lineHeight: 1}}>PATAH BALIK</span>
 				<div style={{width: 76, height: 76, borderRadius: 38, background: C.gold, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -199,7 +199,7 @@ const Satu: React.FC<{f: number}> = ({f}) => {
 				<Pill bg={C.gold} color={C.navy}>Point</Pill>
 				<Display size={110}>Itu satu</Display>
 			</div>
-			<div style={{position: 'relative', opacity: stamp, transform: `scale(${2.2 - 1.2 * stamp}) rotate(${-14 + 8 * stamp}deg)`}}>
+			<div style={{position: 'relative', opacity: stamp, transform: `scale(${1.5 - 0.5 * stamp}) rotate(${-14 + 8 * stamp}deg)`}}>
 				<div style={{width: 230, height: 230, borderRadius: 115, border: `10px solid ${C.gold}`, background: C.navySoft, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 40px rgba(255,199,44,0.45)`}}>
 					<span style={{fontFamily: FONT_DISPLAY, fontSize: 150, color: C.gold, lineHeight: 1}}>01</span>
 				</div>
@@ -220,7 +220,7 @@ const MacamNi: React.FC<{f: number}> = ({f}) => {
 	return (
 		<Band style={{opacity: vis, justifyContent: 'flex-start', paddingTop: 40, gap: 6}}>
 			<Pill style={{opacity: k, transform: `translateY(${(1 - k) * -20}px)`}}>Korang</Pill>
-			<Display size={150} color={C.gold} style={{opacity: Math.min(1, m * 1.5), transform: `scale(${1.6 - 0.6 * m})`}}>
+			<Display size={150} color={C.gold} style={{opacity: Math.min(1, m * 1.5), transform: `scale(${1.35 - 0.35 * m})`}}>
 				Macam ni
 			</Display>
 			<div style={{opacity: m, transform: `translateY(${Math.sin(f / 3) * 6}px)`}}>
@@ -240,7 +240,7 @@ const KenaDefense: React.FC<{f: number}> = ({f}) => {
 	const flash = interpolate(f, [T.defK, T.defK + 6], [1, 0], clamp);
 	return (
 		<Band style={{opacity: vis, gap: 8}}>
-			<Display size={160} color={C.gold} style={{opacity: Math.min(1, d * 1.5), transform: `scale(${1.7 - 0.7 * d})`, textShadow: `0 8px 0 ${C.navy}, 0 0 ${40 * flash}px rgba(255,255,255,${flash})`}}>
+			<Display size={160} color={C.gold} style={{opacity: Math.min(1, d * 1.5), transform: `scale(${1.35 - 0.35 * d})`, textShadow: `0 8px 0 ${C.navy}, 0 0 ${40 * flash}px rgba(255,255,255,${flash})`}}>
 				Defense
 			</Display>
 			<div style={{position: 'relative', opacity: k, transform: `translateY(${(1 - k) * 30}px)`}}>
@@ -294,23 +294,23 @@ const Compare: React.FC<{f: number}> = ({f}) => {
 	const dimL = interpolate(f, [T.banyakSeg, T.banyakSeg + 8], [1, 0.5], clamp);
 	const glow = 0.5 + 0.5 * Math.sin(f / 3);
 	const card = (border: string): React.CSSProperties => ({
-		width: 410, height: 360, borderRadius: 28, background: 'rgba(10,22,51,0.9)', border: `6px solid ${border}`, boxShadow: '0 14px 34px rgba(0,0,0,0.5)',
-		display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', paddingTop: 26, gap: 18,
+		width: 400, height: 324, borderRadius: 28, background: 'rgba(10,22,51,0.9)', border: `6px solid ${border}`, boxShadow: '0 14px 34px rgba(0,0,0,0.5)',
+		display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', paddingTop: 20, gap: 12,
 	});
 	const head: React.CSSProperties = {fontFamily: FONT_UI, fontWeight: 900, fontSize: 40, letterSpacing: 4, color: C.white};
 	return (
-		<Band style={{opacity: vis, flexDirection: 'row', gap: 40, alignItems: 'center'}}>
-			<div style={{...card(C.red), opacity: l * dimL, transform: `translateX(${(1 - l) * -260}px) scale(${0.96 + 0.04 * dimL})`}}>
+		<Band style={{opacity: vis, flexDirection: 'row', gap: 40, alignItems: 'flex-start', paddingTop: 4}}>
+			<div style={{...card(C.red), opacity: l * dimL, transform: `translateY(${(1 - l) * 50}px) scale(${0.96 + 0.04 * dimL})`}}>
 				<div style={{...head, opacity: lh}}>BERDUA</div>
-				<div style={{opacity: lx, transform: `scale(${0.6 + 0.4 * lx})`}}><Cross size={120} p={lx} /></div>
+				<div style={{opacity: lx, transform: `scale(${0.6 + 0.4 * lx})`}}><Cross size={84} p={lx} /></div>
 				<div style={{textAlign: 'center', opacity: lx}}>
 					<div style={{fontFamily: FONT_UI, fontWeight: 800, fontSize: 30, color: 'rgba(255,255,255,0.8)', letterSpacing: 2}}>TAK ADA</div>
 					<div style={{fontFamily: FONT_DISPLAY, fontSize: 70, color: C.white, lineHeight: 1, textDecoration: 'line-through', textDecorationColor: C.red, textDecorationThickness: 8}}>REVERSE</div>
 				</div>
 			</div>
-			<div style={{...card(C.green), opacity: r, transform: `translateX(${(1 - r) * 260}px) scale(${1 + 0.05 * rb})`, boxShadow: `0 14px 34px rgba(0,0,0,0.5), 0 0 ${30 + 30 * glow * rt}px rgba(43,227,139,${0.55 * rt})`}}>
+			<div style={{...card(C.green), opacity: r, transform: `translateY(${(1 - r) * 50}px) scale(${1 + 0.03 * rb})`, boxShadow: `0 14px 34px rgba(0,0,0,0.5), 0 0 ${30 + 30 * glow * rt}px rgba(43,227,139,${0.55 * rt})`}}>
 				<div style={{...head, color: C.gold, opacity: rh}}>DEFENSE</div>
-				<div style={{opacity: rb, transform: `scale(${0.6 + 0.4 * rb})`}}><Tick size={120} p={rt} /></div>
+				<div style={{opacity: rb, transform: `scale(${0.6 + 0.4 * rb})`}}><Tick size={84} p={rt} /></div>
 				<div style={{textAlign: 'center', opacity: rb}}>
 					<div style={{fontFamily: FONT_UI, fontWeight: 900, fontSize: 30, color: C.green, letterSpacing: 2}}>BANYAK</div>
 					<div style={{fontFamily: FONT_DISPLAY, fontSize: 70, color: C.white, lineHeight: 1}}>REVERSE</div>

@@ -9,13 +9,13 @@
 //
 // Layout: every face (the coach and the players) sits at y 824-1081, small (h 20-60 px).
 // The coach demonstrates footwork and stance with his whole body, so the floor stays clear:
-// captions sit ABOVE the heads (centre y 720, up to 4 words split on phrase breaks) and graphics in the top band
+// captions sit ABOVE the heads (centre y 700, up to 4 words split on phrase breaks) and graphics in the top band
 // (y 260-610). Each take zooms 1.2-1.4x pivoting on the coach's face (zoomOriginX/Y),
 // so he grows in place and never drifts into the right-hand UI rail.
 import transcript from './transcript.json';
 import {createEdl, SegmentDef} from '../../lib/edl';
 
-export const CAPTION_Y = 720;
+export const CAPTION_Y = 700;
 
 const DEFS: SegmentDef[] = [
 	{id: 'hook', srcStart: 20.76, srcEnd: 22.36, zoomFrom: 1.3, zoomTo: 1.38, zoomOriginX: 682, zoomOriginY: 984, note: 'HOOK (cold open): "Melainkan dia lompat, baru you move."'},
@@ -28,7 +28,7 @@ const DEFS: SegmentDef[] = [
 	{id: 'kena', srcStart: 26.9, srcEnd: 29.06, zoomFrom: 1.28, zoomTo: 1.34, zoomOriginX: 729, zoomOriginY: 1015, note: '"Sebab itulah korang punya defense kena macam ni."'},
 	{id: 'sebab', srcStart: 33.22, srcEnd: 34.6, zoomFrom: 1.3, zoomTo: 1.36, zoomOriginX: 710, zoomOriginY: 928, note: '"Itu defense. Sebab apa?"'},
 	{id: 'berdua', srcStart: 35.2, srcEnd: 36.72, zoomFrom: 1.24, zoomTo: 1.3, zoomOriginX: 660, zoomOriginY: 932, note: '"Bila korang berdua, korang tak ada reverse." (to confirm: "reverse")'},
-	{id: 'banyak', srcStart: 37.04, srcEnd: 38.36, zoomFrom: 1.32, zoomTo: 1.4, zoomOriginX: 695, zoomOriginY: 951, note: 'CLIMAX: "Bila defense, korang banyak reverse."'},
+	{id: 'banyak', srcStart: 37.04, srcEnd: 38.36, zoomFrom: 1.3, zoomTo: 1.36, zoomOriginX: 695, zoomOriginY: 951, note: 'CLIMAX: "Bila defense, korang banyak reverse."'},
 ];
 
 export const EDL = createEdl({

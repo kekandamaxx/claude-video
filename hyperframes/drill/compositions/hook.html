@@ -37,7 +37,7 @@
     // "Melainkan" lands at 0.07 s, "lompat" 0.63 s, "baru you move" 1.07-1.27 s.
     // on screen from frame 0: the first frame is the thumbnail
     tl.fromTo('#hook-l1', { opacity: 1, scale: 1.18 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power4.out' }, 0);
-    tl.fromTo('#hook-l2', { opacity: 0, scale: 1.9, y: 60 }, { opacity: 1, scale: 1, y: 0, duration: 0.2, ease: 'power4.in' }, 0.43);
+    tl.fromTo('#hook-l2', { opacity: 0, scale: 1.45, y: 50 }, { opacity: 1, scale: 1, y: 0, duration: 0.2, ease: 'power4.in' }, 0.43);
     // the jump: up, hang, settle
     tl.fromTo('#hook-l2', { y: 0 }, { y: -34, duration: 0.16, ease: 'power2.out', immediateRender: false }, 0.64);
     tl.fromTo('#hook-l2', { y: -34 }, { y: 0, duration: 0.3, ease: 'bounce.out', immediateRender: false }, 0.8);

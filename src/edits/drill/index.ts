@@ -64,13 +64,15 @@ export const drillEdit: EditConfig = {
 	zoomOriginY: 940,
 	captionKeys: new Set(['ATTACK', 'DEFENSE', 'TOUCH', 'PATAH', 'BALIK', 'LOMPAT', 'MOVE', 'TOK', 'LAMA-LAMA', 'SATU', 'MACAM', 'KENA', 'APA', 'BERDUA', 'REVERSE', 'BANYAK']),
 	captionAutoFit: true,
+	// Wider than the default (x 90-930, still inside x 60-960): 4-word chunks stay on 2 lines.
+	captionZone: {x: 90, w: 840},
 	maxFaceHeight: 200,
 	Graphics,
 	overlay: {src: 'drill/overlay/hf_overlay.webm'},
 	shakeHits: SHAKE_HITS,
 	cues: CUES,
-	// Outdoor court with crowd noise under the voice: keep the bed 2 dB lower than the coach edits.
-	musicUnderSpeech: 0.08,
+	// Outdoor court, quiet phone-mic voice: the bed sits 5 dB under the coach edits while he speaks.
+	musicUnderSpeech: 0.055,
 	musicInGaps: 0.26,
 	sfxBus: 0.55,
 };

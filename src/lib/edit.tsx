@@ -23,6 +23,8 @@ export type EditConfig = {
 	captionKeys: Set<string>;
 	/** Shrink long caption chunks so they stay inside the caption band (max ~2 lines). */
 	captionAutoFit?: boolean;
+	/** Override the caption box's x / width (default CAPTION_ZONE: x 170, w 680). */
+	captionZone?: {x: number; w: number};
 	/** Face boxes taller than this are treated as false positives in QA (default 320 px). */
 	maxFaceHeight?: number;
 	Graphics: React.FC;
