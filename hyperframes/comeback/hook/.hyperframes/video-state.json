@@ -42,9 +42,9 @@
   },
   "renders": {
     "latest": {
-      "id": "8e08103c-cb9b-41a3-9ba9-0edcbd69a9cb",
-      "completedAt": 1794805117032,
-      "output": "/tmp/tmp.0amFsM2AVS/seq",
+      "id": "d63141b9-5950-4f5b-9245-0d3ff790347d",
+      "completedAt": 1794806742169,
+      "output": "/tmp/tmp.fygB8biH0L/seq",
       "status": "completed",
       "revision": null
     },

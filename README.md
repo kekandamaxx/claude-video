@@ -9,7 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
-| `ComebackEdit` | `IMG_7671`–`IMG_7675`, five talks from the match where UMPSA trailed by 3 goals | 314.7 s → 34.8 s | preview awaiting approval |
+| `ComebackEdit` | `IMG_7671`–`IMG_7675`, five talks from the match where UMPSA trailed by 3 goals | 314.7 s → 34.8 s | final delivered, all corrections confirmed |
 
 ## Layout
 
@@ -80,7 +80,7 @@ Not used: the tactical walk-throughs (wall, intercept, transition, pivot; 26–9
 
 Faces sit at y 515–1195 across the kept takes, so graphics use y 260–500 and captions sit below the faces (centre 1310). QA results: 0 of 1045 frames with an overlay on a face or outside the safe area. 102 words with a median of 17.2 dB and a minimum of 9.9 dB over music+SFX. The preview master is at −14.0 LUFS.
 
-To confirm: "kena 3 biji pun" (one pass heard "kena fikir-fikir pun"), "Mental kena kuat" (one pass heard "kembali"), "First half kita perform", "henjut", and the end-card tagline "Bawa balik." Confirmed by the coach: "25 minit lagi" (ASR heard "2.5").
+Confirmed by the coach: "kena 3 biji pun", "Mental kena kuat", "First half kita perform", "henjut", the end-card tagline "Bawa balik.", and "25 minit lagi" (his correction; ASR heard "2.5").
 
 ## VivaEdit: edit decisions (21.1 s)
 
