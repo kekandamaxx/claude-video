@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      #zone { position: absolute; left: 70px; top: 260px; width: 880px; height: 240px; display: flex; flex-direction: column; align-items: center; }
+      #tag { display: inline-flex; padding: 9px 24px; border-radius: 999px; background: var(--gold); color: var(--navy); font-size: 28px; letter-spacing: 3px; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+      #title { margin-top: 14px; font-size: 132px; color: var(--white); text-shadow: 0 7px 0 var(--navy), 0 14px 34px rgba(0,0,0,0.55); white-space: nowrap; }
+      #title b { color: var(--gold); font-weight: 400; }
+      #rule { margin-top: 12px; width: 620px; height: 8px; border-radius: 4px; background: var(--gold); }
+      #sub { margin-top: 12px; font-size: 26px; letter-spacing: 6px; color: var(--white); text-shadow: 0 3px 10px rgba(0,0,0,0.7); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="endcard" data-start="0" data-duration="1.8" data-width="1080" data-height="1920" data-fps="30">
+      <div id="scene" class="clip" data-start="0" data-duration="1.8" data-track-index="0">
+        <div id="zone">
+          <div id="tag" class="ui">UMPSA Handball</div>
+          <div id="title" class="display">Bawa <b>balik.</b></div>
+          <div id="rule"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#tag", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.25, ease: "back.out(2)" }, 0.08);
+      tl.fromTo("#title", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.out" }, 0.22);
+      tl.fromTo("#rule", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "power3.out" }, 0.4);
+      tl.to("#title", { scale: 1.04, duration: 1.2, ease: "none" }, 0.45);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["endcard"] = tl;
+    </script>
+  </body>
+</html>

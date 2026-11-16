@@ -9,6 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
+| `ComebackEdit` | `IMG_7671`–`IMG_7675`, five talks from the match where UMPSA trailed by 3 goals | 314.7 s → 34.8 s | preview awaiting approval |
 
 ## Layout
 
@@ -44,6 +45,42 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## ComebackEdit: edit decisions (34.8 s)
+
+Five clips are joined into one source (`scripts/concat_sources.sh`), so the single-clip pipeline applies. Offsets in the joined source: 7671 0.0, 7672 131.3, 7673 152.43, 7674 179.1, 7675 228.0. Ranges come from two full Whisper large-v3 passes, a focused third pass where they disagreed, and a loudness scan.
+
+The hook scoreboard and the end card are Hyperframes compositions (`hyperframes/comeback/hook`, `hyperframes/comeback/endcard`), rendered as transparent PNG sequences and laid over the footage by `src/components/HfOverlay.tsx`. Everything else is Remotion.
+
+```bash
+scripts/concat_sources.sh /tmp/comeback.mkv IMG_7671.MOV IMG_7672.MOV IMG_7673.MOV IMG_7674.MOV IMG_7675.MOV
+scripts/prepare_media.sh comeback /tmp/comeback.mkv
+python3 scripts/detect_faces.py comeback        # src/edits/comeback/faces.json
+scripts/render_hyperframes.sh comeback          # public/comeback/hf/
+COMP=ComebackEdit npm run preview
+```
+
+| # | Source time | Speech |
+|---|---|---|
+| 1 | 181.55–184.55 | **HOOK** Kena ingat, kena 3 biji pun, jangan down. |
+| 2 | 162.44–164.76 | Ingat, kita tak nak benda semalam berulang lagi. |
+| 3 | 165.34–167.64 | First half kita perform, second half kita down. (0.6 s pause cut) |
+| 4 | 14.72–17.10 | Lepas tu apa jadi kat kita? Tragedi tau. |
+| 5 | 0.14–3.42, 4.22–5.98 | Bila kita mula main fancy ni, kita akan rasa overconfident tau. Overconfident ni akan memakan diri sendiri. (0.8 s pause cut) |
+| 6 | 18.66–20.60 | Tolong, tolong jangan mula main fancy. |
+| 7 | 184.50–185.34, 186.32–188.44 | Jangan rush. Tolong, control game. (1.0 s pause cut) |
+| 8 | 168.80–170.12 | Mental kena kuat. |
+| 9 | 105.16–108.36 | Game ni boleh menang. Tapi kalau kau buat susah, habis lah. |
+| 10 | 242.76–244.46 | Nak menang, cara main, main cara nak menang. |
+| 11 | 229.22–231.56 | Dapat bola, henjut! Dapat bola, henjut! |
+| 12 | 172.30–175.12 | Ada 2½ minit lagi. Jangan down. |
+| 13 | 137.44–139.16 | **CLOSE** Let's go, let's go! Easy game, easy game. |
+
+Not used: the tactical walk-throughs (wall, intercept, transition, pivot; 26–98 s, 188–221 s), the repeats of "jangan main fancy", "jangan down" and "betulkan balik", "enjoy je / idea korang guna je" (245–290 s), and every range where the passes disagreed on more than one word.
+
+Faces sit at y 515–1195 across the kept takes, so graphics use y 260–500 and captions sit below the faces (centre 1310). QA results: 0 of 1045 frames with an overlay on a face or outside the safe area. 102 words with a median of 17.2 dB and a minimum of 9.9 dB over music+SFX. The preview master is at −14.0 LUFS.
+
+To confirm: "kena 3 biji pun" (one pass heard "kena fikir-fikir pun"), "Mental kena kuat" (one pass heard "kembali"), "First half kita perform", "2½ minit", "henjut", and the end-card tagline "Bawa balik."
 
 ## VivaEdit: edit decisions (21.1 s)
 

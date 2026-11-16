@@ -1,0 +1,9 @@
+@font-face { font-family: 'Anton'; src: url('assets/fonts/anton.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Montserrat'; src: url('assets/fonts/montserrat-900.woff2') format('woff2'); font-weight: 900; }
+:root { --gold: #FFC72C; --navy: #0A1633; --red: #FF2D3D; --white: #FFFFFF; --green: #2BE38B; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+#root { position: relative; width: 1080px; height: 1920px; background: transparent; }
+.clip { position: absolute; inset: 0; }
+.display { font-family: 'Anton', sans-serif; text-transform: uppercase; line-height: 0.95; letter-spacing: 1px; }
+.ui { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; }

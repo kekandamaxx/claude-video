@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "historyId": "8d0f1b85-6350-459c-9d77-f9bc23cfea4a",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "assets/fonts/anton.woff2": {
+      "hash": "d0fa07ff63dd60cbc0e2f58e29c802dca2a5ae0276c999f59c6111ab7bbaec3b",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/d0/d0fa07ff63dd60cbc0e2f58e29c802dca2a5ae0276c999f59c6111ab7bbaec3b"
+    },
+    "assets/fonts/montserrat-900.woff2": {
+      "hash": "5b6958520638bb8609f9eacb17c4d189563efeae96d5da49f7c2043988697205",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/5b/5b6958520638bb8609f9eacb17c4d189563efeae96d5da49f7c2043988697205"
+    },
+    "hyperframes.json": {
+      "hash": "b6d70303cf9ee063f87a2ce10ed85ccb22a7daf4dd738f946eb17ad244b1fbc6",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/b6/b6d70303cf9ee063f87a2ce10ed85ccb22a7daf4dd738f946eb17ad244b1fbc6"
+    },
+    "index.html": {
+      "hash": "34d0505b55492e3a2bd2587f2d534362ac9064eaf8995d98612484f42f5cea44",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/34/34d0505b55492e3a2bd2587f2d534362ac9064eaf8995d98612484f42f5cea44"
+    },
+    "meta.json": {
+      "hash": "e61810ac341dccc5e1991e927493239620940fe52d9102ba78b82e3d410c9630",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/e6/e61810ac341dccc5e1991e927493239620940fe52d9102ba78b82e3d410c9630"
+    },
+    "shared.css": {
+      "hash": "5c0ee7a9a12e879658476e852c1096bcd251793f64efbd764620d43a0570152f",
+      "content": "/root/.cache/hyperframes/history/8d0f1b85-6350-459c-9d77-f9bc23cfea4a/blobs/5c/5c0ee7a9a12e879658476e852c1096bcd251793f64efbd764620d43a0570152f"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "8e08103c-cb9b-41a3-9ba9-0edcbd69a9cb",
+      "completedAt": 1794805117032,
+      "output": "/tmp/tmp.0amFsM2AVS/seq",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}
