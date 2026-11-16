@@ -56,10 +56,10 @@ const CUES: Cue[] = [
 	{sfx: 'bass_hit', at: T.henjut2 + 4, vol: 0.5},
 	// countdown
 	{sfx: 'whoosh_cine', at: T.minit - 3, vol: 0.36},
-	{sfx: 'tick', at: T.duaSetengah, vol: 0.4},
-	{sfx: 'tick', at: T.duaSetengah + 10, vol: 0.4},
-	{sfx: 'tick', at: T.duaSetengah + 20, vol: 0.4},
-	{sfx: 'tick', at: T.duaSetengah + 30, vol: 0.4},
+	{sfx: 'tick', at: T.duaLima, vol: 0.4},
+	{sfx: 'tick', at: T.duaLima + 10, vol: 0.4},
+	{sfx: 'tick', at: T.duaLima + 20, vol: 0.4},
+	{sfx: 'tick', at: T.duaLima + 30, vol: 0.4},
 	{sfx: 'bass_drum', at: T.minitDown, vol: 0.42},
 	// climax + end card
 	{sfx: 'riser', at: T.letsgo + 2, vol: 0.2},
@@ -82,7 +82,7 @@ export const comebackEdit: EditConfig = {
 	},
 	captionY: 1310,
 	zoomOriginY: 930,
-	captionKeys: new Set(['3', 'BIJI', 'DOWN', 'SEMALAM', 'BERULANG', 'PERFORM', 'TRAGEDI', 'FANCY', 'OVERCONFIDENT', 'MEMAKAN', 'SENDIRI', 'RUSH', 'CONTROL', 'GAME', 'KUAT', 'MENANG', 'SUSAH', 'HABIS', 'HENJUT', '2½', 'MINIT', 'GO', 'EASY']),
+	captionKeys: new Set(['3', 'BIJI', 'DOWN', 'SEMALAM', 'BERULANG', 'PERFORM', 'TRAGEDI', 'FANCY', 'OVERCONFIDENT', 'MEMAKAN', 'SENDIRI', 'RUSH', 'CONTROL', 'GAME', 'KUAT', 'MENANG', 'SUSAH', 'HABIS', 'HENJUT', '25', 'MINIT', 'GO', 'EASY']),
 	captionAutoFit: true,
 	Graphics,
 	shakeHits: SHAKE_HITS,

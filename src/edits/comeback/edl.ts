@@ -23,7 +23,7 @@ const DEFS: SegmentDef[] = [
 	{id: 'boleh', srcStart: 105.16, srcEnd: 108.36, zoomFrom: 1.0, zoomTo: 1.06, zoomOriginY: 860, note: '"Game ni boleh menang. Tapi kalau kau buat susah, habis lah."'},
 	{id: 'menang', srcStart: 242.76, srcEnd: 244.46, zoomFrom: 1.0, zoomTo: 1.04, zoomOriginY: 765, note: '"Nak menang, cara main, main cara nak menang."'},
 	{id: 'henjut', srcStart: 229.22, srcEnd: 231.56, zoomFrom: 1.0, zoomTo: 1.05, zoomOriginY: 760, note: '"Dapat bola, henjut! Dapat bola, henjut!"'},
-	{id: 'minit', srcStart: 172.3, srcEnd: 175.12, zoomFrom: 1.0, zoomTo: 1.06, zoomOriginY: 935, note: '"Ada 2½ minit lagi. Jangan down."'},
+	{id: 'minit', srcStart: 172.3, srcEnd: 175.12, zoomFrom: 1.0, zoomTo: 1.06, zoomOriginY: 935, note: '"Ada 25 minit lagi. Jangan down."'},
 	{id: 'letsgo', srcStart: 137.44, srcEnd: 139.16, zoomFrom: 1.02, zoomTo: 1.08, zoomOriginY: 905, note: '"Let\'s go, let\'s go! Easy game, easy game."'},
 ];
 

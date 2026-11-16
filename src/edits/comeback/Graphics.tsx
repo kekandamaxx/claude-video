@@ -57,7 +57,7 @@ export const T = {
 	henjut2: at('henjut', 231.09),
 	henjutEnd: segEnd('henjut'),
 	minit: start('minit'),
-	duaSetengah: at('minit', 173.1),
+	duaLima: at('minit', 173.1),
 	minitDown: at('minit', 174.56),
 	minitEnd: segEnd('minit'),
 	letsgo: start('letsgo'),
@@ -353,18 +353,18 @@ const Henjut: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 12. 2½ minit lagi: countdown
+// ---------------------------------------------------------------- 12. 25 minit lagi: countdown
 const Minit: React.FC<{frame: number}> = ({frame}) => {
 	if (frame < T.minit || frame >= T.minitEnd) return null;
 	const a = pop(frame, T.minit + 2);
-	const secs = 150 - Math.max(0, Math.floor((frame - T.duaSetengah) / 10));
+	const secs = 1500 - Math.max(0, Math.floor((frame - T.duaLima) / 10));
 	const mm = Math.floor(secs / 60);
 	const ss = String(secs % 60).padStart(2, '0');
-	const tick = 1 + 0.05 * Math.max(0, 1 - ((((frame - T.duaSetengah) % 10) + 10) % 10) / 4);
+	const tick = 1 + 0.05 * Math.max(0, 1 - ((((frame - T.duaLima) % 10) + 10) % 10) / 4);
 	const d = pop(frame, T.minitDown - 9, 9);
 	return (
 		<Zone style={{flexDirection: 'row', gap: 28}}>
-			<Card border={C.gold} style={{width: 370, height: 200, opacity: Math.min(a * 1.5, 1), transform: `scale(${(0.7 + 0.3 * a) * tick})`}}>
+			<Card border={C.gold} style={{width: 430, height: 200, opacity: Math.min(a * 1.5, 1), transform: `scale(${(0.7 + 0.3 * a) * tick})`}}>
 				<Label size={24}>Masa tinggal</Label>
 				<div style={{fontFamily: FONT_DISPLAY, fontSize: 124, lineHeight: 1, color: C.gold, letterSpacing: 4, fontVariantNumeric: 'tabular-nums'}}>{mm}:{ss}</div>
 			</Card>

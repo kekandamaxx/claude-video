@@ -73,14 +73,14 @@ COMP=ComebackEdit npm run preview
 | 9 | 105.16–108.36 | Game ni boleh menang. Tapi kalau kau buat susah, habis lah. |
 | 10 | 242.76–244.46 | Nak menang, cara main, main cara nak menang. |
 | 11 | 229.22–231.56 | Dapat bola, henjut! Dapat bola, henjut! |
-| 12 | 172.30–175.12 | Ada 2½ minit lagi. Jangan down. |
+| 12 | 172.30–175.12 | Ada 25 minit lagi. Jangan down. |
 | 13 | 137.44–139.16 | **CLOSE** Let's go, let's go! Easy game, easy game. |
 
 Not used: the tactical walk-throughs (wall, intercept, transition, pivot; 26–98 s, 188–221 s), the repeats of "jangan main fancy", "jangan down" and "betulkan balik", "enjoy je / idea korang guna je" (245–290 s), and every range where the passes disagreed on more than one word.
 
 Faces sit at y 515–1195 across the kept takes, so graphics use y 260–500 and captions sit below the faces (centre 1310). QA results: 0 of 1045 frames with an overlay on a face or outside the safe area. 102 words with a median of 17.2 dB and a minimum of 9.9 dB over music+SFX. The preview master is at −14.0 LUFS.
 
-To confirm: "kena 3 biji pun" (one pass heard "kena fikir-fikir pun"), "Mental kena kuat" (one pass heard "kembali"), "First half kita perform", "2½ minit", "henjut", and the end-card tagline "Bawa balik."
+To confirm: "kena 3 biji pun" (one pass heard "kena fikir-fikir pun"), "Mental kena kuat" (one pass heard "kembali"), "First half kita perform", "henjut", and the end-card tagline "Bawa balik." Confirmed by the coach: "25 minit lagi" (ASR heard "2.5").
 
 ## VivaEdit: edit decisions (21.1 s)
 
