@@ -1,6 +1,6 @@
 {
  "source": "IMG_6778.MOV (Google Drive > Video)",
- "note": "Kept lines only. Text agreed by 3 Whisper large-v3 passes (full clip, focused window, isolated snippet); word edges re-timed to the 50 ms RMS envelope. Raw pass-1 output: transcript.json. \"Tutup.\" (26.45-26.86) is shown as the TUTUP! stamp instead of a caption.",
+ "note": "Kept lines only. Text agreed by 3 Whisper large-v3 passes (full clip, focused window, isolated snippet); word edges re-timed to the 50 ms RMS envelope. Raw pass-1 output: transcript.json. \"Tutup.\" (26.45-26.86) is shown as the TUTUP! stamp instead of a caption. Move calls: \"kena move, kena move\" (6.95-7.84) agreed by all passes; the two \"Move!\" calls at 11.4 and 12.2 heard as move/bergerak by every pass; 10.3 and 11.1 are unclear (okey/stay/sana) and not used.",
  "segments": [
   {
    "id": "sharp",
@@ -149,6 +149,71 @@
      "w": "bola.",
      "s": 37.46,
      "e": 37.8
+    }
+   ]
+  },
+  {
+   "id": "kenapa",
+   "words": [
+    {
+     "w": "Sebab",
+     "s": 27.02,
+     "e": 27.24
+    },
+    {
+     "w": "dia",
+     "s": 27.24,
+     "e": 27.36
+    },
+    {
+     "w": "kenapa?",
+     "s": 27.36,
+     "e": 27.84
+    }
+   ]
+  },
+  {
+   "id": "kenamove",
+   "words": [
+    {
+     "w": "Kena",
+     "s": 6.95,
+     "e": 7.08
+    },
+    {
+     "w": "move,",
+     "s": 7.08,
+     "e": 7.3
+    },
+    {
+     "w": "kena",
+     "s": 7.38,
+     "e": 7.54
+    },
+    {
+     "w": "move.",
+     "s": 7.54,
+     "e": 7.84
+    }
+   ]
+  },
+  {
+   "id": "move1",
+   "words": [
+    {
+     "w": "Move!",
+     "s": 11.38,
+     "e": 11.62
+    }
+   ]
+  },
+  {
+   "id": "move2",
+   "words": [
+    {
+     "w": "Move!",
+     "s": 12.2,
+     "e": 12.48
     }
    ]
   }

@@ -15,6 +15,9 @@ export const T = {
 	belum: at('hook', 32.75),
 	penalti: at('hook', 33.3),
 	hookEnd: segEnd('hook'),
+	kenapa: start('kenapa'),
+	kenapaWord: at('kenapa', 27.36),
+	kenapaEnd: segEnd('kenapa'),
 	sebab: start('sebab'),
 	wallWord: at('sebab', 36.28),
 	sampai: at('sebab', 36.56),
@@ -30,6 +33,13 @@ export const T = {
 	sharp: start('sharp'),
 	sharpWord: at('sharp', 21.48),
 	sharpEnd: segEnd('sharp'),
+	kenamove: start('kenamove'),
+	move1: start('move1'),
+	move1Word: at('move1', 11.38),
+	move2: start('move2'),
+	move2Word: at('move2', 12.2),
+	point: at('move2', 12.5), // hand out, pointing where the ball goes
+	move2End: segEnd('move2'),
 	outro: start('outro'),
 	end: EDL.totalFrames,
 };
@@ -43,7 +53,7 @@ export const BOARD = {
 	sharpShot: T.sharpWord + 9,
 };
 
-export const SHAKE_HITS = [T.penalti + 1, T.wallWord + 1, BOARD.lobLand + 1, T.tutupWord + 1, T.outro + 2];
+export const SHAKE_HITS = [T.penalti + 1, T.wallWord + 1, BOARD.lobLand + 1, T.tutupWord + 1, T.move1Word + 1, T.move2Word + 1, T.outro + 2];
 
 // ---------------------------------------------------------------- 1. hook: FLY ≠ PENALTI
 const Hook: React.FC<{frame: number}> = ({frame}) => {
@@ -64,6 +74,22 @@ const Hook: React.FC<{frame: number}> = ({frame}) => {
 					<div style={{padding: '6px 34px', border: `9px solid ${C.red}`, borderRadius: 18, background: 'rgba(255,255,255,0.95)', color: C.red, fontFamily: FONT_DISPLAY, fontSize: 116, letterSpacing: 4, boxShadow: '0 14px 30px rgba(0,0,0,0.45)'}}>PENALTI</div>
 					<div style={{position: 'absolute', left: -12, right: -12, top: '50%', height: 14, marginTop: -7, borderRadius: 7, background: C.red, transform: `scaleX(${strike}) rotate(-7deg)`, transformOrigin: 'left center', boxShadow: '0 4px 10px rgba(0,0,0,0.35)'}} />
 				</div>
+			</div>
+		</TopZone>
+	);
+};
+
+// ---------------------------------------------------------------- 1b. SEBAB DIA KENAPA?
+const Kenapa: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.kenapa || frame >= T.kenapaEnd) return null;
+	const v = window01(frame, T.kenapa, T.kenapaEnd, 3);
+	const k = pop(frame, T.kenapa, 10, 0.5);
+	const q = frame >= T.kenapaWord ? pop(frame, T.kenapaWord, 7, 0.6) : 0;
+	return (
+		<TopZone style={{top: 300, height: 380}}>
+			<div style={{display: 'flex', alignItems: 'center', gap: 6, opacity: v}}>
+				<Display size={150} color={C.white} style={{transform: `scale(${k})`}}>Kenapa</Display>
+				<Display size={190} color={C.gold} style={{transform: `scale(${q}) rotate(${(1 - q) * 40 + 10}deg)`, transformOrigin: '50% 80%'}}>?</Display>
 			</div>
 		</TopZone>
 	);
@@ -124,6 +150,40 @@ const Tutup: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
+// ---------------------------------------------------------------- MOVE! calls + direction arrow (coach points the ball's way)
+const Move: React.FC<{frame: number}> = ({frame}) => {
+	if (frame < T.move1 || frame >= T.outro + 6) return null;
+	const out = interpolate(frame, [T.outro, T.outro + 6], [1, 0], clamp);
+	const second = frame >= T.move2Word - 1;
+	const hit = second ? T.move2Word - 1 : T.move1Word - 1;
+	const k = frame >= hit ? pop(frame, hit, 8, 0.7) : 0;
+	const arrow = interpolate(frame, [T.point, T.point + 12], [0, 1], {...clamp, easing: (t) => 1 - (1 - t) ** 3});
+	const ballX = interpolate(frame, [T.point, T.move2End], [0, 1], clamp);
+	const label = frame >= T.point + 6 ? pop(frame, T.point + 6, 11, 0.5) : 0;
+	return (
+		<TopZone style={{top: 270, height: 470, opacity: out}}>
+			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14}}>
+				<div style={{display: 'flex', alignItems: 'flex-end', gap: 16, transform: `rotate(-4deg) scale(${1.5 - 0.5 * k})`, opacity: Math.min(1, k * 1.6)}}>
+					<Display size={second ? 170 : 150} color={C.gold}>Move!</Display>
+					<Pill bg={C.red} style={{fontSize: 34, padding: '6px 16px', marginBottom: 18}}>{second ? '×2' : '×1'}</Pill>
+				</div>
+				{/* Arrow sweeps the way the coach's hand points (screen right), ball rides it. */}
+				<div style={{position: 'relative', width: 760, height: 110, opacity: arrow > 0 ? 1 : 0}}>
+					<svg width={760} height={110} viewBox="0 0 760 110" style={{position: 'absolute', inset: 0, overflow: 'visible', filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.45))'}}>
+						<path d={`M20 55 H${20 + 660 * arrow}`} stroke={C.white} strokeWidth={18} strokeLinecap="round" strokeDasharray="1 34" />
+						<path d={`M20 55 H${20 + 660 * arrow}`} stroke={C.gold} strokeWidth={10} strokeLinecap="round" />
+						<path d={`M${640 * arrow + 20} 15 L${700 * arrow + 30} 55 L${640 * arrow + 20} 95`} fill="none" stroke={C.gold} strokeWidth={16} strokeLinecap="round" strokeLinejoin="round" opacity={arrow} />
+					</svg>
+					<div style={{position: 'absolute', top: 55, left: 20 + 560 * ballX * arrow, transform: 'translate(-50%, -50%)'}}>
+						<Ball size={70} rotate={frame * 14} />
+					</div>
+				</div>
+				<Pill bg={C.navySoft} style={{transform: `scale(${label})`, fontSize: 32}}>Ikut arah bola</Pill>
+			</div>
+		</TopZone>
+	);
+};
+
 // ---------------------------------------------------------------- outro card
 const EndCard: React.FC<{frame: number}> = ({frame}) => {
 	const from = T.outro + 6;
@@ -157,10 +217,12 @@ export const Graphics: React.FC = () => {
 	return (
 		<AbsoluteFill style={{pointerEvents: 'none'}}>
 			<Hook frame={frame} />
+			<Kenapa frame={frame} />
 			<Race frame={frame} />
 			<Board src="lob" from={BOARD.lob} until={T.tutupEnd + 2} />
 			<Tutup frame={frame} />
-			<Board src="sharp" from={BOARD.sharp} until={T.outro + 8} />
+			<Board src="sharp" from={BOARD.sharp} until={T.move1 + 3} />
+			<Move frame={frame} />
 			<EndCard frame={frame} />
 		</AbsoluteFill>
 	);

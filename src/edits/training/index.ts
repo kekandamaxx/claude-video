@@ -10,6 +10,9 @@ const CUES: Cue[] = [
 	{sfx: 'swoosh_accent', at: T.fly - 1, vol: 0.35},
 	{sfx: 'impact_fast', at: T.penalti, vol: 0.5},
 	{sfx: 'glitch_break', at: T.penalti + 6, vol: 0.18},
+	// KENAPA?
+	{sfx: 'swoosh_accent', at: T.kenapa, vol: 0.3},
+	{sfx: 'pop_light', at: T.kenapaWord + 1, vol: 0.45},
 	// Race: wall dashes, ball crawls, wall wins
 	{sfx: 'whoosh_fast', at: T.sebab, vol: 0.4},
 	{sfx: 'swoosh_wind', at: T.wallWord, vol: 0.35},
@@ -25,6 +28,11 @@ const CUES: Cue[] = [
 	{sfx: 'whoosh_fast', at: BOARD.sharpLand - 2, vol: 0.45},
 	{sfx: 'pop_light', at: BOARD.sharpLand + 2, vol: 0.5},
 	{sfx: 'bass_drum', at: BOARD.sharpShot + 4, vol: 0.35},
+	// MOVE! x2 + direction arrow
+	{sfx: 'impact_fast', at: T.move1Word, vol: 0.45},
+	{sfx: 'impact_fast', at: T.move2Word, vol: 0.5},
+	{sfx: 'whoosh_fast', at: T.point + 6, vol: 0.45},
+	{sfx: 'pop_hard', at: T.point + 12, vol: 0.3},
 	// Outro
 	{sfx: 'riser', at: T.outro, vol: 0.15},
 	{sfx: 'impact_trailer', at: T.outro + 14, vol: 0.4, dur: 50},

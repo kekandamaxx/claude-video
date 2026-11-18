@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `TrainingEdit` | `IMG_6778.MOV`, sideline tip at training: lob vs sharp pass to the wing | 57.9 s → 11.3 s | preview awaiting approval |
+| `TrainingEdit` | `IMG_6778.MOV`, sideline tip at training: lob vs sharp pass to the wing | 57.9 s → 15.9 s | v2 preview awaiting approval |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -46,7 +46,7 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## TrainingEdit: edit decisions (11.3 s)
+## TrainingEdit: edit decisions (v2, 15.9 s)
 
 Source: `IMG_6778.MOV` (Google Drive > Video), 1080×1920 HEVC 60 fps, wide shots of the coach at the sideline. Prepared with `scripts/prepare_media.sh training …`, faces with `scripts/detect_faces.py training 0.6` (YuNet, 5 fps; every face sits at y 1000–1300).
 
@@ -64,18 +64,24 @@ Remotion places them as transparent `OffthreadVideo` layers in y 262–722. Ever
 | # | Source time | Speech | Graphic |
 |---|---|---|---|
 | 1 | 31.84–33.74 | **HOOK** Kau fly pun, belum tentu dapat penalti. | FLY ≠ ~~PENALTI~~ |
-| 2 | 35.90–37.86 | Sebabnya wall sampai dulu sebelum bola. | race bars: WALL 1st, BOLA late |
-| 3 | 22.70–24.00 | Kalau kau lambung, | HyperFrames board: lob |
-| 4 | 25.06–26.08 | wall akan move, (1.1 s pause cut) | lob board: wall slides, WALL TUTUP |
-| 5 | 26.40–26.92 | Tutup. | TUTUP! stamp (no caption) |
-| 6 | 20.26–21.96 | **PAYOFF** Tak nak lambung, dia mesti sharp. | HyperFrames board: sharp, WING TERBUKA |
-| 7 | 47.00–49.50 | (players drilling, no dialogue) | end card: ~~Bola lambung~~ PASS SHARP |
+| 2 | 26.98–27.90 | Sebab dia kenapa? | KENAPA? |
+| 3 | 35.90–37.86 | Sebabnya wall sampai dulu sebelum bola. | race bars: WALL 1st, BOLA late |
+| 4 | 22.70–24.00 | Kalau kau lambung, | HyperFrames board: lob |
+| 5 | 25.06–26.08 | wall akan move, (1.1 s pause cut) | lob board: wall slides, WALL TUTUP |
+| 6 | 26.40–26.92 | Tutup. | TUTUP! stamp (no caption) |
+| 7 | 20.26–21.96 | **PAYOFF** Tak nak lambung, dia mesti sharp. | HyperFrames board: sharp, WING TERBUKA |
+| 8 | 6.90–7.90 | Kena move, kena move. | sharp board held |
+| 9 | 11.32–11.68 | Move! | MOVE! ×1 stamp |
+| 10 | 12.14–13.72 | Move! (then the coach points the ball's direction) | MOVE! ×2, arrow + ball sweep, "Ikut arah bola" |
+| 11 | 47.00–50.20 | (players drilling, no dialogue) | end card: ~~Bola lambung~~ PASS SHARP |
 
-Not used: drill calls 0.9–11 s ("Okay / Kena move / Move"), the first take of "lambung kena, tak nak lambung" (16.3–17.5, repeated at 20.3), "Sebab dia kenapa? Ada masa bola tu pergi, wall dah tutup" (same point as line 2), and 37.6–41.8 ("kita nak dia dapat … bola, wing … tutup"): three Whisper passes disagree on two words.
+v2 (coach's request: 15–20 s, keep the "move" calls: they tell the players to move, with the hand showing the ball's direction).
+
+Not used: "Okay" (1.9 s), the unclear calls at 10.3 and 11.1 s (okey / stay / sana), the first take of "lambung kena, tak nak lambung" (16.3–17.5, repeated at 20.3), "Ada masa bola tu pergi, wall dah tutup" (same point as line 3), and 37.6–41.8 ("kita nak dia dapat … bola, wing … tutup"): three Whisper passes disagree on two words.
 
 `transcript.json` is the raw pass; `transcript_kept.json` holds the kept lines, agreed by three passes and re-timed to the 50 ms RMS envelope.
 
-QA results: 0 of 339 frames with an overlay on a face or outside the safe area. 18 words with a median of 19.1 dB and a minimum of 12.6 dB above music+SFX. Preview master −14 LUFS.
+QA results: 0 of 476 frames with an overlay on a face or outside the safe area. 22 words with a median of 20.0 dB and a minimum of 11.9 dB above music+SFX. Preview master −14 LUFS.
 
 To confirm: "wall" (ASR also heard "world"/"wallah"), "sharp", "fly", and the end-card line "Bola sampai dulu sebelum wall".
 
