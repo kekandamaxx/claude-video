@@ -10,3 +10,4 @@ assets/friendship/photos/
 # HyperFrames renders (copied to public/training/overlays by hand) and preview copies
 hyperframes/*/renders/
 *_preview.mp4
+hyperframes/*/.hyperframes/
