@@ -1,0 +1,556 @@
+{
+ "source": "IMG_6778.MOV (Google Drive > Video)",
+ "model": "whisper large-v3 (faster-whisper, int8)",
+ "language": "ms",
+ "segments": [
+  {
+   "start": 0.94,
+   "end": 2.0,
+   "text": "Okay",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Okay",
+     "s": 0.94,
+     "e": 2.0,
+     "p": 0.15
+    }
+   ]
+  },
+  {
+   "start": 6.45,
+   "end": 7.29,
+   "text": "Kena move",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Kena",
+     "s": 6.45,
+     "e": 7.09,
+     "p": 0.53
+    },
+    {
+     "w": "move",
+     "s": 7.09,
+     "e": 7.29,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 7.29,
+   "end": 7.99,
+   "text": "Okay",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Okay",
+     "s": 7.29,
+     "e": 7.99,
+     "p": 0.14
+    }
+   ]
+  },
+  {
+   "start": 10.34,
+   "end": 10.98,
+   "text": "Move",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Move",
+     "s": 10.34,
+     "e": 10.98,
+     "p": 0.45
+    }
+   ]
+  },
+  {
+   "start": 15.97,
+   "end": 16.85,
+   "text": "Lambung ke dia",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Lambung",
+     "s": 15.97,
+     "e": 16.61,
+     "p": 0.88
+    },
+    {
+     "w": "ke",
+     "s": 16.61,
+     "e": 16.71,
+     "p": 0.39
+    },
+    {
+     "w": "dia",
+     "s": 16.71,
+     "e": 16.85,
+     "p": 0.98
+    }
+   ]
+  },
+  {
+   "start": 16.85,
+   "end": 17.57,
+   "text": "Tak nak lambung",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Tak",
+     "s": 16.85,
+     "e": 17.03,
+     "p": 0.5
+    },
+    {
+     "w": "nak",
+     "s": 17.03,
+     "e": 17.15,
+     "p": 0.99
+    },
+    {
+     "w": "lambung",
+     "s": 17.15,
+     "e": 17.57,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 20.4,
+   "end": 21.8,
+   "text": "Dia mesti sharp",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Dia",
+     "s": 20.4,
+     "e": 21.04,
+     "p": 0.78
+    },
+    {
+     "w": "mesti",
+     "s": 21.04,
+     "e": 21.42,
+     "p": 1.0
+    },
+    {
+     "w": "sharp",
+     "s": 21.42,
+     "e": 21.8,
+     "p": 0.93
+    }
+   ]
+  },
+  {
+   "start": 21.8,
+   "end": 23.74,
+   "text": "Kalau kau lambung",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Kalau",
+     "s": 21.8,
+     "e": 22.78,
+     "p": 1.0
+    },
+    {
+     "w": "kau",
+     "s": 22.78,
+     "e": 23.1,
+     "p": 0.94
+    },
+    {
+     "w": "lambung",
+     "s": 23.1,
+     "e": 23.74,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 23.74,
+   "end": 25.94,
+   "text": "Wall akan move",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Wall",
+     "s": 23.74,
+     "e": 24.84,
+     "p": 0.98
+    },
+    {
+     "w": "akan",
+     "s": 25.32,
+     "e": 25.6,
+     "p": 1.0
+    },
+    {
+     "w": "move",
+     "s": 25.6,
+     "e": 25.94,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 25.94,
+   "end": 26.8,
+   "text": "Tutup",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Tutup",
+     "s": 25.94,
+     "e": 26.8,
+     "p": 0.76
+    }
+   ]
+  },
+  {
+   "start": 26.8,
+   "end": 27.7,
+   "text": "Sebab dia kenapa",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Sebab",
+     "s": 26.8,
+     "e": 27.26,
+     "p": 0.99
+    },
+    {
+     "w": "dia",
+     "s": 27.26,
+     "e": 27.38,
+     "p": 1.0
+    },
+    {
+     "w": "kenapa",
+     "s": 27.38,
+     "e": 27.7,
+     "p": 0.99
+    }
+   ]
+  },
+  {
+   "start": 27.7,
+   "end": 29.3,
+   "text": "Ada masa bola tu pergi",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Ada",
+     "s": 27.7,
+     "e": 28.22,
+     "p": 0.82
+    },
+    {
+     "w": "masa",
+     "s": 28.22,
+     "e": 28.48,
+     "p": 1.0
+    },
+    {
+     "w": "bola",
+     "s": 28.48,
+     "e": 28.86,
+     "p": 0.99
+    },
+    {
+     "w": "tu",
+     "s": 28.86,
+     "e": 29.06,
+     "p": 0.95
+    },
+    {
+     "w": "pergi",
+     "s": 29.06,
+     "e": 29.3,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 29.3,
+   "end": 30.5,
+   "text": "Wall dah tutup",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Wall",
+     "s": 29.3,
+     "e": 29.98,
+     "p": 1.0
+    },
+    {
+     "w": "dah",
+     "s": 29.98,
+     "e": 30.14,
+     "p": 1.0
+    },
+    {
+     "w": "tutup",
+     "s": 30.14,
+     "e": 30.5,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 30.5,
+   "end": 32.72,
+   "text": "Kalau macam tu kau fly pun",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Kalau",
+     "s": 30.5,
+     "e": 31.1,
+     "p": 1.0
+    },
+    {
+     "w": "macam",
+     "s": 31.1,
+     "e": 31.42,
+     "p": 1.0
+    },
+    {
+     "w": "tu",
+     "s": 31.42,
+     "e": 31.66,
+     "p": 0.99
+    },
+    {
+     "w": "kau",
+     "s": 31.66,
+     "e": 31.84,
+     "p": 0.85
+    },
+    {
+     "w": "fly",
+     "s": 31.84,
+     "e": 32.46,
+     "p": 0.87
+    },
+    {
+     "w": "pun",
+     "s": 32.46,
+     "e": 32.72,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 32.72,
+   "end": 33.54,
+   "text": "Belum tentu dapat penalty",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Belum",
+     "s": 32.72,
+     "e": 33.02,
+     "p": 1.0
+    },
+    {
+     "w": "tentu",
+     "s": 33.02,
+     "e": 33.16,
+     "p": 0.99
+    },
+    {
+     "w": "dapat",
+     "s": 33.16,
+     "e": 33.26,
+     "p": 0.98
+    },
+    {
+     "w": "penalty",
+     "s": 33.26,
+     "e": 33.54,
+     "p": 0.58
+    }
+   ]
+  },
+  {
+   "start": 35.66,
+   "end": 37.62,
+   "text": "Sebabnya wall sampai dulu sebelum bola",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Sebabnya",
+     "s": 35.66,
+     "e": 36.3,
+     "p": 0.99
+    },
+    {
+     "w": "wall",
+     "s": 36.3,
+     "e": 36.58,
+     "p": 0.98
+    },
+    {
+     "w": "sampai",
+     "s": 36.58,
+     "e": 36.84,
+     "p": 0.99
+    },
+    {
+     "w": "dulu",
+     "s": 36.84,
+     "e": 37.12,
+     "p": 1.0
+    },
+    {
+     "w": "sebelum",
+     "s": 37.12,
+     "e": 37.44,
+     "p": 0.87
+    },
+    {
+     "w": "bola",
+     "s": 37.44,
+     "e": 37.62,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 37.62,
+   "end": 38.78,
+   "text": "Kita nak",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Kita",
+     "s": 37.62,
+     "e": 38.38,
+     "p": 1.0
+    },
+    {
+     "w": "nak",
+     "s": 38.38,
+     "e": 38.78,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 38.78,
+   "end": 40.62,
+   "text": "Dia dapat berdua bola",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Dia",
+     "s": 38.78,
+     "e": 39.86,
+     "p": 0.99
+    },
+    {
+     "w": "dapat",
+     "s": 39.86,
+     "e": 40.18,
+     "p": 1.0
+    },
+    {
+     "w": "berdua",
+     "s": 40.18,
+     "e": 40.44,
+     "p": 0.72
+    },
+    {
+     "w": "bola",
+     "s": 40.44,
+     "e": 40.62,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 40.62,
+   "end": 41.74,
+   "text": "Wing tak boleh tutup",
+   "avg_logprob": -0.215,
+   "no_speech_prob": 0.324,
+   "words": [
+    {
+     "w": "Wing",
+     "s": 40.62,
+     "e": 41.2,
+     "p": 0.97
+    },
+    {
+     "w": "tak",
+     "s": 41.2,
+     "e": 41.38,
+     "p": 0.93
+    },
+    {
+     "w": "boleh",
+     "s": 41.38,
+     "e": 41.46,
+     "p": 0.59
+    },
+    {
+     "w": "tutup",
+     "s": 41.46,
+     "e": 41.74,
+     "p": 1.0
+    }
+   ]
+  },
+  {
+   "start": 45.54,
+   "end": 47.6,
+   "text": "Boa",
+   "avg_logprob": -1.073,
+   "no_speech_prob": 0.341,
+   "words": [
+    {
+     "w": "Boa",
+     "s": 45.54,
+     "e": 47.6,
+     "p": 0.23
+    }
+   ]
+  },
+  {
+   "start": 53.24,
+   "end": 54.04,
+   "text": "Fakir",
+   "avg_logprob": -1.073,
+   "no_speech_prob": 0.341,
+   "words": [
+    {
+     "w": "Fakir",
+     "s": 53.24,
+     "e": 54.04,
+     "p": 0.5
+    }
+   ]
+  }
+ ]
+}

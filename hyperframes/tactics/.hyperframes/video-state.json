@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "historyId": "82e4687d-c94e-424b-8aa8-060707c6299f",
+  "currentRevision": "febcf3f9-df83-4bd3-8b9a-cba5e0b0fb3f",
+  "pendingChanges": false,
+  "files": {
+    "assets/fonts/anton-latin-400-normal.woff2": {
+      "hash": "d0fa07ff63dd60cbc0e2f58e29c802dca2a5ae0276c999f59c6111ab7bbaec3b",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/d0/d0fa07ff63dd60cbc0e2f58e29c802dca2a5ae0276c999f59c6111ab7bbaec3b"
+    },
+    "assets/fonts/montserrat-latin-800-normal.woff2": {
+      "hash": "ba826fb84c2e961578adf3a08b5778b87905d4443445d1d56d84f9f157d5ea4b",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/ba/ba826fb84c2e961578adf3a08b5778b87905d4443445d1d56d84f9f157d5ea4b"
+    },
+    "assets/fonts/montserrat-latin-900-normal.woff2": {
+      "hash": "5b6958520638bb8609f9eacb17c4d189563efeae96d5da49f7c2043988697205",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/5b/5b6958520638bb8609f9eacb17c4d189563efeae96d5da49f7c2043988697205"
+    },
+    "assets/js/gsap.min.js": {
+      "hash": "96c01b81f44a3290e2b4532f55e2c9534b2adc43273a19f3756b2cb41f0fd0b6",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/96/96c01b81f44a3290e2b4532f55e2c9534b2adc43273a19f3756b2cb41f0fd0b6"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "86e8800e5f1e6a5c1c4be11d1f9fcefa648a5e59439d92960ff816c43cf3a31e",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/86/86e8800e5f1e6a5c1c4be11d1f9fcefa648a5e59439d92960ff816c43cf3a31e"
+    },
+    "meta.json": {
+      "hash": "8f2c70bafaf13b05d3a820e341b1beb1a6ad5d357449c396585350549a48fa7c",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/8f/8f2c70bafaf13b05d3a820e341b1beb1a6ad5d357449c396585350549a48fa7c"
+    },
+    "package.json": {
+      "hash": "577921adb07a1c07c8a37a98ccb0501b08610ed71efdb89c2645bc677de06be8",
+      "content": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/57/577921adb07a1c07c8a37a98ccb0501b08610ed71efdb89c2645bc677de06be8"
+    }
+  },
+  "revisions": {
+    "febcf3f9-df83-4bd3-8b9a-cba5e0b0fb3f": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794999730726,
+      "endedAt": 1794999730727,
+      "files": {
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/cf/cfacc2c22635ba798c544e7914f5013b6bc62a2cb90151d9481b7c487cf27a8f",
+          "after": "/root/.cache/hyperframes/history/82e4687d-c94e-424b-8aa8-060707c6299f/blobs/86/86e8800e5f1e6a5c1c4be11d1f9fcefa648a5e59439d92960ff816c43cf3a31e"
+        }
+      }
+    }
+  },
+  "checks": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "99963230-f41c-4847-b517-5e43f87ea4f4",
+      "completedAt": 1794999807934,
+      "output": "/home/user/claude-video/hyperframes/tactics/renders/sharp.webm",
+      "status": "completed",
+      "revision": "febcf3f9-df83-4bd3-8b9a-cba5e0b0fb3f"
+    },
+    "retainedRevisions": [
+      "febcf3f9-df83-4bd3-8b9a-cba5e0b0fb3f"
+    ]
+  },
+  "pendingArtifactCleanup": []
+}

@@ -6,3 +6,7 @@ public/
 *.MOV
 # Friendship tribute: personal photos stay out of git (drop them here, then run scripts/prepare_friendship.sh).
 assets/friendship/photos/
+
+# HyperFrames renders (copied to public/training/overlays by hand) and preview copies
+hyperframes/*/renders/
+*_preview.mp4

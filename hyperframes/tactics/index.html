@@ -1,0 +1,125 @@
+<!doctype html>
+<!-- Tactics board overlay for TrainingEdit (Remotion). Rendered with alpha:
+       npx hyperframes render . --format webm --variables '{"mode":"lob"}'   -> lob.webm
+       npx hyperframes render . --format webm --variables '{"mode":"sharp"}' -> sharp.webm
+     900x460 panel, top-down half court, attack goes right. Gold = attack, red = defence wall.
+     lob:   ball floats on an arc, the wall slides across and shuts the wing (TUTUP).
+     sharp: flat pass arrives before the wall moves, the wing is open (TERBUKA). -->
+<html lang="ms" data-composition-variables='[{"id":"mode","type":"string","label":"lob | sharp","default":"lob"}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=900, height=460" />
+    <script src="assets/js/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: Anton; src: url(assets/fonts/anton-latin-400-normal.woff2) format('woff2'); }
+      @font-face { font-family: Montserrat; font-weight: 800; src: url(assets/fonts/montserrat-latin-800-normal.woff2) format('woff2'); }
+      @font-face { font-family: Montserrat; font-weight: 900; src: url(assets/fonts/montserrat-latin-900-normal.woff2) format('woff2'); }
+      :root { --navy: rgba(10, 22, 51, 0.86); --gold: #ffc72c; --red: #ff2d3d; --green: #2be38b; --line: rgba(255, 255, 255, 0.55); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 900px; height: 460px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 900px; height: 460px; font-family: Montserrat, sans-serif; }
+      #panel { position: absolute; inset: 10px; border-radius: 34px; background: var(--navy); border: 3px solid rgba(255, 255, 255, 0.14); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45); overflow: hidden; }
+      svg { position: absolute; inset: 0; }
+      #tag { position: absolute; left: 34px; top: 26px; padding: 8px 20px 6px; border-radius: 14px; font: 400 40px/1 Anton, sans-serif; letter-spacing: 1px; color: #0a1633; }
+      #verdict { position: absolute; right: 34px; top: 26px; padding: 8px 20px 6px; border-radius: 14px; font: 400 40px/1 Anton, sans-serif; letter-spacing: 1px; color: #fff; }
+      .lbl { font: 900 22px Montserrat, sans-serif; fill: #fff; text-anchor: middle; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="tactics" data-start="0" data-duration="3" data-width="900" data-height="460">
+      <div id="panel" class="clip" data-start="0" data-duration="3">
+        <svg width="880" height="440" viewBox="0 0 880 440">
+          <!-- court: goal on the right, 6 m and 9 m lines as D-shapes -->
+          <g id="court" stroke="var(--line)" fill="none" stroke-width="4">
+            <line x1="860" y1="20" x2="860" y2="420" />
+            <path d="M860,40 C640,60 600,150 600,220 C600,290 640,380 860,400" />
+            <path d="M860,0 C540,10 480,140 480,220 C480,300 540,430 860,440" stroke-dasharray="14 12" stroke-width="3" />
+            <rect x="852" y="175" width="18" height="90" fill="rgba(255,255,255,0.85)" stroke="none" rx="4" />
+          </g>
+          <!-- pass path (drawn progressively) -->
+          <path id="path" fill="none" stroke-width="6" stroke-linecap="round" stroke-dasharray="1000" stroke-dashoffset="1000" />
+          <!-- shot arrow after the pass -->
+          <path id="shot" d="M742,380 L838,262" fill="none" stroke-width="7" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160" />
+          <!-- defence wall -->
+          <g id="d1"><circle cx="610" cy="120" r="24" fill="var(--red)" /><text class="lbl" x="610" y="128">D</text></g>
+          <g id="d2"><circle cx="596" cy="220" r="24" fill="var(--red)" /><text class="lbl" x="596" y="228">D</text></g>
+          <g id="d3"><circle cx="640" cy="318" r="24" fill="var(--red)" /><text class="lbl" x="640" y="326">D</text></g>
+          <!-- attackers -->
+          <g id="back"><circle cx="300" cy="150" r="28" fill="var(--gold)" /><text class="lbl" x="300" y="158" style="fill:#0a1633">B</text></g>
+          <g id="wing"><circle cx="742" cy="388" r="28" fill="var(--gold)" /><text class="lbl" x="742" y="396" style="fill:#0a1633">W</text></g>
+          <circle id="ring" cx="742" cy="388" r="44" fill="none" stroke-width="6" opacity="0" />
+          <!-- lock-out cross on the wing lane -->
+          <g id="cross" opacity="0" stroke="var(--red)" stroke-width="10" stroke-linecap="round">
+            <line x1="772" y1="290" x2="832" y2="350" /><line x1="832" y1="290" x2="772" y2="350" />
+          </g>
+          <!-- ball + shadow -->
+          <ellipse id="shadow" cx="300" cy="176" rx="14" ry="6" fill="rgba(0,0,0,0.45)" />
+          <circle id="ball" cx="300" cy="150" r="13" fill="#fff" stroke="#0a1633" stroke-width="3" />
+        </svg>
+        <div id="tag"></div>
+        <div id="verdict" style="opacity: 0"></div>
+      </div>
+    </div>
+    <script>
+      const {mode} = window.__hyperframes.getVariables();
+      const lob = mode !== 'sharp';
+      const $ = (s) => document.querySelector(s);
+      const A = {x: 300, y: 150}, W = {x: 730, y: 378};
+      const col = lob ? 'var(--red)' : 'var(--green)';
+      $('#tag').textContent = lob ? 'BOLA LAMBUNG' : 'PASS SHARP';
+      $('#tag').style.background = lob ? 'var(--gold)' : 'var(--green)';
+      $('#verdict').textContent = lob ? 'WALL TUTUP' : 'WING TERBUKA';
+      $('#verdict').style.background = lob ? 'var(--red)' : '#0f9d58';
+      // Lob: a high arc (control point well above the line). Sharp: dead straight.
+      const C = lob ? {x: 520, y: -40} : {x: (A.x + W.x) / 2, y: (A.y + W.y) / 2};
+      const path = $('#path');
+      path.setAttribute('d', `M${A.x},${A.y} Q${C.x},${C.y} ${W.x},${W.y}`);
+      path.setAttribute('stroke', col);
+      if (lob) path.setAttribute('stroke-dasharray', '1000');
+      const shot = $('#shot');
+      shot.setAttribute('stroke', 'var(--green)');
+      $('#ring').setAttribute('stroke', col);
+      const q = (p) => ({
+        x: (1 - p) ** 2 * A.x + 2 * (1 - p) * p * C.x + p * p * W.x,
+        y: (1 - p) ** 2 * A.y + 2 * (1 - p) * p * C.y + p * p * W.y,
+      });
+      const ground = (p) => ({x: A.x + (W.x - A.x) * p, y: A.y + (W.y - A.y) * p});
+
+      const tl = gsap.timeline({paused: true});
+      // Board in
+      tl.fromTo('#panel', {opacity: 0, scale: 0.86, y: 30}, {opacity: 1, scale: 1, y: 0, duration: 0.28, ease: 'back.out(1.8)'}, 0);
+      tl.fromTo('#tag', {opacity: 0, x: -30}, {opacity: 1, x: 0, duration: 0.22, ease: 'power3.out'}, 0.12);
+      const t0 = 0.35;
+      const flight = lob ? 1.45 : 0.32;
+      const ball = {p: 0};
+      tl.to(ball, {
+        p: 1, duration: flight, ease: lob ? 'sine.inOut' : 'power1.in',
+        onUpdate: () => {
+          const b = q(ball.p), g = ground(ball.p);
+          const lift = lob ? Math.sin(Math.PI * ball.p) : 0;
+          $('#ball').setAttribute('cx', b.x); $('#ball').setAttribute('cy', b.y);
+          $('#ball').setAttribute('r', 13 + 9 * lift);
+          $('#shadow').setAttribute('cx', g.x); $('#shadow').setAttribute('cy', g.y + 26);
+          $('#shadow').setAttribute('rx', 14 - 6 * lift); $('#shadow').setAttribute('opacity', 1 - 0.6 * lift);
+          path.setAttribute('stroke-dashoffset', 1000 * (1 - ball.p));
+        },
+      }, t0);
+      if (lob) {
+        // The wall reads the arc and slides across into the wing lane while the ball hangs.
+        tl.to('#d3', {x: 62, y: 6, duration: 1.0, ease: 'power2.inOut'}, t0 + 0.25);
+        tl.to('#d2', {x: 40, y: 70, duration: 1.0, ease: 'power2.inOut'}, t0 + 0.35);
+        tl.to('#d1', {x: 10, y: 50, duration: 1.0, ease: 'power2.inOut'}, t0 + 0.45);
+        tl.fromTo('#cross', {opacity: 0, scale: 0.3, transformOrigin: '802px 320px'}, {opacity: 1, scale: 1, duration: 0.22, ease: 'back.out(3)'}, t0 + flight + 0.02);
+      } else {
+        // The pass is there before the wall can react; wing defender only starts late.
+        tl.to('#d3', {x: 40, y: 10, duration: 0.8, ease: 'power2.inOut'}, t0 + 0.3);
+        tl.to(shot, {attr: {'stroke-dashoffset': 0}, duration: 0.3, ease: 'power2.out'}, t0 + flight + 0.25);
+      }
+      tl.fromTo('#ring', {opacity: 0, scale: 0.5, transformOrigin: '742px 388px'}, {opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2.5)'}, t0 + flight);
+      tl.fromTo('#verdict', {opacity: 0, scale: 1.6}, {opacity: 1, scale: 1, duration: 0.2, ease: 'power4.out'}, t0 + flight + 0.05);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['tactics'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
