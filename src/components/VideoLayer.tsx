@@ -28,8 +28,10 @@ const FaceBoxes: React.FC<{offset: number}> = ({offset}) => {
 	const {edl, faces} = useEdit();
 	const frame = useCurrentFrame() + offset;
 	const t = edl.srcTimeAt(frame);
-	if (t === null || edl.segmentAt(frame)?.visual) return null;
-	const near = faces.reduce((a, b) => (Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a));
+	const sg = edl.segmentAt(frame);
+	if (t === null || !sg || (sg.visual && !(sg.visual.kind === 'video' && sg.visual.sameSource))) return null;
+	const tv = sg.visual?.kind === 'video' ? sg.visual.srcStart + (frame - sg.outFrom) / 30 : t;
+	const near = faces.reduce((a, b) => (Math.abs(b.t - tv) < Math.abs(a.t - tv) ? b : a));
 	return (
 		<>
 			{near.faces.map((b, i) => (
@@ -59,7 +61,7 @@ export const VideoLayer: React.FC<{src: string; guides: boolean; preview?: boole
 				{/* Outro: hold the last frame under the end card. */}
 				<Sequence from={e.edl.cutEnd} name="outro-freeze">
 					<Freeze frame={last.len - 1}>
-						<Clip src={staticFile(src)} srcFrom={last.srcFrom} len={last.len} zoomFrom={last.zoomFrom} zoomTo={last.zoomTo} originY={origin(last)} first visual={last.visual} preview={preview} />
+						<Clip src={staticFile(src)} srcFrom={last.srcFrom} len={last.len} zoomFrom={last.zoomFrom} zoomTo={last.zoomTo} originY={origin(last)} first visual={e.media.outroStill ? {kind: 'image', src: e.media.outroStill} : last.visual} preview={preview} />
 					</Freeze>
 				</Sequence>
 			</AbsoluteFill>
@@ -87,12 +89,13 @@ export const FaceMask: React.FC = () => {
 	const frame = useCurrentFrame();
 	const sh = shake(frame, e.shakeHits, 14, 7);
 	const s = e.edl.segmentAt(frame);
-	if (!s || s.visual) return null; // B-roll / stills carry no detected faces
+	// B-roll / stills carry no detected faces; a J-cut to another moment of the same master does.
+	if (!s || (s.visual && !(s.visual.kind === 'video' && s.visual.sameSource))) return null;
 	const f = frame - s.outFrom;
 	const drift = interpolate(f, [0, s.len], [s.zoomFrom, s.zoomTo], clamp);
 	const p = s.outFrom === 0 ? 1 : pop(f, 0, 14, 0.5);
 	const z = drift * (1 + 0.1 * (1 - p));
-	const t = (s.srcFrom + f) / 30;
+	const t = ((s.visual?.kind === 'video' ? Math.round(s.visual.srcStart * 30) : s.srcFrom) + f) / 30;
 	const near = e.faces.reduce((a, b) => (Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a));
 	return (
 		<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px) scale(1.03)`}}>

@@ -34,6 +34,7 @@ export const makeMain = (edit: EditConfig): React.FC<MainProps> => {
 	const Main: React.FC<MainProps> = ({preview, guides, music, sfx, voice, qa = 'off'}) => {
 		useFonts();
 		const G = edit.Graphics;
+		const Grade = edit.Grade;
 		if (qa !== 'off') {
 			return (
 				<EditProvider edit={edit}>
@@ -53,6 +54,7 @@ export const makeMain = (edit: EditConfig): React.FC<MainProps> => {
 				<AbsoluteFill style={{background: '#000'}}>
 					<VideoLayer src={preview ? edit.media.proxy : edit.media.master} guides={guides} preview={preview} />
 					<CutFlash />
+					{Grade ? <Grade /> : null}
 					<G />
 					<Captions />
 					{guides ? <SafeZoneGuides /> : null}

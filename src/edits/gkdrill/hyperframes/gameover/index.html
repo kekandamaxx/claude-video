@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- End card (3.6 s, transparent): arcade "GAME OVER" in the graphics band (y 260-610) and
+     "CONTINUE? 9-8-7" + the title line in the low band (y 1150-1410); the fallen player's
+     face sits at y 950-1040 between them. -->
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton.woff2") format("woff2"); }
+      @font-face { font-family: "MontserratBlack"; font-weight: 900; src: url("assets/fonts/montserrat-900.woff2") format("woff2"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #go-panel { left: 80px; top: 292px; width: 860px; height: 300px; border-radius: 28px;
+        background: rgba(10, 22, 51, 0.82); border: 5px solid #FF2D3D; box-shadow: 0 0 40px rgba(255,45,61,0.55), 0 16px 40px rgba(0,0,0,0.5); }
+      #go-title { left: 0; width: 1080px; top: 330px; display: flex; justify-content: center; gap: 6px;
+        font-family: "Anton"; font-size: 146px; line-height: 1; color: #FF2D3D; letter-spacing: 4px;
+        -webkit-text-stroke: 4px #FFFFFF; text-shadow: 0 8px 0 #4A0008, 0 0 30px rgba(255,45,61,0.8); }
+      #go-title span { display: inline-block; }
+      .go-gap { width: 36px; }
+      #go-sub { left: 0; width: 1080px; top: 506px; display: flex; justify-content: center; align-items: center; gap: 18px;
+        font-family: "MontserratBlack"; font-weight: 900; font-size: 34px; letter-spacing: 5px; color: #FFFFFF; }
+      #go-bar { width: 260px; height: 30px; border-radius: 8px; border: 4px solid #FFFFFF; padding: 3px; }
+      #go-bar-fill { width: 100%; height: 100%; border-radius: 3px; background: #FF2D3D; transform-origin: 0 50%; }
+      #go-zero { color: #FF2D3D; }
+      #go-continue { left: 0; width: 1080px; top: 1170px; display: flex; justify-content: center; align-items: baseline; gap: 22px;
+        font-family: "Anton"; font-size: 92px; line-height: 1; color: #FFC72C; letter-spacing: 4px;
+        text-shadow: 0 6px 0 #0A1633, 0 12px 26px rgba(0,0,0,0.55); }
+      #go-count { position: relative; width: 70px; height: 92px; }
+      .go-n { position: absolute; left: 0; top: 0; width: 70px; text-align: center; color: #FFFFFF; }
+      #go-tag { left: 0; width: 1080px; top: 1300px; text-align: center; font-family: "MontserratBlack"; font-weight: 900;
+        font-size: 40px; letter-spacing: 4px; color: #FFFFFF; text-shadow: 0 4px 0 #0A1633, 0 8px 20px rgba(0,0,0,0.6); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="gameover" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
+      <div id="go-panel" class="clip abs" data-start="0" data-duration="3.6" data-track-index="0"></div>
+      <div id="go-title" class="clip abs" data-start="0" data-duration="3.6" data-track-index="1" data-layout-allow-overlap>
+        <span>G</span><span>A</span><span>M</span><span>E</span><span class="go-gap"></span><span>O</span><span>V</span><span>E</span><span>R</span>
+      </div>
+      <div id="go-sub" class="clip abs" data-start="0" data-duration="3.6" data-track-index="2">
+        STAMINA <div id="go-bar"><div id="go-bar-fill"></div></div> <span id="go-zero">0%</span>
+      </div>
+      <div id="go-continue" class="clip abs" data-start="0" data-duration="3.6" data-track-index="3">
+        CONTINUE?
+        <div id="go-count"><span id="go-n9" class="go-n">9</span><span id="go-n8" class="go-n">8</span><span id="go-n7" class="go-n">7</span></div>
+      </div>
+      <div id="go-tag" class="clip abs" data-start="0" data-duration="3.6" data-track-index="4">TRAINING LEVEL MALAYSIA</div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#go-panel", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.22, ease: "power3.out" }, 0);
+      tl.fromTo("#go-title span", { y: -40, scale: 1.5, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.24, ease: "back.out(2.2)", stagger: 0.045 }, 0.08);
+      // Arcade flicker on the title, three blinks.
+      [0.9, 1.0, 1.1].forEach((t) => { tl.to("#go-title", { opacity: 0.25, duration: 0.03 }, t); tl.to("#go-title", { opacity: 1, duration: 0.03 }, t + 0.05); });
+      tl.fromTo("#go-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" }, 0.55);
+      tl.fromTo("#go-bar-fill", { scaleX: 0.12 }, { scaleX: 0, duration: 0.5, ease: "power2.in" }, 0.65);
+      tl.fromTo("#go-continue", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 0.9);
+      tl.fromTo("#go-n9", { opacity: 1 }, { opacity: 1, duration: 0.01 }, 0.9);
+      tl.to("#go-n9", { opacity: 0, duration: 0.01 }, 1.9);
+      tl.fromTo("#go-n8", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.15, ease: "power3.out" }, 1.9);
+      tl.to("#go-n8", { opacity: 0, duration: 0.01 }, 2.9);
+      tl.fromTo("#go-n7", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.15, ease: "power3.out" }, 2.9);
+      tl.fromTo("#go-tag", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 1.2);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["gameover"] = tl;
+    </script>
+  </body>
+</html>

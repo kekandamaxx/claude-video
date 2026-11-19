@@ -9,6 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
+| `GkDrillEdit` | chat upload, goalkeeper footwork drill (`ac629d23…mov`) | 74.0 s → 44.9 s | preview awaiting approval |
 
 ## Layout
 
@@ -22,6 +23,8 @@ scripts/prepare_media.sh  <id> <source.MOV> → public/<id>/ (master, proxy, voi
 scripts/render.sh         <Comp> preview|final → out/<Comp>/, loudness-mastered to −14 LUFS / −1 dBTP
 scripts/overlap_qa.py     every frame: overlays vs face boxes, and overlays vs the safe area
 scripts/stems.sh + word_snr.py + audio_qa.py   per-word voice masking check
+scripts/detect_faces.py   YuNet at 5 fps on the master (+ a 2x pass for distant players) -> faces.json
+scripts/prepare_gkdrill.sh + render_gkdrill_hf.sh   GkDrillEdit media, extra SFX, HyperFrames stingers
 ```
 
 ```bash
@@ -44,6 +47,41 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## GkDrillEdit: edit decisions (44.9 s)
+
+The drill played as a video game. A HUD (level chip + stamina bar) runs from the rewind to the K.O.; each command lands as a callout; the stamina bar drains with the drill and hits 0% when he drops. The HOOK title and the GAME OVER card are HyperFrames compositions (`src/edits/gkdrill/hyperframes/`, GSAP, rendered by `scripts/render_gkdrill_hf.sh` to transparent VP9 WebM and layered with `<OffthreadVideo transparent>`); everything else is Remotion; ffmpeg does the media prep, voice chain and mastering.
+
+```bash
+scripts/prepare_gkdrill.sh /path/to/ac629d23-....mov   # media, music, extra SFX, faces, stingers
+COMP=GkDrillEdit npm run preview
+COMP=GkDrillEdit npm run qa:faces
+COMP=GkDrillEdit EDIT=gkdrill npm run qa:audio
+```
+
+| # | Source time | Speech | Graphic |
+|---|---|---|---|
+| 1 | 23.76–25.80 over picture 70.0–72.0 | **HOOK** (Hari) ini baru training level Malaysia ni | HyperFrames title over the collapse |
+| 2 | 3.90–14.80 | (okay, move, bawah) Yes. Kita nak go, you punya footwork tu. Nak pergi laju. Depan, belakang. (oh, tunggu) Nampak tak macam mana masalah dia? | rewind, HUD LVL 1, GO / FOOTWORK / LAJU / DEPAN / BELAKANG / MASALAH DIA |
+| 3 | 14.80–18.30 | (none) | split check 0–180° |
+| 4 | 20.90–23.76 | Ini level. Tadi simple sangat macam ni. | difficulty 1/5 |
+| 5 | 31.05–32.00 | Okey, lagi. | LEVEL UP, LVL MALAYSIA (flag) |
+| 6 | 34.25–42.25 | Kita nak bagi awak punya footwork. Good. Depan. (okey) Good. Tukar pula. | difficulty 5/5, GOOD +100/+200, DEPAN, TUKAR |
+| 7 | 43.85–46.45 | (okey) Masuk. | MASUK |
+| 8 | 50.95–53.60 | Bawah. Okey. | BAWAH |
+| 9 | 60.70–62.25 | Buat lari, kena cepat! | LARI! CEPAT! |
+| 10 | 62.98–66.80 | Nampak, tangan tak boleh angkat, step pun tak lepas dah. | LOW STAMINA, red edge pulse, heartbeat |
+| 11 | 69.00–74.00 | (none) | K.O. on the floor hit (70.80), music drops, GAME OVER / CONTINUE? 9-8-7 |
+
+Not used: 0–3.9 (settling), the first "ini level" (said twice), 26–31 and 52.8–60.7 (dead air between throws), "pastikan" (56.8, cut off), 46.5–48.0 (the passes disagree: "masuk" / "keluar" / noise), the 0.73 s pause before "nampak", the walk-off, and Whisper's "Terima kasih kerana menonton" (a hallucination over 72.9 s).
+
+Transcript: three large-v3 passes (`transcript_asr.json` keeps the first two raw); `transcript.json` is the curated, energy-re-timed word list. Words marked `~` differ between passes: they play and duck the music but get no caption. The cut voice stem was transcribed again to check every cut lands between words.
+
+Audio: Mixkit "K.O." (id 1068) at 0.08 under speech, 0.30 in gaps, dropped out on the K.O. and back under the end card. Extra Mixkit SFX: tape rewind, arcade game over, unlock, coin, repeating beep, punch impact. "Ini level" gets +4 dB clip gain (said turned away). Mixkit's "level completed" jingle masked two words and was replaced.
+
+QA: 0 of 1346 frames with an overlay on a face or outside the safe area. 70 words, median 19.1 dB, minimum 10.0 dB above music+SFX. Preview master −14.0 LUFS, −0.9 dBFS peak.
+
+To confirm: "Hari ini baru" vs "ini bro" in the hook (passes split 2–2; the title reads "INI BARU"), "awak punya footwork" vs "you punya", "step pun tak lepas dah" (one pass: "stik"/"stem"), and the end-card copy.
 
 ## VivaEdit: edit decisions (21.1 s)
 

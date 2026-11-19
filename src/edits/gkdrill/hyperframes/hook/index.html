@@ -1,0 +1,61 @@
+<!doctype html>
+<!-- HOOK title (2.03 s, transparent): "INI BARU / TRAINING / LEVEL MALAYSIA", timed to the
+     spoken line (hari 0.02, ini 0.32, baru 0.60, training 0.72, level 0.96, Malaysia 1.32 s).
+     Everything stays in the graphics band y 260-610, x 70-950 (TikTok/IG safe, above faces). -->
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton.woff2") format("woff2"); }
+      @font-face { font-family: "MontserratBlack"; font-weight: 900; src: url("assets/fonts/montserrat-900.woff2") format("woff2"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      #hook-stripes { left: 90px; top: 268px; width: 840px; height: 22px; border-radius: 4px;
+        background: repeating-linear-gradient(-45deg, #FF2D3D 0 26px, #FFFFFF 26px 52px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.35); transform-origin: 0 50%; }
+      #hook-pill { left: 0; width: 1080px; top: 306px; height: 64px; display: flex; justify-content: center; }
+      #hook-pill-in { display: inline-flex; align-items: center; gap: 14px; padding: 0 28px; height: 64px; border-radius: 32px;
+        background: #0A1633; color: #FFC72C; font-family: "MontserratBlack"; font-weight: 900; font-size: 34px; letter-spacing: 6px; }
+      #hook-dot { width: 16px; height: 16px; border-radius: 8px; background: #FF2D3D; box-shadow: 0 0 14px #FF2D3D; }
+      #hook-training { left: 0; width: 1080px; top: 372px; text-align: center; font-family: "Anton"; font-size: 132px; line-height: 1;
+        color: #FFFFFF; letter-spacing: 4px; text-shadow: 0 7px 0 #0A1633, 0 14px 30px rgba(0,0,0,0.5); }
+      #hook-level { left: 0; width: 1080px; top: 498px; text-align: center; font-family: "Anton"; font-size: 100px; line-height: 1;
+        color: #FFC72C; letter-spacing: 3px; -webkit-text-stroke: 3px #0A1633; text-shadow: 0 6px 0 #C4001A, 0 14px 30px rgba(0,0,0,0.5); }
+      #hook-flash { left: 90px; top: 492px; width: 840px; height: 112px; background: #FFFFFF; mix-blend-mode: screen; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook" data-start="0" data-duration="2.03" data-width="1080" data-height="1920">
+      <div id="hook-stripes" class="clip abs" data-start="0" data-duration="2.03" data-track-index="0"></div>
+      <div id="hook-pill" class="clip abs" data-start="0" data-duration="2.03" data-track-index="1">
+        <div id="hook-pill-in"><span id="hook-dot"></span>INI BARU</div>
+      </div>
+      <div id="hook-training" class="clip abs" data-start="0" data-duration="2.03" data-track-index="2">TRAINING</div>
+      <div id="hook-level" class="clip abs" data-start="0" data-duration="2.03" data-track-index="3">LEVEL MALAYSIA</div>
+      <div id="hook-flash" class="clip abs" data-start="0" data-duration="2.03" data-track-index="4"></div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#hook-stripes", { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.28, ease: "power3.out" }, 0.02);
+      tl.fromTo("#hook-pill-in", { scale: 0.4, opacity: 0, y: 14 }, { scale: 1, opacity: 1, y: 0, duration: 0.3, ease: "back.out(2.6)" }, 0.04);
+      tl.fromTo("#hook-training", { x: -260, opacity: 0, skewX: -18 }, { x: 0, opacity: 1, skewX: 0, duration: 0.26, ease: "expo.out" }, 0.66);
+      tl.fromTo("#hook-level", { scale: 1.25, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.2, ease: "power4.in" }, 0.9);
+      tl.fromTo("#hook-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.03 }, 1.1);
+      tl.to("#hook-flash", { opacity: 0, duration: 0.22, ease: "power2.out" }, 1.13);
+      // "Malaysia" (1.32 s): a small recoil on the beat.
+      tl.fromTo("#hook-level", { y: 0 }, { y: -10, duration: 0.06, ease: "power2.out" }, 1.3);
+      tl.to("#hook-level", { y: 0, duration: 0.2, ease: "bounce.out" }, 1.36);
+      tl.fromTo("#hook-training", { y: 0 }, { y: -6, duration: 0.06 }, 1.3);
+      tl.to("#hook-training", { y: 0, duration: 0.2, ease: "bounce.out" }, 1.36);
+      // Out: everything lifts and fades before the rewind (lands at 2.0 s).
+      tl.to(["#hook-pill-in", "#hook-training", "#hook-level"], { y: -60, opacity: 0, duration: 0.18, ease: "power2.in", stagger: 0.02 }, 1.78);
+      tl.to("#hook-stripes", { scaleX: 0, duration: 0.18, ease: "power2.in", transformOrigin: "100% 50%" }, 1.8);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook"] = tl;
+    </script>
+  </body>
+</html>

@@ -11,6 +11,7 @@ const HIT: Record<string, number> = {
 	pop_hard: 0, pop_light: 0.02, riser: 2.53, swoosh_accent: 0.11, swoosh_wind: 0.43,
 	tick: 0.66, whoosh_cine: 0.71, whoosh_fast: 1.07, zoom_impact: 0.41, heartbeat: 0.09,
 	buzzer: 0.05, crowd: 0, whoosh_hit: 3.16,
+	tape_rewind: 0, game_over: 0.1, level_up: 0.06, low_battery: 0, ko_punch: 0.1, coin: 0.03, unlock: 0.01, glitch_intro: 0.53,
 };
 
 const SFX_UNDER_SPEECH = 0.2; // -14 dB extra on the SFX bus while a word is spoken
@@ -34,7 +35,7 @@ const buildMix = (e: EditConfig) => {
 	for (let f = 0; f < totalFrames; f++) {
 		const tgt = f >= cutEnd ? 0.5 : target[f];
 		g += (tgt - g) * (tgt < g ? 1 / 3 : 1 / 10);
-		music.push(g * interpolate(f, [totalFrames - 14, totalFrames - 1], [1, 0], clamp));
+		music.push(g * (e.musicGain ? e.musicGain(f) : 1) * interpolate(f, [totalFrames - 14, totalFrames - 1], [1, 0], clamp));
 	}
 	return {speechEnv, music};
 };

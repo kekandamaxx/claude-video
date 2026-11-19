@@ -9,9 +9,13 @@ export const Captions: React.FC = () => {
 	const frame = useCurrentFrame();
 	const chunk = e.edl.chunks.find((c) => frame >= c.from && frame < c.to);
 	if (!chunk) return null;
+	if (e.edl.seg(chunk.words[0].segId).captions === false) return null;
+	// Words marked ~ in the transcript are uncertain across ASR passes: heard and ducked, never captioned.
+	const words = chunk.words.filter((w) => !w.text.startsWith('~'));
+	if (!words.length) return null;
 	// Caption band centre: per segment (picked from the measured face band) or the edit default.
 	const cy = e.edl.seg(chunk.words[0].segId).captionY ?? e.captionY;
-	const chars = chunk.words.reduce((n, w) => n + w.text.length + 1, 0);
+	const chars = words.reduce((n, w) => n + w.text.length + 1, 0);
 	const fit = e.captionAutoFit ? (chars > 30 ? 0.72 : chars > 22 ? 0.84 : 1) : 1;
 	const enter = pop(frame, chunk.from, 13, 0.5);
 	const exit = interpolate(frame, [chunk.to - 3, chunk.to], [1, 0], clamp);
@@ -39,7 +43,7 @@ export const Captions: React.FC = () => {
 						opacity: Math.min(enter * 1.6, 1) * exit,
 					}}
 				>
-					{chunk.words.map((w, i) => {
+					{words.map((w, i) => {
 						const active = frame >= w.from && frame < Math.max(w.to, w.from + 4);
 						const spoken = frame >= w.from;
 						const key = e.captionKeys.has(w.text);

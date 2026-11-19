@@ -16,6 +16,8 @@ export type EditConfig = {
 		voice: string;
 		music: string;
 		musicTrimFrames: number; // start the bed on its first downbeat
+		/** The last source frame as a still (public/ path), held under the outro instead of a frozen video frame. */
+		outroStill?: string;
 	};
 	/** Default captions centre line and zoom pivot when a segment does not set its own. */
 	captionY: number;
@@ -26,10 +28,14 @@ export type EditConfig = {
 	/** Face boxes taller than this are treated as false positives in QA (default 320 px). */
 	maxFaceHeight?: number;
 	Graphics: React.FC;
+	/** Full-frame colour/light effects on the picture (not graphics): drawn under the graphics, left out of the overlay QA pass. */
+	Grade?: React.FC;
 	shakeHits: number[];
 	cues: Cue[];
 	/** Extra per-output-frame dialogue gain (clip gain automation). */
 	voiceGain?: (f: number) => number;
+	/** Extra per-output-frame music gain on top of the speech ducking (drop-outs, swells). */
+	musicGain?: (f: number) => number;
 	musicUnderSpeech: number;
 	musicInGaps: number;
 	sfxBus: number;

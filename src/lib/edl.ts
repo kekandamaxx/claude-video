@@ -21,11 +21,14 @@ export type SegmentDef = {
 	visual?: Visual;
 	/** false = no dialogue (and no captions) in this segment; srcStart/srcEnd then only set its length. */
 	voice?: boolean;
+	/** false = the dialogue plays (and ducks the music) but no captions are drawn, e.g. when a title card already spells the line. */
+	captions?: boolean;
 	note: string;
 };
 
 export type Visual =
-	| {kind: 'video'; master: string; proxy: string; srcStart: number}
+	/** sameSource: the picture is another moment of the edit's own master, so its faces.json applies (QA + guides). */
+	| {kind: 'video'; master: string; proxy: string; srcStart: number; sameSource?: boolean}
 	| {kind: 'image'; src: string};
 
 export type Segment = SegmentDef & {srcFrom: number; len: number; outFrom: number};
