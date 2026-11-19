@@ -8,6 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
+| `TrainingEdit` | 10 chat uploads, one training night (B-roll + coach calls) | 249.8 s → 45.0 s | final rendered, awaiting review |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -18,6 +19,7 @@ src/lib/edit.tsx          EditConfig + context (everything that differs per vide
 src/components/           shared template: graded video, cut flash, captions, audio mix, guides
 src/edits/<id>/           per video: edl.ts (cuts), Graphics.tsx, index.ts (SFX cues, levels),
                           transcript.json (Whisper large-v3 words), faces.json (YuNet, 5 fps)
+scripts/prepare_training.sh c01..c10.mov → public/training/ (10 clips joined into one source)
 scripts/prepare_media.sh  <id> <source.MOV> → public/<id>/ (master, proxy, voice); public/shared/ (music, SFX)
 scripts/render.sh         <Comp> preview|final → out/<Comp>/, loudness-mastered to −14 LUFS / −1 dBTP
 scripts/overlap_qa.py     every frame: overlays vs face boxes, and overlays vs the safe area
@@ -44,6 +46,27 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Voice chain: high-pass at 90 Hz, gentle FFT denoise, −2 dB at 250 Hz, +3 dB at 3.4 kHz, 3:1 compression, normalised to −14 LUFS.
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
+
+## TrainingEdit: edit decisions (45.0 s)
+
+Ten phone clips of one training session (576x1024, two at 31.58 fps). `scripts/prepare_training.sh` rotates them upright, resamples to 30 fps, upscales with lanczos + light unsharp and joins them into one source, so the shared EDL engine addresses every shot by one source time (offsets in `public/training/offsets.json`). There is no talk to cut, so the music leads: every cut sits on a beat of the drum bed (`src/edits/training/beats.ts`, 117.5 BPM, measured with librosa from the 61-frame trim), and only the coach's short calls from the court are kept as dialogue. Music sits at 0.42 between calls and drops to 0.12 under them.
+
+| Bars | Section | Shots | Calls kept (joined source time) |
+|---|---|---|---|
+| 0-1 | Hook: LATIHAN | close throw (240.0), catch and throw (8.6) | "Main, main" (61.05, laid over the close throw) |
+| 2-5 | Drill 1: GERAK / HANTAR / PINDAH / ULANG | 8 shots of 2 beats | "Pas. Pergi." (11.35), "Low!" (109.6), "Move, move" (114.5) |
+| 6-7 | Mata coach tak lepas | coach in the MALAYSIA shirt (137.8), coach clapping (98.2) | "Good try, good try" |
+| 8-11 | Drill 2: SWAP, rep counter 01-08 | 8 shots of 2 beats | "Swap" x4, "Swap dulu", "Terus hantar sana" |
+| 12-13 | Rehat: TARIK NAFAS | players resting (35.4), hands on heads (96.6) | none |
+| 14-17 | Build: SATU LAGI / SEKALI LAGI, energy bar | calls, then four 1-beat cuts | "Again x3", "One more", "Flow dulu. Sekali lagi." |
+| 18-21 | Climax: PERGI x3 | 4 shots | "Pergi x3" (213.3), "Hantar wing" (220.95) |
+| 21-22 | Hero + end card | line of men, she runs in and releases the ball on the last frame (203.85), frozen under "Penat hari ni, kuat esok" | none |
+
+Not used: calls that name players ("Anis move", "Asma kena ada gaya", "Lee no. 10"), "Itulah kau yang syuting eh" (about the camera), the long tactical explanation at 231-240 s, and 167-213 s of ASR output with no matching speech energy (hallucination; removed from `transcript.json`). Whisper large-v3 word onsets drifted up to 0.4 s on these shouts, so the kept calls are re-timed in `edl.ts` (`merge`) against a 50 ms energy scan of the court sound.
+
+QA results: 0 of 1350 frames with an overlay on a face or outside the safe area. 32 kept words with a median of 18.2 dB and a minimum of 13.0 dB above music+SFX. Final master: -14.0 LUFS, -1.5 dBTP. (`word_snr.py` parses the coach-talk EDL format; this edit was measured with the same method on `EDL.chunks`.)
+
+To confirm: the on-screen labels "Drill 1 · Hantaran", "Drill 2 · Tukar posisi", the rep counter (counts cuts, not real reps), and the end-card line "Penat hari ni, kuat esok".
 
 ## VivaEdit: edit decisions (21.1 s)
 
