@@ -9,7 +9,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
-| `GkDrillEdit` | chat upload, goalkeeper footwork drill (`ac629d23…mov`) | 74.0 s → 44.9 s | preview awaiting approval |
+| `GkDrillEdit` | chat upload, goalkeeper footwork drill (`ac629d23…mov`) | 74.0 s → 44.9 s | final delivered, all items confirmed |
 
 ## Layout
 
@@ -81,7 +81,7 @@ Audio: Mixkit "K.O." (id 1068) at 0.08 under speech, 0.30 in gaps, dropped out o
 
 QA: 0 of 1346 frames with an overlay on a face or outside the safe area. 70 words, median 19.1 dB, minimum 10.0 dB above music+SFX. Preview master −14.0 LUFS, −0.9 dBFS peak.
 
-To confirm: "Hari ini baru" vs "ini bro" in the hook (passes split 2–2; the title reads "INI BARU"), "awak punya footwork" vs "you punya", "step pun tak lepas dah" (one pass: "stik"/"stem"), and the end-card copy.
+Confirmed as shown in the preview: "INI BARU" in the hook title, "awak punya footwork", "step pun tak lepas dah", and the end card "GAME OVER / CONTINUE? / TRAINING LEVEL MALAYSIA". Final: `out/GkDrillEdit/final.mp4`, 1080×1920, 30 fps, 44.9 s, −14.0 LUFS, −0.9 dBFS peak.
 
 ## VivaEdit: edit decisions (21.1 s)
 
