@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `TrainingEdit` | 10 chat uploads, one training night (B-roll + coach calls) | 249.8 s → 45.0 s | final rendered, awaiting review |
+| `TrainingEdit` | 10 chat uploads, one training night (B-roll + coach calls) | 249.8 s → 45.0 s | final delivered, all items confirmed |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -66,7 +66,7 @@ Not used: calls that name players ("Anis move", "Asma kena ada gaya", "Lee no. 1
 
 QA results: 0 of 1350 frames with an overlay on a face or outside the safe area. 32 kept words with a median of 18.2 dB and a minimum of 13.0 dB above music+SFX. Final master: -14.0 LUFS, -1.5 dBTP. (`word_snr.py` parses the coach-talk EDL format; this edit was measured with the same method on `EDL.chunks`.)
 
-To confirm: the on-screen labels "Drill 1 · Hantaran", "Drill 2 · Tukar posisi", the rep counter (counts cuts, not real reps), and the end-card line "Penat hari ni, kuat esok".
+Confirmed as shown in the final: the on-screen labels "Drill 1 · Hantaran", "Drill 2 · Tukar posisi", the rep counter (counts cuts, not real reps), the captions, and the end-card line "Penat hari ni, kuat esok".
 
 ## VivaEdit: edit decisions (21.1 s)
 
