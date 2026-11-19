@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `TrainingEdit` | `IMG_6778.MOV`, sideline tip at training: lob vs sharp pass to the wing | 57.9 s → 15.9 s | v2 preview awaiting approval |
+| `TrainingEdit` | `IMG_6778.MOV`, sideline tip at training: lob vs sharp pass to the wing | 57.9 s → 15.9 s | final delivered (v2 approved) |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -46,7 +46,7 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## TrainingEdit: edit decisions (v2, 15.9 s)
+## TrainingEdit: edit decisions (v2, final, 15.9 s)
 
 Source: `IMG_6778.MOV` (Google Drive > Video), 1080×1920 HEVC 60 fps, wide shots of the coach at the sideline. Prepared with `scripts/prepare_media.sh training …`, faces with `scripts/detect_faces.py training 0.6` (YuNet, 5 fps; every face sits at y 1000–1300).
 
