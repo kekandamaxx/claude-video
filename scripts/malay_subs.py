@@ -5,9 +5,12 @@ The narration is French. The burned-in English captions are covered by a plate a
 replaced with Malay, timed to the French words (Whisper large-v3 word timestamps).
 The creator's TikTok handle is kept visible above the plate.
 
+If scripts/malay_voiceover.py has been run on <out_dir>, its Malay voice-over mix and the
+cue times retimed to it are used, and the output is two_pivot_ms_vo.mp4.
+
 usage: scripts/malay_subs.py <source.mp4> <out_dir>
 """
-import subprocess, sys
+import json, subprocess, sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
@@ -74,7 +77,7 @@ def ts(t, sep="."):
     return f"{h}:{m:02d}:{s:05.2f}" if sep == "." else f"{h:02d}:{m:02d}:{s:06.3f}".replace(".", ",")
 
 
-def write_ass(path):
+def write_ass(path, cues):
     yellow, white = r"{\c&H2CD0FF&}", r"{\c&HFFFFFF&}"
     head = f"""[Script Info]
 ScriptType: v4.00+
@@ -92,7 +95,7 @@ Style: Mark,Inter Black,30,&H55FFFFFF,&H55FFFFFF,&H99000000,&H00000000,0,0,0,0,1
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     lines = []
-    for s, e, txt in CUES:
+    for s, e, txt in cues:
         body = txt.replace("{", "\x01").replace("}", "\x02").replace("\x01", yellow).replace("\x02", white)
         anim = rf"{{\pos({W//2},{CAP_Y})\fad(60,0)\fscx112\fscy112\t(0,90,\fscx100\fscy100)}}"
         lines.append(f"Dialogue: 1,{ts(s)},{ts(e)},Cap,,0,0,0,,{anim}{body}")
@@ -100,9 +103,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     path.write_text(head + "\n".join(lines) + "\n", encoding="utf-8")
 
 
-def write_srt(path):
+def write_srt(path, cues):
     out = []
-    for i, (s, e, txt) in enumerate(CUES, 1):
+    for i, (s, e, txt) in enumerate(cues, 1):
         out.append(f"{i}\n{ts(s, ',')} --> {ts(e, ',')}\n{txt.replace('{', '').replace('}', '')}\n")
     path.write_text("\n".join(out), encoding="utf-8")
 
@@ -145,7 +148,10 @@ def main():
     check_widths()
     ass, srt = out / "subs_ms.ass", out / "subs_ms.srt"
     plate, hmask = out / "plate.png", out / "handle.png"
-    write_ass(ass); write_srt(srt); make_plate(plate)
+    vo, mix = out / "cues_ms.json", out / "mix_ms.wav"
+    use_vo = vo.exists() and mix.exists()
+    cues = json.loads(vo.read_text(encoding="utf-8")) if use_vo else CUES
+    write_ass(ass, cues); write_srt(srt, cues); make_plate(plate)
     make_handle_mask(src, hmask, out / "_outro.png")
     fc = (
         f"[0:v]scale={W}:{H}:flags=lanczos,format=rgba[base];"
@@ -158,12 +164,14 @@ def main():
     cmd = ["ffmpeg", "-v", "error", "-y", "-i", src,
            "-loop", "1", "-framerate", "30", "-i", str(plate),
            "-loop", "1", "-framerate", "30", "-i", str(hmask),
-           "-filter_complex", fc, "-map", "[v]", "-map", "0:a", "-shortest",
+           *(["-i", str(mix)] if use_vo else []),
+           "-filter_complex", fc, "-map", "[v]", "-map", "3:a" if use_vo else "0:a", "-shortest",
            "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-r", "30",
            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-           "-c:a", "copy", "-movflags", "+faststart", str(out / "two_pivot_ms.mp4")]
+           *(["-c:a", "aac", "-b:a", "192k"] if use_vo else ["-c:a", "copy"]),
+           "-movflags", "+faststart", str(dst := out / ("two_pivot_ms_vo.mp4" if use_vo else "two_pivot_ms.mp4"))]
     subprocess.run(cmd, check=True)
-    print(out / "two_pivot_ms.mp4")
+    print(dst)
 
 
 if __name__ == "__main__":
