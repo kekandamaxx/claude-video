@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `TrainingEdit` | `IMG_4790.mp4` + `IMG_4793.mp4`, attack double pivot drill | 143.4 s + 39.9 s → 40.7 s (+2.5 s end card) | preview awaiting approval |
+| `TrainingEdit` | `IMG_4790.mp4` + `IMG_4793.mp4`, attack double pivot drill | 143.4 s + 39.9 s → 40.7 s (+2.5 s end card) | final delivered, all corrections confirmed |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -83,7 +83,7 @@ Not used: the repeated "switch, switch, switch"; "kau sebelah sini" ×2 (too fai
 
 QA results: 0 of 1297 frames with an overlay on a face or outside the safe area. 84 words with a median of 19.6 dB, none below 8 dB. "Kita" and "tengok dulu" get +4 dB of clip gain.
 
-To confirm: "highway untuk dia, tahan" (the second pass heard "highway tu dia, tahan"), "Ipan", "45", "tengok dulu", and the end card "UMPSA Handball · Attack · Double pivot".
+Confirmed by the coach: "highway untuk dia, tahan", "Ipan", "45", "tengok dulu", and the end card "UMPSA Handball · Attack · Double pivot". Final: 1080×1920, 30 fps, 43.3 s, −14.0 LUFS, −1.0 dBTP.
 
 ## VivaEdit: edit decisions (21.1 s)
 
