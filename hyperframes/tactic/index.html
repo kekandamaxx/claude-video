@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=880, height=340" />
+    <!--
+      Tactic board for TrainingEdit (rendered with HyperFrames to a transparent WebM and laid
+      over the Remotion edit in the top band, x 100-980 -> placed at x 100, y 268).
+      Board time 0 = output frame 105 (start of segment 'title'). Cue times below are
+      (output frame - 105) / 30, taken from the words in src/edits/training/transcript.json:
+        2.47 ATTACK   2.77 DOUBLE   3.37 PIVOT   4.07 BOLA FLOW   5.53 "45"
+        7.83 LUAR     8.87 BELAKANG 10.73 TARIK KELUAR   board out 11.06-11.37
+    -->
+    <script src="gsap.min.js"></script>
+    <style>
+      @font-face { font-family: Anton; src: url(fonts/anton-latin-400-normal.woff2) format("woff2"); }
+      @font-face { font-family: Montserrat; font-weight: 900; src: url(fonts/montserrat-latin-900-normal.woff2) format("woff2"); }
+      :root { --gold: #ffc72c; --navy: #0a1633; --red: #ff2d3d; --line: rgba(255, 255, 255, 0.85); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 880px; height: 340px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 880px; height: 340px; }
+      #panel {
+        position: absolute; inset: 6px; border-radius: 26px;
+        background: linear-gradient(160deg, rgba(14, 30, 70, 0.86), rgba(8, 16, 38, 0.9));
+        border: 3px solid rgba(255, 199, 44, 0.9);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(30, 91, 255, 0.18);
+        overflow: hidden;
+      }
+      svg { position: absolute; left: 0; top: 0; }
+      .tag {
+        position: absolute; font-family: Montserrat, sans-serif; font-weight: 900; font-size: 22px;
+        letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 999px;
+        white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+      #head { left: 24px; top: 20px; background: var(--gold); color: var(--navy); font-size: 24px; }
+      #head b { font-family: Anton, sans-serif; font-weight: 400; font-size: 30px; letter-spacing: 1px; }
+      #t45 { left: 640px; top: 196px; background: var(--gold); color: var(--navy); font-family: Anton, sans-serif; font-weight: 400; font-size: 34px; padding: 0 14px; }
+      #tluar { left: 700px; top: 286px; background: #2be38b; color: var(--navy); }
+      #tjangan { right: 22px; top: 62px; background: var(--red); color: #fff; }
+      #ttarik { left: 470px; top: 284px; background: #fff; color: var(--navy); }
+      #tflow { left: 24px; top: 284px; background: rgba(255, 255, 255, 0.95); color: var(--navy); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="11.367" data-width="880" data-height="340">
+      <div id="panel" class="clip" data-start="0" data-duration="11.367" data-track-index="0">
+        <svg width="880" height="340" viewBox="0 0 880 340">
+          <defs>
+            <radialGradient id="ballg" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stop-color="#FFF3C4" /><stop offset="55%" stop-color="#FFC72C" /><stop offset="100%" stop-color="#C98A00" />
+            </radialGradient>
+            <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2be38b" /></marker>
+            <marker id="ahw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#fff" /></marker>
+          </defs>
+          <!-- court: goal, 6 m line, dashed 9 m line (stylised, goal at the top) -->
+          <g id="court" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round">
+            <path id="goal" d="M400 6 L400 22 L480 22 L480 6" stroke="var(--gold)" stroke-width="6" />
+            <path id="six" d="M240 6 C 250 120, 330 150, 440 150 C 550 150, 630 120, 640 6" />
+            <path id="nine" d="M150 6 C 165 190, 300 220, 440 220 C 580 220, 715 190, 730 6" stroke-dasharray="14 12" opacity="0.7" />
+          </g>
+          <!-- ball-flow path along the backs -->
+          <path id="flowpath" d="M255 250 Q 345 300 440 285 Q 535 300 625 250" fill="none" stroke="var(--gold)" stroke-width="4" stroke-dasharray="8 10" opacity="0" />
+          <!-- "stand outside" arrow for the 45 -->
+          <path id="luararrow" d="M640 248 L700 278" stroke="#2be38b" stroke-width="7" stroke-linecap="round" marker-end="url(#ah)" fill="none" />
+          <!-- "not behind" ghost spot behind the pivot -->
+          <g transform="translate(522 78)"><g id="ghost">
+            <circle r="20" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="5 5" opacity="0.8" />
+            <path id="xmark" d="M-17 -17 L17 17 M17 -17 L-17 17" stroke="var(--red)" stroke-width="8" stroke-linecap="round" />
+          </g></g>
+          <!-- defender pulled out -->
+          <path id="tarikarrow" d="M598 184 L 640 226" stroke="#fff" stroke-width="6" stroke-linecap="round" marker-end="url(#ahw)" fill="none" />
+          <g transform="translate(585 168)"><g id="def"><path d="M0 -18 L17 13 L-17 13 Z" fill="var(--red)" stroke="#fff" stroke-width="3" /></g></g>
+          <!-- attackers -->
+          <g id="players" font-family="Anton" font-size="20" text-anchor="middle">
+            <g transform="translate(84 128)"><g class="pl" id="lw"><circle r="20" fill="#1E5BFF" stroke="#fff" stroke-width="3" /><text y="7" fill="#fff">LW</text></g></g>
+            <g transform="translate(255 250)"><g class="pl" id="lb"><circle r="20" fill="#1E5BFF" stroke="#fff" stroke-width="3" /><text y="7" fill="#fff">LB</text></g></g>
+            <g transform="translate(440 285)"><g class="pl" id="cb"><circle r="20" fill="#1E5BFF" stroke="#fff" stroke-width="3" /><text y="7" fill="#fff">CB</text></g></g>
+            <g transform="translate(625 250)"><g class="pl" id="rb"><circle id="rbc" r="20" fill="#1E5BFF" stroke="#fff" stroke-width="3" /><text y="7" fill="#fff">RB</text></g></g>
+            <g transform="translate(796 128)"><g class="pl" id="rw"><circle r="20" fill="#1E5BFF" stroke="#fff" stroke-width="3" /><text y="7" fill="#fff">RW</text></g></g>
+            <g transform="translate(385 158)"><g class="pv" id="p1"><circle r="22" fill="var(--gold)" stroke="var(--navy)" stroke-width="4" /><text y="7" fill="var(--navy)">P</text></g></g>
+            <g transform="translate(495 158)"><g class="pv" id="p2"><circle r="22" fill="var(--gold)" stroke="var(--navy)" stroke-width="4" /><text y="7" fill="var(--navy)">P</text></g></g>
+          </g>
+          <circle id="ring" cx="625" cy="250" r="30" fill="none" stroke="var(--gold)" stroke-width="5" opacity="0" />
+          <circle id="ball" cx="255" cy="250" r="11" fill="url(#ballg)" stroke="var(--navy)" stroke-width="2.5" opacity="0" />
+        </svg>
+        <div class="tag" id="head">Attack · <b>Double Pivot</b></div>
+        <div class="tag" id="tflow">Bola flow dulu</div>
+        <div class="tag" id="t45">45</div>
+        <div class="tag" id="tluar">Luar ✓</div>
+        <div class="tag" id="tjangan">Jangan belakang</div>
+        <div class="tag" id="ttarik">Tarik keluar</div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const len = (id) => document.getElementById(id).getTotalLength();
+      const draw = (sel, at, dur) => {
+        const L = len(sel);
+        tl.fromTo("#" + sel, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: dur, ease: "power2.out" }, at);
+      };
+      // board in
+      tl.fromTo("#panel", { opacity: 0, y: -40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 0);
+      draw("goal", 0.15, 0.4);
+      draw("six", 0.25, 0.8);
+      tl.fromTo("#nine", { opacity: 0 }, { opacity: 0.7, duration: 0.6 }, 0.6);
+      tl.set(["#ghost", "#def", "#luararrow", "#tarikarrow", ".tag"], { opacity: 0 }, 0);
+      // ATTACK: attackers pop in, then the two pivots pulse on DOUBLE / PIVOT
+      tl.fromTo(".pl", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.35, ease: "back.out(2.5)", stagger: 0.05 }, 2.4);
+      tl.fromTo("#head", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 2.47);
+      tl.fromTo(".pv", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, ease: "back.out(3)", stagger: 0.2 }, 2.75);
+      tl.to(".pv", { scale: 1.25, duration: 0.15, yoyo: true, repeat: 3, ease: "sine.inOut" }, 3.37);
+      // BOLA FLOW DULU: ball swings LB -> CB -> RB along the backs
+      tl.to("#flowpath", { opacity: 0.9, duration: 0.2 }, 4.0);
+      tl.fromTo("#tflow", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.25 }, 4.07);
+      tl.set("#ball", { opacity: 1 }, 4.07);
+      tl.to("#ball", { attr: { cx: 440, cy: 285 }, duration: 0.35, ease: "power1.inOut" }, 4.1);
+      tl.to("#ball", { attr: { cx: 625, cy: 250 }, duration: 0.35, ease: "power1.inOut" }, 4.5);
+      tl.to(["#tflow", "#flowpath"], { opacity: 0, duration: 0.3 }, 4.9);
+      // "45": ring + tag on the right back
+      tl.fromTo("#ring", { opacity: 0, attr: { r: 60 } }, { opacity: 1, attr: { r: 30 }, duration: 0.3, ease: "power3.out" }, 5.45);
+      tl.fromTo("#t45", { opacity: 0, scale: 1.8, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 5.5);
+      // LUAR: the 45 steps outside
+      draw("luararrow", 7.6, 0.3);
+      tl.to("#luararrow", { opacity: 1, duration: 0.01 }, 7.6);
+      tl.to("#rb", { x: 50, y: 22, duration: 0.4, ease: "power2.inOut" }, 7.8);
+      tl.to("#ring", { attr: { cx: 675, cy: 272 }, duration: 0.4, ease: "power2.inOut" }, 7.8);
+      tl.to("#ball", { attr: { cx: 675, cy: 272 }, duration: 0.4, ease: "power2.inOut" }, 7.8);
+      tl.to("#t45", { x: 50, y: 22, duration: 0.4, ease: "power2.inOut" }, 7.8);
+      tl.fromTo("#tluar", { opacity: 0, scale: 0.4, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 7.85);
+      tl.to("#luararrow", { opacity: 0, duration: 0.3 }, 8.6);
+      // JANGAN BELAKANG: ghost spot behind the pivot, red X
+      tl.to("#ghost", { opacity: 1, duration: 0.2 }, 8.5);
+      draw("xmark", 8.82, 0.25);
+      tl.fromTo("#tjangan", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.25 }, 8.82);
+      tl.to("#ghost", { opacity: 0, duration: 0.25 }, 10.0);
+      tl.to("#tjangan", { opacity: 0, duration: 0.25 }, 10.0);
+      // TARIK KELUAR: defender dragged out of the 6 m by the 45 standing outside
+      tl.fromTo("#def", { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 9.6);
+      tl.to("#tarikarrow", { opacity: 1, duration: 0.01 }, 10.6);
+      draw("tarikarrow", 10.6, 0.25);
+      tl.to("#def", { x: 48, y: 46, duration: 0.35, ease: "power3.in" }, 10.7);
+      tl.fromTo("#ttarik", { opacity: 0, scale: 1.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 10.73);
+      // board out
+      tl.to("#panel", { opacity: 0, y: -30, scale: 0.95, duration: 0.3, ease: "power2.in" }, 11.06);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

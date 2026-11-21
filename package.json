@@ -16,6 +16,8 @@
     "render:friendship": "scripts/render_friendship.sh",
     "qa:capcut": "esbuild scripts/capcut_qa.ts --bundle --platform=node --log-level=warning --loader:.css=empty --loader:.woff=empty --loader:.woff2=empty --outfile=out/.qa/capcut_qa.js && node out/.qa/capcut_qa.js",
     "prepare:song": "scripts/prepare_song.sh",
+    "prepare:training": "scripts/prepare_training.sh",
+    "render:tactic": "cd hyperframes/tactic && ../../node_modules/.bin/hyperframes render . --format webm --fps 30 --quality delivery -o ../../public/training/gfx/tactic.webm",
     "render:capcut": "scripts/render_capcut.sh"
   },
   "dependencies": {
