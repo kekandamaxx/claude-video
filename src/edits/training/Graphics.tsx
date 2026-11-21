@@ -49,6 +49,10 @@ export const T = {
 	brk: start('brk'),
 	masuk: at('masuk', 169.67),
 	masukEnd: segEnd('masuk'),
+	shot: start('shot'),
+	feed: at('shot', 173.3),
+	shoot: at('shot', 173.55),
+	shotEnd: segEnd('shot'),
 	ikut: start('ikut'),
 	opt1: at('ikut', 176.29),
 	opt2: at('ikut', 176.67),
@@ -59,7 +63,7 @@ export const T = {
 	end: EDL.totalFrames,
 };
 
-export const SHAKE_HITS = [T.highway + 1, T.tahan + 1, T.b45 + 1, T.lagi1 + 1, T.lagi3 + 1, T.masuk + 1, T.improvise + 2];
+export const SHAKE_HITS = [T.highway + 1, T.tahan + 1, T.b45 + 1, T.lagi1 + 1, T.lagi3 + 1, T.masuk + 1, T.shoot + 1, T.improvise + 2];
 
 // ---------------------------------------------------------------- zones
 // Every face in this clip sits at y 420-1100 (players mid-court, filmed from the sideline);
@@ -248,15 +252,37 @@ const Pivot: React.FC<{frame: number}> = ({frame}) => {
 	);
 };
 
-// ---------------------------------------------------------------- 8. game: live badge + MASUK!
+// ---------------------------------------------------------------- 8. game: live badge, MASUK!, the pivot's shot
+// Shot take (IMG_4793 27-34 s, zoomed on the goal): the callout stays in the ceiling band and
+// points down at the pivot (x ~550 after the zoom), it never reaches the players.
 const Game: React.FC<{frame: number}> = ({frame}) => {
-	if (frame < T.brk || frame >= T.masukEnd) return null;
+	if (frame < T.brk || frame >= T.shotEnd) return null;
+	const inShot = frame >= T.shot;
+	const feedK = frame >= T.feed - 2 ? pop(frame, T.feed - 2, 10, 0.5) : 0;
+	const bob = Math.sin(frame * 0.5) * 8;
 	return (
-		<Band style={{justifyContent: 'flex-start', paddingTop: 6, opacity: interpolate(frame, [T.masukEnd - 4, T.masukEnd], [1, 0], clamp)}}>
+		<Band style={{justifyContent: 'flex-start', paddingTop: 6, opacity: interpolate(frame, [T.shotEnd - 5, T.shotEnd], [1, 0], clamp)}}>
 			<LiveBadge frame={frame} label="Attack" from={T.brk} />
-			<div style={{marginTop: 34}}>
-				<Stamp frame={frame} at={T.masuk} size={130} color={C.green}>MASUK!</Stamp>
-			</div>
+			{!inShot ? (
+				<div style={{marginTop: 34}}>
+					<Stamp frame={frame} at={T.masuk} size={130} color={C.green}>MASUK!</Stamp>
+				</div>
+			) : (
+				<div style={{position: 'relative', width: 860, height: 250, marginTop: 8}}>
+					<div style={{position: 'absolute', left: 60, top: 20, display: 'flex', alignItems: 'center', gap: 12, transform: `scale(${feedK})`, transformOrigin: '0 50%'}}>
+						<Ball size={64} rotate={frame * 12} />
+						<Pill bg={C.navySoft} style={{fontSize: 34}}>Bola → pivot · attempt</Pill>
+					</div>
+					<div style={{position: 'absolute', left: 500, top: 60}}>
+						<Stamp frame={frame} at={T.shoot} size={104} color={C.gold} rot={-4}>SHOOT!</Stamp>
+					</div>
+					{frame >= T.feed ? (
+						<svg width={90} height={110} viewBox="0 0 90 110" style={{position: 'absolute', left: 385, top: 120 + bob, opacity: feedK, filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.5))'}}>
+							<path d="M45 6 L45 80 M14 52 L45 92 L76 52" stroke={C.gold} strokeWidth={14} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+						</svg>
+					) : null}
+				</div>
+			)}
 		</Band>
 	);
 };

@@ -8,7 +8,7 @@ A Remotion template for vertical 9:16 edits (1080×1920, 30 fps) of raw coach ta
 | `SemifinalEdit` | `IMG_7546.MOV`, pep talk before the semifinal | 89.3 s → 45.7 s | final delivered, all corrections confirmed |
 | `BriefingEdit` | chat upload, coach briefing on reacting to elbows | 32.0 s → 18.6 s | preview awaiting approval |
 | `FriendshipTribute` | 16 photos, 16:9 tribute "A Friendship to Remember" | 16 stills → 172.0 s | rendered |
-| `TrainingEdit` | `IMG_4790.mp4` + `IMG_4793.mp4`, attack double pivot drill | 143.4 s + 39.9 s → 37.6 s (+2.5 s end card) | preview awaiting approval |
+| `TrainingEdit` | `IMG_4790.mp4` + `IMG_4793.mp4`, attack double pivot drill | 143.4 s + 39.9 s → 40.7 s (+2.5 s end card) | preview awaiting approval |
 | `VivaEdit` | Viva! juice teaser: taste-test clip + pallet B-roll + 3 bottle stills | 35.4 s + 3.8 s + stills → 21.1 s | final delivered, all items confirmed |
 
 ## Layout
@@ -46,11 +46,11 @@ The refactor to multiple compositions was checked against the delivered `Timeout
 - Music: Mixkit "Epical Drums 02", with a 1–4 kHz pocket carved out for the voice. It sits at 0.10 under speech and 0.28 in gaps. The SFX bus is side-chained to the same speech envelope at −14 dB.
 - Every kept word must be at least 8 dB above music+SFX (`word_snr.py`).
 
-## TrainingEdit: edit decisions (39.1 s)
+## TrainingEdit: edit decisions (43.2 s)
 
 Sources: two phone clips filmed by the coach from the sideline, joined end to end (`scripts/prepare_training.sh`; IMG_4793 starts at 143.433 s in the joined source). The voice is close to the mic; the players are small and mid-frame, with faces measured at y 420–1100 (`scripts/scan_faces.py`, YuNet at 5 fps). Graphics use the ceiling band (y 262–610). The exception is `flow3`, where a player's face rises to y 424, so its graphics stay in y 262–400. Captions sit at y 1290. Captions come from `words.py`, which writes `transcript.json` with at most 3 words per chunk. Those words were checked with a second Whisper pass over each cut and against the voice energy scan. The raw ASR is in `asr/`.
 
-The tactic board is a **HyperFrames** composition (`hyperframes/tactic/index.html`, GSAP). It is rendered to a transparent VP9 WebM and laid over the Remotion edit from the start of `title` to the end of `tarik`. Its cue times are the caption words' output frames minus the board start:
+The tactic board is a **HyperFrames** composition (`hyperframes/tactic/index.html`, GSAP). It is rendered to a transparent VP9 WebM and laid over the Remotion edit from the start of `title` to the end of `tarik`. Its cue times are the caption words' output frames minus the board start. Segments can now set `zoomOriginX` (horizontal zoom pivot) and `seamless` (a cut inside one continuous take); without them, other edits render exactly as before.
 
 ```bash
 cd hyperframes/tactic && ../../node_modules/.bin/hyperframes render . --format webm --fps 30 --quality delivery -o ../../public/training/gfx/tactic.webm
@@ -75,12 +75,13 @@ cd hyperframes/tactic && ../../node_modules/.bin/hyperframes render . --format w
 | 15 | 148.05–149.45 | Tapi bola tu bola pivot. |
 | 16 | 160.90–164.00 | attack drill, live |
 | 17 | 167.90–170.22 | Ok, masuk! |
-| 18 | 174.40–177.33 | Haa, pun boleh, jadi ikut. Ada banyak option. |
-| 19 | 178.30–179.62 | **CLIMAX** Improvise. (the repeat of "ada banyak option" is cut) |
+| 18 | 170.22–174.40 | **Pivot shot** (IMG_4793 26.8–31.0 s, coach's request). The back feeds the pivot at 173.3 s and the pivot shoots at 173.55 s. The frame zooms 1.22→1.42 on the goal (pivot x 430, y 960), with the coach's "Haa!" at full level and callouts "Bola → pivot · attempt" and "SHOOT!" in the ceiling band. |
+| 19 | 174.40–177.33 | Haa, pun boleh, jadi ikut. Ada banyak option. (`seamless`: same take, no punch-in or flash; zoom eases back to 1.2) |
+| 20 | 178.30–179.62 | **CLIMAX** Improvise. (the repeat of "ada banyak option" is cut) |
 
 Not used: the repeated "switch, switch, switch"; "kau sebelah sini" ×2 (too faint); "memang kau masuk, kau duduk dalam cerita dia" and "kau akan pasang bola pada dia, kau jump" (the two ASR passes disagree); the second "tengok dulu" (a breath only); every okay/alright; and the dead air.
 
-QA results: 0 of 1172 frames with an overlay on a face or outside the safe area. 84 words with a median of 19.6 dB, none below 8 dB. "Kita" and "tengok dulu" get +4 dB of clip gain.
+QA results: 0 of 1297 frames with an overlay on a face or outside the safe area. 84 words with a median of 19.6 dB, none below 8 dB. "Kita" and "tengok dulu" get +4 dB of clip gain.
 
 To confirm: "highway untuk dia, tahan" (the second pass heard "highway tu dia, tahan"), "Ipan", "45", "tengok dulu", and the end card "UMPSA Handball · Attack · Double pivot".
 

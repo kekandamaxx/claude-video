@@ -16,6 +16,10 @@ export type SegmentDef = {
 	captionY?: number;
 	/** Zoom pivot (px from top); defaults to the edit's face-band centre. */
 	zoomOriginY?: number;
+	/** Horizontal zoom pivot (px from left); defaults to the centre (540). */
+	zoomOriginX?: number;
+	/** Continues the previous segment's take: no punch-in, blur or flash at its start. */
+	seamless?: boolean;
 	/** Picture from another source while the dialogue keeps running (J/L-cuts, B-roll, stills).
 	 *  Without it the picture comes from the edit's main clip at srcStart. */
 	visual?: Visual;

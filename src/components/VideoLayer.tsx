@@ -4,7 +4,7 @@ import type {Visual} from '../lib/edl';
 import {clamp, pop, shake} from '../lib/anim';
 import {useEdit} from '../lib/edit';
 
-const Clip: React.FC<{src: string; srcFrom: number; len: number; zoomFrom: number; zoomTo: number; originY: number; first: boolean; visual?: Visual; preview?: boolean}> = ({src, srcFrom, len, zoomFrom, zoomTo, originY, first, visual, preview}) => {
+const Clip: React.FC<{src: string; srcFrom: number; len: number; zoomFrom: number; zoomTo: number; originY: number; originX?: number; first: boolean; visual?: Visual; preview?: boolean}> = ({src, srcFrom, len, zoomFrom, zoomTo, originY, originX = 540, first, visual, preview}) => {
 	const f = useCurrentFrame();
 	const drift = interpolate(f, [0, len], [zoomFrom, zoomTo], clamp);
 	// Punch-in on every cut: overshoot + motion blur settling in ~6 frames.
@@ -12,7 +12,7 @@ const Clip: React.FC<{src: string; srcFrom: number; len: number; zoomFrom: numbe
 	const punch = 1 + 0.1 * (1 - p);
 	const blur = first ? 0 : interpolate(f, [0, 5], [7, 0], clamp);
 	return (
-		<AbsoluteFill style={{transform: `scale(${drift * punch})`, transformOrigin: `50% ${originY}px`, filter: `blur(${blur}px)`}}>
+		<AbsoluteFill style={{transform: `scale(${drift * punch})`, transformOrigin: `${originX}px ${originY}px`, filter: `blur(${blur}px)`}}>
 			{visual?.kind === 'image' ? (
 				<Img src={staticFile(visual.src)} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
 			) : visual?.kind === 'video' ? (
@@ -52,14 +52,14 @@ export const VideoLayer: React.FC<{src: string; guides: boolean; preview?: boole
 			<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px) scale(1.03)`, filter: 'contrast(1.08) saturate(1.16) brightness(1.02)'}}>
 				{segs.map((s, i) => (
 					<Sequence key={s.id} from={s.outFrom} durationInFrames={s.len} name={`clip:${s.id}`}>
-						<Clip src={staticFile(src)} srcFrom={s.srcFrom} len={s.len} zoomFrom={s.zoomFrom} zoomTo={s.zoomTo} originY={origin(s)} first={i === 0} visual={s.visual} preview={preview} />
-						{guides ? <AbsoluteFill style={{transform: `scale(${s.zoomTo})`, transformOrigin: `50% ${origin(s)}px`}}><FaceBoxes offset={s.outFrom} /></AbsoluteFill> : null}
+						<Clip src={staticFile(src)} srcFrom={s.srcFrom} len={s.len} zoomFrom={s.zoomFrom} zoomTo={s.zoomTo} originY={origin(s)} originX={s.zoomOriginX} first={i === 0 || !!s.seamless} visual={s.visual} preview={preview} />
+						{guides ? <AbsoluteFill style={{transform: `scale(${s.zoomTo})`, transformOrigin: `${s.zoomOriginX ?? 540}px ${origin(s)}px`}}><FaceBoxes offset={s.outFrom} /></AbsoluteFill> : null}
 					</Sequence>
 				))}
 				{/* Outro: hold the last frame under the end card. */}
 				<Sequence from={e.edl.cutEnd} name="outro-freeze">
 					<Freeze frame={last.len - 1}>
-						<Clip src={staticFile(src)} srcFrom={last.srcFrom} len={last.len} zoomFrom={last.zoomFrom} zoomTo={last.zoomTo} originY={origin(last)} first visual={last.visual} preview={preview} />
+						<Clip src={staticFile(src)} srcFrom={last.srcFrom} len={last.len} zoomFrom={last.zoomFrom} zoomTo={last.zoomTo} originY={origin(last)} originX={last.zoomOriginX} first visual={last.visual} preview={preview} />
 					</Freeze>
 				</Sequence>
 			</AbsoluteFill>
@@ -76,7 +76,7 @@ export const CutFlash: React.FC = () => {
 	const {edl} = useEdit();
 	const frame = useCurrentFrame();
 	let o = 0;
-	for (const s of edl.segments.slice(1)) if (frame >= s.outFrom) o = Math.max(o, interpolate(frame, [s.outFrom, s.outFrom + 4], [0.55, 0], clamp));
+	for (const s of edl.segments.slice(1)) if (!s.seamless && frame >= s.outFrom) o = Math.max(o, interpolate(frame, [s.outFrom, s.outFrom + 4], [0.55, 0], clamp));
 	return <AbsoluteFill style={{background: '#fff', opacity: o, mixBlendMode: 'screen'}} />;
 };
 
@@ -90,13 +90,13 @@ export const FaceMask: React.FC = () => {
 	if (!s || s.visual) return null; // B-roll / stills carry no detected faces
 	const f = frame - s.outFrom;
 	const drift = interpolate(f, [0, s.len], [s.zoomFrom, s.zoomTo], clamp);
-	const p = s.outFrom === 0 ? 1 : pop(f, 0, 14, 0.5);
+	const p = s.outFrom === 0 || s.seamless ? 1 : pop(f, 0, 14, 0.5);
 	const z = drift * (1 + 0.1 * (1 - p));
 	const t = (s.srcFrom + f) / 30;
 	const near = e.faces.reduce((a, b) => (Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a));
 	return (
 		<AbsoluteFill style={{transform: `translate(${sh.x}px, ${sh.y}px) scale(1.03)`}}>
-			<AbsoluteFill style={{transform: `scale(${z})`, transformOrigin: `50% ${s.zoomOriginY ?? e.zoomOriginY}px`}}>
+			<AbsoluteFill style={{transform: `scale(${z})`, transformOrigin: `${s.zoomOriginX ?? 540}px ${s.zoomOriginY ?? e.zoomOriginY}px`}}>
 				{near.faces
 					.filter((b) => b[4] >= 0.7 && b[3] < (e.maxFaceHeight ?? 320))
 					.map((b, i) => (

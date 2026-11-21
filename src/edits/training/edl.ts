@@ -40,10 +40,13 @@ const DEFS: SegmentDef[] = [
 	s({id: 'pivot', srcStart: 148.05, srcEnd: 149.45, zoomFrom: 1.04, zoomTo: 1.08, note: '"Tapi bola tu bola pivot." (0.5 s pause cut)'}),
 	s({id: 'brk', srcStart: 160.9, srcEnd: 164.0, zoomFrom: 1.12, zoomTo: 1.2, note: 'ACTION: fast break (hall sound only)'}),
 	s({id: 'masuk', srcStart: 167.9, srcEnd: 170.22, zoomFrom: 1.1, zoomTo: 1.2, note: 'ACTION: attack runs in, "Ok, masuk!"'}),
-	s({id: 'ikut', srcStart: 174.4, srcEnd: 177.33, zoomFrom: 1.0, zoomTo: 1.06, note: '"Haa, pun boleh, jadi ikut. Ada banyak option."'}),
+	// IMG_4793 27.0-33.9 s plays through with no cut ('shot' then 'ikut' are contiguous in the source):
+	// the back feeds the pivot at 173.3 s and the pivot turns to shoot at 173.5-173.9 s.
+	s({id: 'shot', srcStart: 170.22, srcEnd: 174.4, zoomFrom: 1.22, zoomTo: 1.42, zoomOriginX: 430, zoomOriginY: 960, note: 'ACTION: pivot gets the ball and attempts the shot (hall sound, "Haa!")'}),
+	s({id: 'ikut', srcStart: 174.4, srcEnd: 177.33, zoomFrom: 1.42, zoomTo: 1.2, zoomOriginX: 430, zoomOriginY: 960, seamless: true, note: '"Haa, pun boleh, jadi ikut. Ada banyak option." (continues the shot take)'}),
 	s({id: 'improvise', srcStart: 178.3, srcEnd: 179.62, zoomFrom: 1.08, zoomTo: 1.16, note: 'CLIMAX "Improvise." (repeat of "ada banyak option" cut)'}),
 ];
 
-export const ACTION = new Set(['drill', 'drill2', 'brk', 'masuk']);
+export const ACTION = new Set(['drill', 'drill2', 'brk', 'masuk', 'shot']);
 
 export const EDL = createEdl({defs: DEFS, transcript, outroFrames: 75});

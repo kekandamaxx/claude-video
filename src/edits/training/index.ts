@@ -48,8 +48,14 @@ const CUES: Cue[] = [
 	{sfx: 'bass_drum', at: T.pivotW, vol: 0.4},
 	// Game: whoosh in, crowd bed, MASUK stamp
 	{sfx: 'whoosh_hit', at: T.brk + 3, vol: 0.35},
-	{sfx: 'crowd', at: T.brk + 10, vol: 0.12, dur: 150, fadeIn: 20},
+	{sfx: 'crowd', at: T.brk + 10, vol: 0.12, dur: 150, fadeIn: 20}, // fades before the shot take
 	{sfx: 'impact_trailer', at: T.masuk, vol: 0.35, dur: 40},
+	// Pivot shot take
+	{sfx: 'zoom_impact', at: T.shot + 2, vol: 0.3},
+	{sfx: 'whoosh_fast', at: T.feed, vol: 0.35},
+	{sfx: 'heartbeat', at: T.feed + 1, vol: 0.25, dur: 20},
+	{sfx: 'impact_fast', at: T.shoot, vol: 0.45},
+	{sfx: 'crowd', at: T.shoot + 2, vol: 0.14, dur: 70, fadeIn: 4},
 	// Options -> IMPROVISE climax -> end card
 	{sfx: 'pop_light', at: T.opt1, vol: 0.4},
 	{sfx: 'pop_light', at: T.opt2, vol: 0.4},
@@ -70,7 +76,7 @@ const SOFT: [number, number][] = [
 const actionGain = (f: number) => {
 	const s = EDL.segmentAt(f);
 	if (SOFT.some(([a, b]) => f >= a && f < b)) return 1.6;
-	return s && ACTION.has(s.id) && s.id !== 'masuk' ? 0.55 : 1;
+	return s && ACTION.has(s.id) && s.id !== 'masuk' && s.id !== 'shot' ? 0.55 : 1; // the shot take keeps the coach's "Haa!" at full level
 };
 
 export const trainingEdit: EditConfig = {
